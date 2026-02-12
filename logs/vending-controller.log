@@ -62,3 +62,18 @@ java.lang.StringIndexOutOfBoundsException: Range [7, 29) out of bounds for lengt
 	at java.base/java.lang.Thread.run(Thread.java:1583)
 2026-02-12 10:22:53.942 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
 2026-02-12 10:22:53.943 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:35:43.105 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:35:43.107 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:36:01.350 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:36:01.351 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:42:49.642 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:42:49.644 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:42:55.888 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:42:55.889 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:43:01.779 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:43:01.780 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:46:05.359 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:46:05.360 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:48:18.091 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:48:18.092 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:48:34.651 [Thread-3] INFO  com.vending.service.AuthService - User admin@system.ru logged in successfully

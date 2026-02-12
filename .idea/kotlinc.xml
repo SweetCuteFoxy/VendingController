@@ -5,6 +5,7 @@
   </component>
   <component name="Kotlin2JvmCompilerArguments">
     <option name="jvmTarget" value="17" />
+    <option name="jdkHome" value="C:\Users\edikk\.jdks\axiomjdk-21.0.9" />
   </component>
   <component name="KotlinCommonCompilerArguments">
     <option name="apiVersion" value="2.1" />
