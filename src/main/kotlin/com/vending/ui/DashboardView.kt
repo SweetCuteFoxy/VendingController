@@ -124,7 +124,7 @@ class DashboardView {
         val gc = canvas.graphicsContext2D
 
         // Background circle
-        gc.stroke = Color.web("#e0e0e0")
+        gc.stroke = Color.web("#2a2e38")
         gc.lineWidth = 12.0
         gc.strokeArc(15.0, 15.0, 110.0, 110.0, 90.0, -360.0, javafx.scene.shape.ArcType.OPEN)
 
@@ -139,10 +139,11 @@ class DashboardView {
         gc.strokeArc(15.0, 15.0, 110.0, 110.0, 90.0, -(360.0 * pct / 100.0), javafx.scene.shape.ArcType.OPEN)
 
         // Percentage text
-        gc.fill = Color.web("#1e1e2d")
+        gc.fill = Color.web("#e8ecf1")
         gc.font = Font.font("System", javafx.scene.text.FontWeight.BOLD, 28.0)
         val text = "${pct.toInt()}%"
-        gc.fillText(text, 45.0, 78.0)
+        val textWidth = text.length * 14.0
+        gc.fillText(text, (140.0 - textWidth) / 2.0, 78.0)
 
         return createTileCard("Эффективность сети", VBox(10.0).apply {
             alignment = Pos.CENTER

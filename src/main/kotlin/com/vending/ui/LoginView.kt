@@ -12,19 +12,19 @@ class LoginView(private val onSuccess: () -> Unit) {
     val root: StackPane = StackPane()
 
     init {
-        root.styleClass.add("login-background")
+        root.styleClass.add("login-root")
         root.alignment = Pos.CENTER
 
         val card = VBox(20.0).apply {
             styleClass.add("login-card")
             alignment = Pos.CENTER
             padding = Insets(40.0, 50.0, 40.0, 50.0)
-            maxWidth = 420.0
-            maxHeight = 520.0
+            maxWidth = 440.0
+            maxHeight = 560.0
         }
 
         // Logo/Title
-        val logoLabel = Label("🏭").apply { font = Font.font(48.0) }
+        val logoLabel = Label("🏭").apply { font = Font.font(56.0) }
         val titleLabel = Label("Vending Controller").apply {
             styleClass.add("login-title")
         }
@@ -101,7 +101,7 @@ class LoginView(private val onSuccess: () -> Unit) {
         // Also login on Enter in password field
         passwordField.setOnAction { loginButton.fire() }
 
-        val hintLabel = Label("Демо: admin@system.ru / пароль").apply {
+        val hintLabel = Label("Демо: admin@system.ru / password123").apply {
             styleClass.add("login-hint")
         }
 

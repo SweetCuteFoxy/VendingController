@@ -109,15 +109,10 @@ class MachineMonitorView {
         val filtersRow = HBox(16.0).apply {
             alignment = Pos.CENTER_LEFT
             children.addAll(statusGroup, connGroup, addGroup, applyBtn)
-            isWrapText(this)
         }
 
         filterBox.children.addAll(titleRow, filtersRow)
         root.top = filterBox
-    }
-
-    private fun isWrapText(hbox: HBox) {
-        // Allow wrapping by making the container a FlowPane-like behavior
     }
 
     private fun buildSummary() {
