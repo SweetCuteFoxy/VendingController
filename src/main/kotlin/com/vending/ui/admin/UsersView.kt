@@ -47,14 +47,7 @@ class UsersView {
         table.columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
         table.styleClass.add("admin-table")
 
-        table.setRowFactory {
-            object : TableRow<User>() {
-                override fun updateItem(item: User?, empty: Boolean) {
-                    super.updateItem(item, empty)
-                    style = if (item != null && !empty && index % 2 != 0) "-fx-background-color: #f5f8fa;" else ""
-                }
-            }
-        }
+        // Row styling handled by CSS
 
         table.columns.addAll(
             TableColumn<User, String>("ID").apply {

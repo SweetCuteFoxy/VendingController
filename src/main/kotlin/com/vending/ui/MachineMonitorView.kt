@@ -40,9 +40,9 @@ class MachineMonitorView {
     }
 
     private fun buildFilters() {
-        val filterBox = VBox(8.0).apply {
+        val filterBox = VBox(10.0).apply {
             styleClass.add("monitor-filter-box")
-            padding = Insets(12.0, 16.0, 12.0, 16.0)
+            padding = Insets(14.0, 20.0, 14.0, 20.0)
         }
 
         val titleRow = HBox(10.0).apply {
@@ -53,35 +53,41 @@ class MachineMonitorView {
         }
 
         // Status filter
-        val statusLabel = Label("Общее состояние:")
-        val statusGroup = HBox(8.0).apply { alignment = Pos.CENTER_LEFT }
+        val statusLabel = Label("Состояние:").apply { styleClass.add("filter-group-label") }
         val allStatusBtn = ToggleButton("Все").apply { styleClass.add("filter-toggle"); isSelected = true }
-        val workingBtn = ToggleButton("🟢 Работает").apply { styleClass.add("filter-toggle-green") }
-        val brokenBtn = ToggleButton("🔴 Не работает").apply { styleClass.add("filter-toggle-red") }
-        val maintBtn = ToggleButton("🔵 На обслуживании").apply { styleClass.add("filter-toggle-blue") }
+        val workingBtn = ToggleButton("Работает").apply { styleClass.add("filter-toggle-green") }
+        val brokenBtn = ToggleButton("Не работает").apply { styleClass.add("filter-toggle-red") }
+        val maintBtn = ToggleButton("На обслуживании").apply { styleClass.add("filter-toggle-blue") }
         val statusToggle = ToggleGroup()
         listOf(allStatusBtn, workingBtn, brokenBtn, maintBtn).forEach { it.toggleGroup = statusToggle }
-        statusGroup.children.addAll(statusLabel, allStatusBtn, workingBtn, brokenBtn, maintBtn)
+        val statusGroup = HBox(6.0).apply {
+            alignment = Pos.CENTER_LEFT
+            children.addAll(statusLabel, allStatusBtn, workingBtn, brokenBtn, maintBtn)
+        }
 
         // Connection filter
-        val connLabel = Label("Тип подключения:")
-        val connGroup = HBox(8.0).apply { alignment = Pos.CENTER_LEFT }
+        val connLabel = Label("Подключение:").apply { styleClass.add("filter-group-label") }
         val allConnBtn = ToggleButton("Все").apply { styleClass.add("filter-toggle"); isSelected = true }
         val wifiBtn = ToggleButton("WiFi").apply { styleClass.add("filter-toggle") }
         val gsmBtn = ToggleButton("GSM").apply { styleClass.add("filter-toggle") }
         val connToggle = ToggleGroup()
         listOf(allConnBtn, wifiBtn, gsmBtn).forEach { it.toggleGroup = connToggle }
-        connGroup.children.addAll(connLabel, allConnBtn, wifiBtn, gsmBtn)
+        val connGroup = HBox(6.0).apply {
+            alignment = Pos.CENTER_LEFT
+            children.addAll(connLabel, allConnBtn, wifiBtn, gsmBtn)
+        }
 
         // Additional status filter
-        val addLabel = Label("Доп. статусы:")
-        val addGroup = HBox(8.0).apply { alignment = Pos.CENTER_LEFT }
+        val addLabel = Label("Доп. статусы:").apply { styleClass.add("filter-group-label") }
         val allAddBtn = ToggleButton("Все").apply { styleClass.add("filter-toggle"); isSelected = true }
         val lowStockBtn = ToggleButton("Мало товара").apply { styleClass.add("filter-toggle") }
         val needServiceBtn = ToggleButton("Нужно ТО").apply { styleClass.add("filter-toggle") }
         val addToggle = ToggleGroup()
         listOf(allAddBtn, lowStockBtn, needServiceBtn).forEach { it.toggleGroup = addToggle }
-        addGroup.children.addAll(addLabel, allAddBtn, lowStockBtn, needServiceBtn)
+        val addGroup = HBox(6.0).apply {
+            alignment = Pos.CENTER_LEFT
+            children.addAll(addLabel, allAddBtn, lowStockBtn, needServiceBtn)
+        }
 
         val applyBtn = Button("Применить").apply {
             styleClass.add("primary-button")
@@ -106,12 +112,18 @@ class MachineMonitorView {
             }
         }
 
-        val filtersRow = HBox(16.0).apply {
+        // Row 1: status filters
+        // Row 2: connection + additional + apply button
+        val filtersRow1 = HBox(12.0).apply {
             alignment = Pos.CENTER_LEFT
-            children.addAll(statusGroup, connGroup, addGroup, applyBtn)
+            children.add(statusGroup)
+        }
+        val filtersRow2 = HBox(20.0).apply {
+            alignment = Pos.CENTER_LEFT
+            children.addAll(connGroup, addGroup, Region().apply { HBox.setHgrow(this, Priority.ALWAYS) }, applyBtn)
         }
 
-        filterBox.children.addAll(titleRow, filtersRow)
+        filterBox.children.addAll(titleRow, filtersRow1, filtersRow2)
         root.top = filterBox
     }
 

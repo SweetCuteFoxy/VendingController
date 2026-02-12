@@ -121,19 +121,7 @@ class VendingMachinesView(private val stage: Stage) {
             items = machines
             columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
 
-            // Set row factory for alternating colors
-            setRowFactory {
-                object : TableRow<VendingMachine>() {
-                    override fun updateItem(item: VendingMachine?, empty: Boolean) {
-                        super.updateItem(item, empty)
-                        if (item == null || empty) {
-                            style = ""
-                        } else {
-                            style = if (index % 2 != 0) "-fx-background-color: #f5f8fa;" else ""
-                        }
-                    }
-                }
-            }
+            // Row styling handled by CSS
         }
 
         val idCol = TableColumn<VendingMachine, Int>("ID").apply {
