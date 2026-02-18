@@ -13,10 +13,14 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import javafx.stage.FileChooser
+import org.slf4j.LoggerFactory
+import java.io.File
 import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 
 class ReportsView {
+    private val logger = LoggerFactory.getLogger(ReportsView::class.java)
     val root: BorderPane = BorderPane()
     private val df = DecimalFormat("#,##0.00")
     private val dtFmt = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
@@ -77,6 +81,10 @@ class ReportsView {
                         Label("Выручка:").apply { styleClass.add("summary-label") },
                         totalRevenueLabel.apply { styleClass.add("summary-value") }
                     )
+                },
+                Button("↻ Обновить").apply {
+                    styleClass.add("primary-button")
+                    setOnAction { loadData() }
                 }
             )
         }
@@ -124,12 +132,19 @@ class ReportsView {
             }
         }
 
+        val exportBtn = Button("📥 CSV").apply {
+            styleClass.add("primary-button")
+            setOnAction { exportSalesCSV() }
+        }
+
         val filterBar = HBox(10.0).apply {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
             alignment = Pos.CENTER_LEFT
             children.addAll(
                 Label("Фильтр:").apply { styleClass.add("filter-group-label") },
-                searchField, methodCombo, filterBtn
+                searchField, methodCombo, filterBtn,
+                Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
+                exportBtn
             )
         }
 
@@ -448,13 +463,47 @@ class ReportsView {
                     }
                     if (priCode != null) orders = orders.filter { it.priority == priCode }
                 }
-                Platform.runLater { ordersData.setAll(orders) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    ordersData.setAll(orders)
+                    if (orders.isEmpty()) ordersTable.placeholder = Label("Нет заявок по выбранным фильтрам")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load service orders", e)
+                Platform.runLater { ordersTable.placeholder = Label("Ошибка загрузки: ${e.message}") }
+            }
         }.start()
     }
 
     private fun updateSalesSummary(sales: List<Sale>) {
         totalSalesLabel.text = sales.size.toString()
         totalRevenueLabel.text = "${df.format(sales.sumOf { it.totalAmount })} ₽"
+    }
+
+    private fun exportSalesCSV() {
+        val data = salesData.toList()
+        if (data.isEmpty()) {
+            Alert(Alert.AlertType.INFORMATION, "Нет данных для экспорта").showAndWait()
+            return
+        }
+        val chooser = FileChooser().apply {
+            title = "Сохранить отчёт о продажах"
+            extensionFilters.add(FileChooser.ExtensionFilter("CSV", "*.csv"))
+            initialFileName = "sales_report.csv"
+        }
+        val file = chooser.showSaveDialog(root.scene?.window) ?: return
+        try {
+            file.bufferedWriter(Charsets.UTF_8).use { w ->
+                w.write("\uFEFF") // BOM for Excel
+                w.write("ID;Автомат;Товар;Кол-во;Цена;Сумма;Оплата;Дата\n")
+                data.forEach { s ->
+                    val pay = if (s.paymentMethod == "cash") "Наличные" else "Карта"
+                    w.write("${s.id};${s.machineName};${s.productName};${s.quantity};${s.unitPrice};${s.totalAmount};$pay;${s.saleTime.format(dtFmt)}\n")
+                }
+            }
+            Alert(Alert.AlertType.INFORMATION, "Экспортировано ${data.size} записей в ${file.name}").showAndWait()
+        } catch (e: Exception) {
+            logger.error("Failed to export sales CSV", e)
+            Alert(Alert.AlertType.ERROR, "Ошибка экспорта: ${e.message}").showAndWait()
+        }
     }
 }

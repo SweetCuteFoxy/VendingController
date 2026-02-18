@@ -11,10 +11,12 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class ServiceOrdersView {
+    private val logger = LoggerFactory.getLogger(ServiceOrdersView::class.java)
     val root: BorderPane = BorderPane()
     private val dFmt = DateTimeFormatter.ofPattern("dd.MM.yyyy")
     private val dtFmt = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
@@ -87,8 +89,14 @@ class ServiceOrdersView {
                             else -> null
                         }
                         val filtered = if (statusCode != null) all.filter { it.status == statusCode } else all
-                        Platform.runLater { ordersData.setAll(filtered) }
-                    } catch (_: Exception) {}
+                        Platform.runLater {
+                            ordersData.setAll(filtered)
+                            if (filtered.isEmpty()) ordersTable.placeholder = Label("Нет заявок")
+                        }
+                    } catch (e: Exception) {
+                        logger.error("Failed to filter orders", e)
+                        Platform.runLater { ordersTable.placeholder = Label("Ошибка: ${e.message}") }
+                    }
                 }.start()
             }
         }
@@ -252,7 +260,9 @@ class ServiceOrdersView {
                     try {
                         notifsData.filter { !it.isRead }.forEach { NotificationDAO.markRead(it.id) }
                         Platform.runLater { loadNotifications() }
-                    } catch (_: Exception) {}
+                    } catch (e: Exception) {
+                        logger.error("Failed to mark notifications as read", e)
+                    }
                 }.start()
             }
         }
@@ -494,8 +504,14 @@ class ServiceOrdersView {
         Thread {
             try {
                 val list = ServiceDAO.findAllOrders()
-                Platform.runLater { ordersData.setAll(list) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    ordersData.setAll(list)
+                    if (list.isEmpty()) ordersTable.placeholder = Label("Нет сервисных заявок")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load service orders", e)
+                Platform.runLater { ordersTable.placeholder = Label("Ошибка загрузки: ${e.message}") }
+            }
         }.start()
     }
 
@@ -504,7 +520,9 @@ class ServiceOrdersView {
             try {
                 val list = NotificationDAO.findAll()
                 Platform.runLater { notifsData.setAll(list) }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                logger.error("Failed to load notifications", e)
+            }
         }.start()
     }
 }

@@ -1428,3 +1428,65 @@
 .tab-pane .tab-content-area {
     -fx-background-color: #13161c;
 }
+
+/* ========== Summary Stats Labels ========== */
+.summary-label {
+    -fx-text-fill: #9ca3b8;
+    -fx-font-size: 12px;
+}
+
+.summary-value {
+    -fx-text-fill: #eceff5;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.page-title {
+    -fx-text-fill: #eceff5;
+    -fx-font-weight: bold;
+}
+
+/* ========== Notification Bell Badge ========== */
+.bell-badge {
+    -fx-background-color: #f1416c;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-padding: 1 4;
+    -fx-background-radius: 8;
+    -fx-min-width: 16;
+    -fx-min-height: 16;
+    -fx-alignment: center;
+    -fx-translate-x: 6;
+    -fx-translate-y: -4;
+}
+
+/* ========== Progress Bar (Stock Fill) ========== */
+.progress-bar {
+    -fx-background-color: #2a2e38;
+    -fx-background-radius: 4;
+}
+
+.progress-bar .track {
+    -fx-background-color: #2a2e38;
+    -fx-background-radius: 4;
+}
+
+.progress-bar .bar {
+    -fx-background-radius: 4;
+    -fx-background-insets: 0;
+}
+
+/* ========== Action Buttons ========== */
+.action-btn-danger {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ef6b6b;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+}
+
+.action-btn-danger:hover {
+    -fx-background-color: #2a1518;
+    -fx-background-radius: 4;
+}

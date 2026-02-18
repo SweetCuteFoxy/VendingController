@@ -19,11 +19,13 @@ import javafx.scene.input.*
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
+import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 
 class DashboardView {
     val root: ScrollPane
+    private val logger = LoggerFactory.getLogger(DashboardView::class.java)
     private val tilesContainer = FlowPane()
     private var stats = DashboardStats()
     private var salesData = listOf<SalesByDay>()
@@ -50,7 +52,21 @@ class DashboardView {
             prefWrapLength = 900.0
         }
 
-        root = ScrollPane(tilesContainer).apply {
+        val refreshBar = HBox(12.0).apply {
+            padding = Insets(16.0, 24.0, 0.0, 24.0)
+            alignment = Pos.CENTER_LEFT
+            children.addAll(
+                Label("Главная панель").apply { font = Font.font(18.0); styleClass.add("page-title") },
+                Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
+                Button("↻ Обновить данные").apply {
+                    styleClass.add("primary-button")
+                    setOnAction { loadData() }
+                }
+            )
+        }
+
+        val wrapper = VBox(refreshBar, tilesContainer)
+        root = ScrollPane(wrapper).apply {
             isFitToWidth = true
             styleClass.add("dashboard-scroll")
         }

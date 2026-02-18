@@ -1,9 +1,11 @@
 package com.vending.ui
 
+import com.vending.dao.NotificationDAO
 import com.vending.service.AuthService
 import com.vending.service.NotificationService
 import com.vending.ui.admin.*
 import javafx.animation.TranslateTransition
+import javafx.application.Platform
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
@@ -12,9 +14,11 @@ import javafx.scene.layout.*
 import javafx.scene.text.Font
 import javafx.stage.Stage
 import javafx.util.Duration
+import org.slf4j.LoggerFactory
 
 class MainView(private val stage: Stage) {
     val root: BorderPane = BorderPane()
+    private val logger = LoggerFactory.getLogger(MainView::class.java)
 
     private val contentArea = StackPane()
     private val sidebarBox = VBox()
@@ -66,13 +70,34 @@ class MainView(private val stage: Stage) {
 
         val spacer = Region().apply { HBox.setHgrow(this, Priority.ALWAYS) }
 
-        // Notification bell
-        val bellBtn = Button("🔔").apply {
-            styleClass.add("icon-button")
-            setOnAction {
-                NotificationService.pushInfo("Тест", "Тестовое уведомление системы")
-            }
+        // Notification bell with unread count
+        val bellLabel = Label("🔔")
+        val badgeLabel = Label("").apply {
+            styleClass.add("bell-badge")
+            isVisible = false
         }
+        val bellStack = StackPane(bellLabel, badgeLabel).apply {
+            StackPane.setAlignment(badgeLabel, Pos.TOP_RIGHT)
+        }
+        val bellBtn = Button().apply {
+            graphic = bellStack
+            styleClass.add("icon-button")
+            setOnAction { navigateTo("service-orders") }
+        }
+        // Load unread count
+        Thread {
+            try {
+                val unread = NotificationDAO.findUnread().size
+                Platform.runLater {
+                    if (unread > 0) {
+                        badgeLabel.text = if (unread > 9) "9+" else unread.toString()
+                        badgeLabel.isVisible = true
+                    }
+                }
+            } catch (e: Exception) {
+                logger.debug("Failed to load unread notifications", e)
+            }
+        }.start()
 
         // User profile
         val user = AuthService.getCurrentUser()

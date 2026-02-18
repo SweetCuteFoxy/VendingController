@@ -13,22 +13,30 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 
 class InventoryView {
     val root: BorderPane = BorderPane()
+    private val logger = LoggerFactory.getLogger(InventoryView::class.java)
     private val df = DecimalFormat("#,##0.00")
     private val dtFmt = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
 
     // Products tab
     private val productsTable = TableView<Product>()
     private val productsData = FXCollections.observableArrayList<Product>()
+    private var allProducts = listOf<Product>()
 
     // Stock tab
     private val stockTable = TableView<MachineProduct>()
     private val stockData = FXCollections.observableArrayList<MachineProduct>()
+
+    // Summary labels
+    private val totalProductsLabel = Label("0")
+    private val totalStockLabel = Label("0")
+    private val lowStockCountLabel = Label("0")
 
     init {
         root.styleClass.add("admin-view")
@@ -47,12 +55,38 @@ class InventoryView {
             Tab("Низкий остаток", buildLowStockTab())
         )
 
-        val toolbar = HBox(10.0).apply {
+        val toolbar = HBox(12.0).apply {
             styleClass.add("admin-toolbar")
             padding = Insets(12.0, 20.0, 12.0, 20.0)
             alignment = Pos.CENTER_LEFT
             children.addAll(
-                Label("Учёт ТМЦ").apply { font = Font.font(18.0); styleClass.add("page-title") }
+                Label("Учёт ТМЦ").apply { font = Font.font(18.0); styleClass.add("page-title") },
+                Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
+                HBox(6.0).apply {
+                    alignment = Pos.CENTER
+                    children.addAll(
+                        Label("Продуктов:").apply { styleClass.add("summary-label") },
+                        totalProductsLabel.apply { styleClass.add("summary-value") }
+                    )
+                },
+                HBox(6.0).apply {
+                    alignment = Pos.CENTER
+                    children.addAll(
+                        Label("В наличии:").apply { styleClass.add("summary-label") },
+                        totalStockLabel.apply { styleClass.add("summary-value") }
+                    )
+                },
+                HBox(6.0).apply {
+                    alignment = Pos.CENTER
+                    children.addAll(
+                        Label("⚠ Мало:").apply { styleClass.add("summary-label"); style = "-fx-text-fill: #f0b75a;" },
+                        lowStockCountLabel.apply { styleClass.add("summary-value"); style = "-fx-text-fill: #f0b75a;" }
+                    )
+                },
+                Button("↻ Обновить").apply {
+                    styleClass.add("primary-button")
+                    setOnAction { loadData() }
+                }
             )
         }
 
@@ -87,16 +121,24 @@ class InventoryView {
             setOnAction {
                 val query = searchField.text.trim().lowercase()
                 val cat = if (categoryCombo.value == "Все") null else categoryCombo.value
-                val filtered = productsData.toList().let { _ ->
-                    ProductDAO.findAll().filter { p ->
-                        val matchQ = query.isEmpty() ||
-                                p.name.lowercase().contains(query) ||
-                                (p.barcode?.lowercase()?.contains(query) == true)
-                        val matchC = cat == null || p.category == cat
-                        matchQ && matchC
-                    }
+                val filtered = allProducts.filter { p ->
+                    val matchQ = query.isEmpty() ||
+                            p.name.lowercase().contains(query) ||
+                            (p.barcode?.lowercase()?.contains(query) == true)
+                    val matchC = cat == null || p.category == cat
+                    matchQ && matchC
                 }
                 productsData.setAll(filtered)
+            }
+        }
+
+        // Reset filter
+        val resetBtn = Button("Сбросить").apply {
+            styleClass.addAll("action-btn")
+            setOnAction {
+                searchField.clear()
+                categoryCombo.value = "Все"
+                productsData.setAll(allProducts)
             }
         }
 
@@ -104,7 +146,7 @@ class InventoryView {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
             alignment = Pos.CENTER_LEFT
             children.addAll(
-                searchField, categoryCombo, filterBtn,
+                searchField, categoryCombo, filterBtn, resetBtn,
                 Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
                 addBtn
             )
@@ -113,7 +155,7 @@ class InventoryView {
         productsTable.items = productsData
         productsTable.columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
         productsTable.styleClass.add("admin-table")
-        productsTable.placeholder = Label("Нет продуктов в каталоге")
+        productsTable.placeholder = Label("Загрузка…")
 
         productsTable.columns.addAll(
             TableColumn<Product, String>("ID").apply {
@@ -187,7 +229,9 @@ class InventoryView {
                 Platform.runLater {
                     machines.forEach { machineCombo.items.add("${it.id}: ${it.name}") }
                 }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                logger.error("Failed to load machines for combo", e)
+            }
         }.start()
 
         val filterBtn = Button("Показать").apply {
@@ -202,8 +246,14 @@ class InventoryView {
                             val mId = selected.substringBefore(":").trim().toIntOrNull() ?: return@Thread
                             MachineProductDAO.findByMachine(mId)
                         }
-                        Platform.runLater { stockData.setAll(data) }
-                    } catch (_: Exception) {}
+                        Platform.runLater {
+                            stockData.setAll(data)
+                            if (data.isEmpty()) stockTable.placeholder = Label("Нет привязанных продуктов")
+                        }
+                    } catch (e: Exception) {
+                        logger.error("Failed to load stock", e)
+                        Platform.runLater { stockTable.placeholder = Label("Ошибка: ${e.message}") }
+                    }
                 }.start()
             }
         }
@@ -220,7 +270,7 @@ class InventoryView {
         stockTable.items = stockData
         stockTable.columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
         stockTable.styleClass.add("admin-table")
-        stockTable.placeholder = Label("Выберите автомат для просмотра остатков")
+        stockTable.placeholder = Label("Загрузка…")
 
         stockTable.columns.addAll(
             TableColumn<MachineProduct, String>("Автомат").apply {
@@ -327,7 +377,7 @@ class InventoryView {
         lowStockTable.items = lowStockData
         lowStockTable.columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
         lowStockTable.styleClass.add("admin-table")
-        lowStockTable.placeholder = Label("Все запасы в норме")
+        lowStockTable.placeholder = Label("Загрузка…")
 
         lowStockTable.columns.addAll(
             TableColumn<MachineProduct, String>("Автомат").apply {
@@ -429,8 +479,9 @@ class InventoryView {
                     } else {
                         ProductDAO.create(product.name, product.price, product.category, product.barcode, product.minStock)
                     }
-                    Platform.runLater { loadProducts() }
+                    Platform.runLater { loadData() }
                 } catch (e: Exception) {
+                    logger.error("Failed to save product", e)
                     Platform.runLater { Alert(Alert.AlertType.ERROR, "Ошибка: ${e.message}").showAndWait() }
                 }
             }.start()
@@ -441,8 +492,13 @@ class InventoryView {
         Alert(Alert.AlertType.CONFIRMATION, "Удалить продукт «${p.name}»?").showAndWait().ifPresent {
             if (it == ButtonType.OK) {
                 Thread {
-                    try { ProductDAO.delete(p.id); Platform.runLater { loadProducts() } }
-                    catch (e: Exception) { Platform.runLater { Alert(Alert.AlertType.ERROR, e.message ?: "Ошибка").showAndWait() } }
+                    try {
+                        ProductDAO.delete(p.id)
+                        Platform.runLater { loadData() }
+                    } catch (e: Exception) {
+                        logger.error("Failed to delete product", e)
+                        Platform.runLater { Alert(Alert.AlertType.ERROR, "Ошибка: ${e.message}").showAndWait() }
+                    }
                 }.start()
             }
         }
@@ -460,8 +516,18 @@ class InventoryView {
         Thread {
             try {
                 val list = ProductDAO.findAll()
-                Platform.runLater { productsData.setAll(list) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    allProducts = list
+                    productsData.setAll(list)
+                    totalProductsLabel.text = list.size.toString()
+                    productsTable.placeholder = Label("Нет продуктов в каталоге. Нажмите «+ Добавить продукт»")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load products", e)
+                Platform.runLater {
+                    productsTable.placeholder = Label("Ошибка загрузки: ${e.message}")
+                }
+            }
         }.start()
     }
 
@@ -469,8 +535,17 @@ class InventoryView {
         Thread {
             try {
                 val list = MachineProductDAO.findAll()
-                Platform.runLater { stockData.setAll(list) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    stockData.setAll(list)
+                    totalStockLabel.text = list.sumOf { it.quantity }.toString()
+                    if (list.isEmpty()) stockTable.placeholder = Label("Нет привязок продуктов к автоматам")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load stock", e)
+                Platform.runLater {
+                    stockTable.placeholder = Label("Ошибка загрузки: ${e.message}")
+                }
+            }
         }.start()
     }
 
@@ -478,8 +553,17 @@ class InventoryView {
         Thread {
             try {
                 val list = MachineProductDAO.findLowStock()
-                Platform.runLater { lowStockData.setAll(list) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    lowStockData.setAll(list)
+                    lowStockCountLabel.text = list.size.toString()
+                    if (list.isEmpty()) lowStockTable.placeholder = Label("✅ Все запасы в норме")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load low stock", e)
+                Platform.runLater {
+                    lowStockTable.placeholder = Label("Ошибка загрузки: ${e.message}")
+                }
+            }
         }.start()
     }
 }
