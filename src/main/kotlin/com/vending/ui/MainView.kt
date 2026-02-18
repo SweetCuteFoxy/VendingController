@@ -25,10 +25,13 @@ class MainView(private val stage: Stage) {
     // Views cache
     private var dashboardView: DashboardView? = null
     private var machineMonitorView: MachineMonitorView? = null
+    private var reportsView: ReportsView? = null
+    private var inventoryView: InventoryView? = null
     private var vendingMachinesView: VendingMachinesView? = null
     private var companiesView: CompaniesView? = null
     private var usersView: UsersView? = null
     private var modemsView: ModemsView? = null
+    private var serviceOrdersView: ServiceOrdersView? = null
 
     // Active menu tracking
     private var activeMenuBtn: Button? = null
@@ -307,10 +310,12 @@ class MainView(private val stage: Stage) {
                 machineMonitorView!!.root to "Монитор ТА"
             }
             "reports" -> {
-                createPlaceholder("Детальные отчёты", "Раздел детальных отчётов") to "Детальные отчёты"
+                if (reportsView == null) reportsView = ReportsView()
+                reportsView!!.root to "Детальные отчёты"
             }
             "inventory" -> {
-                createPlaceholder("Учёт ТМЦ", "Учёт товарно-материальных ценностей") to "Учёт ТМЦ"
+                if (inventoryView == null) inventoryView = InventoryView()
+                inventoryView!!.root to "Учёт ТМЦ"
             }
             "admin-machines" -> {
                 if (vendingMachinesView == null) vendingMachinesView = VendingMachinesView(stage)
@@ -329,7 +334,8 @@ class MainView(private val stage: Stage) {
                 modemsView!!.root to "Администрирование → Модемы"
             }
             "admin-extra" -> {
-                createPlaceholder("Дополнительные", "Дополнительные настройки системы") to "Администрирование → Дополнительные"
+                if (serviceOrdersView == null) serviceOrdersView = ServiceOrdersView()
+                serviceOrdersView!!.root to "Администрирование → Дополнительные"
             }
             else -> {
                 createPlaceholder("Не найдено", "Страница не найдена") to target

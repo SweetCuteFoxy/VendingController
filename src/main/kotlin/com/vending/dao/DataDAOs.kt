@@ -6,6 +6,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 object CompanyDAO {
     fun findAll(): List<Company> = transaction {
@@ -161,6 +162,23 @@ object ServiceDAO {
         Tables.ServiceHistory.selectAll()
             .orderBy(Tables.ServiceHistory.eventDate, SortOrder.DESC)
             .map { it.toHistory() }
+    }
+
+    fun createOrder(
+        orderNumber: String, machineId: Int, type: String, priority: String,
+        scheduledDate: LocalDate, engineerId: Int?, description: String?
+    ): Int = transaction {
+        Tables.ServiceOrders.insert {
+            it[Tables.ServiceOrders.orderNumber] = orderNumber
+            it[Tables.ServiceOrders.machineId] = machineId
+            it[Tables.ServiceOrders.type] = type
+            it[Tables.ServiceOrders.status] = "new"
+            it[Tables.ServiceOrders.priority] = priority
+            it[Tables.ServiceOrders.scheduledDate] = scheduledDate
+            it[Tables.ServiceOrders.engineerId] = engineerId
+            it[Tables.ServiceOrders.description] = description
+            it[Tables.ServiceOrders.createdAt] = LocalDateTime.now()
+        } get Tables.ServiceOrders.id
     }
 
     private fun ResultRow.toOrder(): ServiceOrder {

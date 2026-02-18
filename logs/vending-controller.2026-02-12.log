@@ -1,7 +1,87 @@
-2026-02-17 10:18:49.039 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
-2026-02-17 10:18:49.057 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
-2026-02-17 10:19:04.105 [Thread-3] INFO  com.vending.service.AuthService - User admin@system.ru logged in successfully
-2026-02-17 10:19:35.488 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 10:00:51.823 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:00:51.824 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:01:36.092 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:01:36.093 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:02:09.710 [Thread-4] ERROR com.vending.service.AuthService - Login error
+java.lang.StringIndexOutOfBoundsException: Range [7, 29) out of bounds for length 19
+	at java.base/jdk.internal.util.Preconditions$1.apply(Preconditions.java:55)
+	at java.base/jdk.internal.util.Preconditions$1.apply(Preconditions.java:52)
+	at java.base/jdk.internal.util.Preconditions$4.apply(Preconditions.java:213)
+	at java.base/jdk.internal.util.Preconditions$4.apply(Preconditions.java:210)
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:98)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckFromToIndex(Preconditions.java:112)
+	at java.base/jdk.internal.util.Preconditions.checkFromToIndex(Preconditions.java:349)
+	at java.base/java.lang.String.checkBoundsBeginEnd(String.java:4865)
+	at java.base/java.lang.String.substring(String.java:2834)
+	at org.mindrot.jbcrypt.BCrypt.hashpw(BCrypt.java:674)
+	at org.mindrot.jbcrypt.BCrypt.checkpw(BCrypt.java:764)
+	at com.vending.dao.UserDAO$authenticate$1.invoke(UserDAO.kt:37)
+	at com.vending.dao.UserDAO$authenticate$1.invoke(UserDAO.kt:32)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
+	at com.vending.dao.UserDAO.authenticate(UserDAO.kt:32)
+	at com.vending.service.AuthService.login(AuthService.kt:23)
+	at com.vending.ui.LoginView.lambda$11$lambda$10(LoginView.kt:84)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-02-12 10:02:13.897 [Thread-5] ERROR com.vending.service.AuthService - Login error
+java.lang.StringIndexOutOfBoundsException: Range [7, 29) out of bounds for length 19
+	at java.base/jdk.internal.util.Preconditions$1.apply(Preconditions.java:55)
+	at java.base/jdk.internal.util.Preconditions$1.apply(Preconditions.java:52)
+	at java.base/jdk.internal.util.Preconditions$4.apply(Preconditions.java:213)
+	at java.base/jdk.internal.util.Preconditions$4.apply(Preconditions.java:210)
+	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:98)
+	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckFromToIndex(Preconditions.java:112)
+	at java.base/jdk.internal.util.Preconditions.checkFromToIndex(Preconditions.java:349)
+	at java.base/java.lang.String.checkBoundsBeginEnd(String.java:4865)
+	at java.base/java.lang.String.substring(String.java:2834)
+	at org.mindrot.jbcrypt.BCrypt.hashpw(BCrypt.java:674)
+	at org.mindrot.jbcrypt.BCrypt.checkpw(BCrypt.java:764)
+	at com.vending.dao.UserDAO$authenticate$1.invoke(UserDAO.kt:37)
+	at com.vending.dao.UserDAO$authenticate$1.invoke(UserDAO.kt:32)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
+	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
+	at com.vending.dao.UserDAO.authenticate(UserDAO.kt:32)
+	at com.vending.service.AuthService.login(AuthService.kt:23)
+	at com.vending.ui.LoginView.lambda$11$lambda$10(LoginView.kt:84)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-02-12 10:22:53.942 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:22:53.943 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:35:43.105 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:35:43.107 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:36:01.350 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:36:01.351 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:42:49.642 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:42:49.644 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:42:55.888 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:42:55.889 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:43:01.779 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:43:01.780 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:46:05.359 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:46:05.360 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:48:18.091 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:48:18.092 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:48:34.651 [Thread-3] INFO  com.vending.service.AuthService - User admin@system.ru logged in successfully
+2026-02-12 10:51:14.213 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 10:51:14.214 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 10:52:02.330 [Thread-3] WARN  com.vending.service.AuthService - Failed login attempt for admin@system.ru
+2026-02-12 10:52:07.541 [Thread-4] INFO  com.vending.service.AuthService - User admin@system.ru logged in successfully
+2026-02-12 10:52:38.106 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -58,8 +138,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:19:35.493 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:19:35.580 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 10:52:38.111 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 10:52:38.164 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -116,8 +196,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:19:35.582 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:19:35.681 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 10:52:38.165 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 10:52:38.205 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -174,9 +254,12 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:19:35.683 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 10:52:38.207 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:20:04.945 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:46:47.595 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 11:46:47.596 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 11:46:59.545 [Thread-3] INFO  com.vending.service.AuthService - User admin@system.ru logged in successfully
+2026-02-12 11:47:30.448 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -233,8 +316,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:20:04.945 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:20:05.052 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:47:30.455 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:47:30.553 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -291,8 +374,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:20:05.052 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:20:05.173 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:47:30.556 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:47:30.640 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -349,9 +432,9 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:20:05.175 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:47:30.641 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:20:34.924 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:00.386 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -408,8 +491,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:20:34.924 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:20:35.019 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:00.388 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:48:00.489 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -466,8 +549,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:20:35.026 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:20:35.145 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:00.491 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:48:00.575 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -524,9 +607,9 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:20:35.147 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:00.578 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:21:04.924 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:30.378 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -583,8 +666,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:21:04.924 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:21:05.015 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:30.380 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:48:30.469 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -641,8 +724,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:21:05.019 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:21:05.111 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:30.470 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:48:30.559 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -699,9 +782,10 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:21:05.111 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:30.571 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:21:34.920 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:48:54.151 [JavaFX Application Thread] INFO  com.vending.service.AuthService - User admin@system.ru logged out
+2026-02-12 11:49:00.394 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -758,8 +842,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:21:34.920 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:21:35.009 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:00.395 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:49:00.493 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -816,8 +900,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:21:35.009 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:21:35.097 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:00.494 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:49:00.629 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -874,9 +958,9 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:21:35.097 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:00.631 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:22:04.938 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:30.489 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -933,8 +1017,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:22:04.939 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:22:05.031 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:30.490 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:49:30.581 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -991,8 +1075,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:22:05.032 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:22:05.125 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:30.582 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:49:30.679 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1049,9 +1133,10 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:22:05.126 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:30.681 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:22:34.948 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:49:58.176 [Thread-10] INFO  com.vending.service.AuthService - User engineer1@avtovend.ru logged in successfully
+2026-02-12 11:50:00.377 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1108,8 +1193,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:22:34.949 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:22:35.067 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:00.378 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:00.568 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1166,8 +1251,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:22:35.068 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:22:35.176 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:00.570 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:00.660 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1224,9 +1309,9 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:22:35.178 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:00.662 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:23:04.912 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:28.390 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1283,8 +1368,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:23:04.912 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:05.002 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:28.391 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:28.481 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1341,8 +1426,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:23:05.002 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:05.097 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:28.482 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:28.572 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1399,9 +1484,9 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:23:05.097 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:28.573 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:23:34.930 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:30.376 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1458,8 +1543,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:23:34.930 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:35.021 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:30.377 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:30.463 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1516,8 +1601,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:23:35.021 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:35.116 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:30.465 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:30.564 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1574,9 +1659,9 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 37 common frames omitted
-2026-02-17 10:23:35.116 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:30.565 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:23:49.035 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:34.737 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1661,8 +1746,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 65 common frames omitted
-2026-02-17 10:23:49.036 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:49.122 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:34.738 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:34.824 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1747,8 +1832,8 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 65 common frames omitted
-2026-02-17 10:23:49.123 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:49.208 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:34.826 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
+2026-02-12 11:50:34.909 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
 org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
@@ -1833,441 +1918,10 @@ Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "mach
 	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
 	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
 	... 65 common frames omitted
-2026-02-17 10:23:49.209 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
+2026-02-12 11:50:34.909 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
   Позиция: 49
-2026-02-17 10:23:51.573 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
-org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:94)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:244)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:221)
-	at org.jetbrains.exposed.sql.statements.Statement.execute(Statement.kt:55)
-	at org.jetbrains.exposed.sql.QueriesKt.insert(Queries.kt:144)
-	at com.vending.dao.NotificationDAO.create$lambda$6(DataDAOs.kt:236)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
-	at com.vending.dao.NotificationDAO.create(DataDAOs.kt:235)
-	at com.vending.service.NotificationService.push(NotificationService.kt:56)
-	at com.vending.service.NotificationService.pushInfo(NotificationService.kt:46)
-	at com.vending.service.NotificationService.pushInfo$default(NotificationService.kt:45)
-	at com.vending.ui.MainView.buildTopBar$lambda$6$lambda$5(MainView.kt:70)
-	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
-	at javafx.event.Event.fireEvent(Event.java:198)
-	at javafx.scene.Node.fireEvent(Node.java:8875)
-	at javafx.scene.control.Button.fire(Button.java:203)
-	at com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
-	at com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
-	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
-	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
-	at javafx.event.Event.fireEvent(Event.java:198)
-	at javafx.scene.Scene$MouseHandler.process(Scene.java:3984)
-	at javafx.scene.Scene.processMouseEvent(Scene.java:1890)
-	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2708)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
-	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
-	at com.sun.glass.ui.View.handleMouseEvent(View.java:551)
-	at com.sun.glass.ui.View.notifyMouse(View.java:937)
-	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
-	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2712)
-	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2400)
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:367)
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
-	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
-	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152)
-	at org.jetbrains.exposed.sql.statements.jdbc.JdbcPreparedStatementImpl.executeUpdate(JdbcPreparedStatementImpl.kt:55)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.execInsertFunction(InsertStatement.kt:158)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:168)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
-	... 65 common frames omitted
-2026-02-17 10:23:51.574 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:51.661 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
-org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:94)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:244)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:221)
-	at org.jetbrains.exposed.sql.statements.Statement.execute(Statement.kt:55)
-	at org.jetbrains.exposed.sql.QueriesKt.insert(Queries.kt:144)
-	at com.vending.dao.NotificationDAO.create$lambda$6(DataDAOs.kt:236)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
-	at com.vending.dao.NotificationDAO.create(DataDAOs.kt:235)
-	at com.vending.service.NotificationService.push(NotificationService.kt:56)
-	at com.vending.service.NotificationService.pushInfo(NotificationService.kt:46)
-	at com.vending.service.NotificationService.pushInfo$default(NotificationService.kt:45)
-	at com.vending.ui.MainView.buildTopBar$lambda$6$lambda$5(MainView.kt:70)
-	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
-	at javafx.event.Event.fireEvent(Event.java:198)
-	at javafx.scene.Node.fireEvent(Node.java:8875)
-	at javafx.scene.control.Button.fire(Button.java:203)
-	at com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
-	at com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
-	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
-	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
-	at javafx.event.Event.fireEvent(Event.java:198)
-	at javafx.scene.Scene$MouseHandler.process(Scene.java:3984)
-	at javafx.scene.Scene.processMouseEvent(Scene.java:1890)
-	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2708)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
-	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
-	at com.sun.glass.ui.View.handleMouseEvent(View.java:551)
-	at com.sun.glass.ui.View.notifyMouse(View.java:937)
-	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
-	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2712)
-	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2400)
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:367)
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
-	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
-	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152)
-	at org.jetbrains.exposed.sql.statements.jdbc.JdbcPreparedStatementImpl.executeUpdate(JdbcPreparedStatementImpl.kt:55)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.execInsertFunction(InsertStatement.kt:158)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:168)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
-	... 65 common frames omitted
-2026-02-17 10:23:51.662 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:23:51.756 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
-org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:94)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:244)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:221)
-	at org.jetbrains.exposed.sql.statements.Statement.execute(Statement.kt:55)
-	at org.jetbrains.exposed.sql.QueriesKt.insert(Queries.kt:144)
-	at com.vending.dao.NotificationDAO.create$lambda$6(DataDAOs.kt:236)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
-	at com.vending.dao.NotificationDAO.create(DataDAOs.kt:235)
-	at com.vending.service.NotificationService.push(NotificationService.kt:56)
-	at com.vending.service.NotificationService.pushInfo(NotificationService.kt:46)
-	at com.vending.service.NotificationService.pushInfo$default(NotificationService.kt:45)
-	at com.vending.ui.MainView.buildTopBar$lambda$6$lambda$5(MainView.kt:70)
-	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
-	at javafx.event.Event.fireEvent(Event.java:198)
-	at javafx.scene.Node.fireEvent(Node.java:8875)
-	at javafx.scene.control.Button.fire(Button.java:203)
-	at com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
-	at com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
-	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
-	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
-	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
-	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
-	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
-	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
-	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
-	at javafx.event.Event.fireEvent(Event.java:198)
-	at javafx.scene.Scene$MouseHandler.process(Scene.java:3984)
-	at javafx.scene.Scene.processMouseEvent(Scene.java:1890)
-	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2708)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:411)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:301)
-	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:450)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
-	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:449)
-	at com.sun.glass.ui.View.handleMouseEvent(View.java:551)
-	at com.sun.glass.ui.View.notifyMouse(View.java:937)
-	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
-	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2712)
-	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2400)
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:367)
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
-	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
-	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152)
-	at org.jetbrains.exposed.sql.statements.jdbc.JdbcPreparedStatementImpl.executeUpdate(JdbcPreparedStatementImpl.kt:55)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.execInsertFunction(InsertStatement.kt:158)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:168)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
-	... 65 common frames omitted
-2026-02-17 10:23:51.758 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-2026-02-17 10:24:04.923 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #0 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
-org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:94)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:244)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:221)
-	at org.jetbrains.exposed.sql.statements.Statement.execute(Statement.kt:55)
-	at org.jetbrains.exposed.sql.QueriesKt.insert(Queries.kt:144)
-	at com.vending.dao.NotificationDAO.create$lambda$6(DataDAOs.kt:236)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
-	at com.vending.dao.NotificationDAO.create(DataDAOs.kt:235)
-	at com.vending.service.NotificationService.push(NotificationService.kt:56)
-	at com.vending.service.NotificationService.startSimulation$lambda$15(NotificationService.kt:191)
-	at com.sun.scenario.animation.shared.TimelineClipCore.visitKeyFrame(TimelineClipCore.java:239)
-	at com.sun.scenario.animation.shared.TimelineClipCore.playTo(TimelineClipCore.java:180)
-	at javafx.animation.Timeline.doPlayTo(Timeline.java:172)
-	at javafx.animation.AnimationAccessorImpl.playTo(AnimationAccessorImpl.java:39)
-	at com.sun.scenario.animation.shared.InfiniteClipEnvelope.timePulse(InfiniteClipEnvelope.java:104)
-	at javafx.animation.Animation.doTimePulse(Animation.java:1189)
-	at javafx.animation.Animation$1.lambda$timePulse$0(Animation.java:207)
-	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-	at javafx.animation.Animation$1.timePulse(Animation.java:206)
-	at com.sun.scenario.animation.AbstractPrimaryTimer.timePulseImpl(AbstractPrimaryTimer.java:343)
-	at com.sun.scenario.animation.AbstractPrimaryTimer$MainLoop.run(AbstractPrimaryTimer.java:266)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulse(QuantumToolkit.java:588)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulse(QuantumToolkit.java:572)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulseFromQueue(QuantumToolkit.java:565)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.lambda$runToolkit$11(QuantumToolkit.java:352)
-	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
-	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2712)
-	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2400)
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:367)
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
-	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
-	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152)
-	at org.jetbrains.exposed.sql.statements.jdbc.JdbcPreparedStatementImpl.executeUpdate(JdbcPreparedStatementImpl.kt:55)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.execInsertFunction(InsertStatement.kt:158)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:168)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
-	... 37 common frames omitted
-2026-02-17 10:24:04.924 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:24:05.015 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #1 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
-org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:94)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:244)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:221)
-	at org.jetbrains.exposed.sql.statements.Statement.execute(Statement.kt:55)
-	at org.jetbrains.exposed.sql.QueriesKt.insert(Queries.kt:144)
-	at com.vending.dao.NotificationDAO.create$lambda$6(DataDAOs.kt:236)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
-	at com.vending.dao.NotificationDAO.create(DataDAOs.kt:235)
-	at com.vending.service.NotificationService.push(NotificationService.kt:56)
-	at com.vending.service.NotificationService.startSimulation$lambda$15(NotificationService.kt:191)
-	at com.sun.scenario.animation.shared.TimelineClipCore.visitKeyFrame(TimelineClipCore.java:239)
-	at com.sun.scenario.animation.shared.TimelineClipCore.playTo(TimelineClipCore.java:180)
-	at javafx.animation.Timeline.doPlayTo(Timeline.java:172)
-	at javafx.animation.AnimationAccessorImpl.playTo(AnimationAccessorImpl.java:39)
-	at com.sun.scenario.animation.shared.InfiniteClipEnvelope.timePulse(InfiniteClipEnvelope.java:104)
-	at javafx.animation.Animation.doTimePulse(Animation.java:1189)
-	at javafx.animation.Animation$1.lambda$timePulse$0(Animation.java:207)
-	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-	at javafx.animation.Animation$1.timePulse(Animation.java:206)
-	at com.sun.scenario.animation.AbstractPrimaryTimer.timePulseImpl(AbstractPrimaryTimer.java:343)
-	at com.sun.scenario.animation.AbstractPrimaryTimer$MainLoop.run(AbstractPrimaryTimer.java:266)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulse(QuantumToolkit.java:588)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulse(QuantumToolkit.java:572)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulseFromQueue(QuantumToolkit.java:565)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.lambda$runToolkit$11(QuantumToolkit.java:352)
-	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
-	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2712)
-	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2400)
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:367)
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
-	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
-	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152)
-	at org.jetbrains.exposed.sql.statements.jdbc.JdbcPreparedStatementImpl.executeUpdate(JdbcPreparedStatementImpl.kt:55)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.execInsertFunction(InsertStatement.kt:158)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:168)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
-	... 37 common frames omitted
-2026-02-17 10:24:05.049 [JavaFX Application Thread] WARN  Exposed - Wait 0 milliseconds before retrying
-2026-02-17 10:24:05.142 [JavaFX Application Thread] WARN  Exposed - Transaction attempt #2 failed: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49. Statement(s): INSERT INTO notifications (created_at, is_read, machine_id, message, title, "type") VALUES (?, ?, ?, ?, ?, ?)
-org.jetbrains.exposed.exceptions.ExposedSQLException: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:94)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:244)
-	at org.jetbrains.exposed.sql.Transaction.exec(Transaction.kt:221)
-	at org.jetbrains.exposed.sql.statements.Statement.execute(Statement.kt:55)
-	at org.jetbrains.exposed.sql.QueriesKt.insert(Queries.kt:144)
-	at com.vending.dao.NotificationDAO.create$lambda$6(DataDAOs.kt:236)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:306)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.access$inTopLevelTransaction$run(ThreadLocalTransactionManager.kt:1)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$inTopLevelTransaction$1.invoke(ThreadLocalTransactionManager.kt:353)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.inTopLevelTransaction(ThreadLocalTransactionManager.kt:352)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt$transaction$1.invoke(ThreadLocalTransactionManager.kt:261)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.keepAndRestoreTransactionRefAfterRun(ThreadLocalTransactionManager.kt:361)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:231)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction(ThreadLocalTransactionManager.kt:209)
-	at org.jetbrains.exposed.sql.transactions.ThreadLocalTransactionManagerKt.transaction$default(ThreadLocalTransactionManager.kt:208)
-	at com.vending.dao.NotificationDAO.create(DataDAOs.kt:235)
-	at com.vending.service.NotificationService.push(NotificationService.kt:56)
-	at com.vending.service.NotificationService.startSimulation$lambda$15(NotificationService.kt:191)
-	at com.sun.scenario.animation.shared.TimelineClipCore.visitKeyFrame(TimelineClipCore.java:239)
-	at com.sun.scenario.animation.shared.TimelineClipCore.playTo(TimelineClipCore.java:180)
-	at javafx.animation.Timeline.doPlayTo(Timeline.java:172)
-	at javafx.animation.AnimationAccessorImpl.playTo(AnimationAccessorImpl.java:39)
-	at com.sun.scenario.animation.shared.InfiniteClipEnvelope.timePulse(InfiniteClipEnvelope.java:104)
-	at javafx.animation.Animation.doTimePulse(Animation.java:1189)
-	at javafx.animation.Animation$1.lambda$timePulse$0(Animation.java:207)
-	at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-	at javafx.animation.Animation$1.timePulse(Animation.java:206)
-	at com.sun.scenario.animation.AbstractPrimaryTimer.timePulseImpl(AbstractPrimaryTimer.java:343)
-	at com.sun.scenario.animation.AbstractPrimaryTimer$MainLoop.run(AbstractPrimaryTimer.java:266)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulse(QuantumToolkit.java:588)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulse(QuantumToolkit.java:572)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.pulseFromQueue(QuantumToolkit.java:565)
-	at com.sun.javafx.tk.quantum.QuantumToolkit.lambda$runToolkit$11(QuantumToolkit.java:352)
-	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
-	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
-	at com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:185)
-	at java.base/java.lang.Thread.run(Thread.java:1583)
-Caused by: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2712)
-	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2400)
-	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:367)
-	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
-	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
-	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:190)
-	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:152)
-	at org.jetbrains.exposed.sql.statements.jdbc.JdbcPreparedStatementImpl.executeUpdate(JdbcPreparedStatementImpl.kt:55)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.execInsertFunction(InsertStatement.kt:158)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:168)
-	at org.jetbrains.exposed.sql.statements.InsertStatement.executeInternal(InsertStatement.kt:18)
-	at org.jetbrains.exposed.sql.statements.Statement.executeIn$exposed_core(Statement.kt:92)
-	... 37 common frames omitted
-2026-02-17 10:24:05.144 [JavaFX Application Thread] WARN  com.vending.service.NotificationService - Could not save notification to DB: org.postgresql.util.PSQLException: ОШИБКА: столбец "machine_id" в таблице "notifications" не существует
-  Позиция: 49
-2026-02-17 10:24:10.512 [JavaFX Application Thread] INFO  com.vending.service.AuthService - User admin@system.ru logged out
-2026-02-17 10:24:26.817 [Thread-10] INFO  com.vending.service.AuthService - User admin@system.ru logged in successfully
+2026-02-12 13:00:38.346 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 13:00:38.348 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 13:00:41.660 [JavaFX Application Thread] INFO  com.vending.database.DatabaseConfig - Database connected successfully
+2026-02-12 13:00:41.661 [JavaFX Application Thread] INFO  com.vending.ui.VendingApp - Database initialized
+2026-02-12 13:01:53.103 [Thread-3] INFO  com.vending.service.AuthService - User admin@system.ru logged in successfully

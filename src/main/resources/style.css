@@ -1369,3 +1369,62 @@
 .grid-pane .label {
     -fx-text-fill: #9ca3b8;
 }
+
+/* ========== Status Badges ========== */
+.status-badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-alignment: center;
+}
+
+.status-new {
+    -fx-background-color: #1a2640;
+    -fx-text-fill: #5b8def;
+    -fx-border-color: #2a3a60;
+    -fx-border-width: 1;
+}
+
+.status-assigned {
+    -fx-background-color: #2a2418;
+    -fx-text-fill: #f0b75a;
+    -fx-border-color: #443a22;
+    -fx-border-width: 1;
+}
+
+.status-progress {
+    -fx-background-color: #162038;
+    -fx-text-fill: #7fb3ff;
+    -fx-border-color: #243a58;
+    -fx-border-width: 1;
+}
+
+.status-completed {
+    -fx-background-color: #162420;
+    -fx-text-fill: #50cd89;
+    -fx-border-color: #244434;
+    -fx-border-width: 1;
+}
+
+.status-cancelled {
+    -fx-background-color: #241618;
+    -fx-text-fill: #ef6b6b;
+    -fx-border-color: #442428;
+    -fx-border-width: 1;
+}
+
+/* ========== Tab Pane Enhancements ========== */
+.tab-pane .tab:hover .tab-label {
+    -fx-text-fill: #c8cdd8;
+}
+
+.tab-pane .tab:selected {
+    -fx-border-color: transparent transparent #5b8def transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.tab-pane .tab-content-area {
+    -fx-background-color: #13161c;
+}
