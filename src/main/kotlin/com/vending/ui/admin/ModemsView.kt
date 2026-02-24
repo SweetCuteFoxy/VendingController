@@ -10,9 +10,11 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import org.slf4j.LoggerFactory
 
 class ModemsView {
     val root: BorderPane = BorderPane()
+    private val logger = LoggerFactory.getLogger(ModemsView::class.java)
     private val table = TableView<Modem>()
     private val data = FXCollections.observableArrayList<Modem>()
 
@@ -26,7 +28,7 @@ class ModemsView {
     private fun buildToolbar() {
         val toolbar = HBox(10.0).apply {
             styleClass.add("admin-toolbar")
-            padding = Insets(12.0, 16.0, 12.0, 16.0)
+            padding = Insets(12.0, 20.0, 12.0, 20.0)
             alignment = Pos.CENTER_LEFT
         }
         val title = Label("Модемы").apply { font = Font.font(18.0); styleClass.add("page-title") }
@@ -81,8 +83,14 @@ class ModemsView {
                         private val delBtn = Button("🗑").apply { styleClass.add("action-btn-danger") }
                         private val box = HBox(4.0, editBtn, delBtn)
                         init {
-                            editBtn.setOnAction { showDialog(table.items[index]) }
-                            delBtn.setOnAction { confirmDelete(table.items[index]) }
+                            editBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until table.items.size) showDialog(table.items[idx])
+                            }
+                            delBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until table.items.size) confirmDelete(table.items[idx])
+                            }
                         }
                         override fun updateItem(item: Void?, empty: Boolean) {
                             super.updateItem(item, empty); graphic = if (empty) null else box
@@ -95,11 +103,18 @@ class ModemsView {
     }
 
     private fun loadData() {
+        table.placeholder = Label("Загрузка…")
         Thread {
             try {
                 val list = ModemDAO.findAll()
-                Platform.runLater { data.setAll(list) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    data.setAll(list)
+                    table.placeholder = Label("Нет модемов")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load modems", e)
+                Platform.runLater { table.placeholder = Label("Ошибка загрузки: ${e.message}") }
+            }
         }.start()
     }
 

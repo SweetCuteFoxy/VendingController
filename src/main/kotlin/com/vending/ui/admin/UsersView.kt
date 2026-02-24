@@ -12,9 +12,11 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import org.slf4j.LoggerFactory
 
 class UsersView {
     val root: BorderPane = BorderPane()
+    private val logger = LoggerFactory.getLogger(UsersView::class.java)
     private val table = TableView<User>()
     private val data = FXCollections.observableArrayList<User>()
     private var roles = listOf<Role>()
@@ -29,7 +31,7 @@ class UsersView {
     private fun buildToolbar() {
         val toolbar = HBox(10.0).apply {
             styleClass.add("admin-toolbar")
-            padding = Insets(12.0, 16.0, 12.0, 16.0)
+            padding = Insets(12.0, 20.0, 12.0, 20.0)
             alignment = Pos.CENTER_LEFT
         }
         val title = Label("Пользователи").apply { font = Font.font(18.0); styleClass.add("page-title") }
@@ -93,8 +95,14 @@ class UsersView {
                         private val delBtn = Button("🗑").apply { styleClass.add("action-btn-danger") }
                         private val box = HBox(4.0, editBtn, delBtn)
                         init {
-                            editBtn.setOnAction { showDialog(table.items[index]) }
-                            delBtn.setOnAction { confirmDelete(table.items[index]) }
+                            editBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until table.items.size) showDialog(table.items[idx])
+                            }
+                            delBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until table.items.size) confirmDelete(table.items[idx])
+                            }
                         }
                         override fun updateItem(item: Void?, empty: Boolean) {
                             super.updateItem(item, empty); graphic = if (empty) null else box
@@ -107,12 +115,19 @@ class UsersView {
     }
 
     private fun loadData() {
+        table.placeholder = Label("Загрузка…")
         Thread {
             try {
                 val list = UserDAO.findAll()
                 roles = UserDAO.getAllRoles()
-                Platform.runLater { data.setAll(list) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    data.setAll(list)
+                    table.placeholder = Label("Нет пользователей")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load users", e)
+                Platform.runLater { table.placeholder = Label("Ошибка загрузки: ${e.message}") }
+            }
         }.start()
     }
 
@@ -127,7 +142,10 @@ class UsersView {
         val passF = PasswordField().apply { promptText = if (u == null) "Пароль" else "Новый пароль (оставьте пустым)" }
         val roleBox = ComboBox(FXCollections.observableArrayList(roles.map { "${it.id}: ${it.name}" }))
         if (u != null) roles.find { it.id == u.roleId }?.let { roleBox.value = "${it.id}: ${it.name}" }
-        val companies = try { CompanyDAO.findAll() } catch (_: Exception) { emptyList() }
+        val companies = try { CompanyDAO.findAll() } catch (e: Exception) {
+            logger.warn("Failed to load companies for dialog", e)
+            emptyList()
+        }
         val companyItems = mutableListOf("— Нет —")
         companyItems.addAll(companies.map { "${it.id}: ${it.name}" })
         val companyBox = ComboBox(FXCollections.observableArrayList(companyItems))

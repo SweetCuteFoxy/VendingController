@@ -10,9 +10,11 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import org.slf4j.LoggerFactory
 
 class CompaniesView {
     val root: BorderPane = BorderPane()
+    private val logger = LoggerFactory.getLogger(CompaniesView::class.java)
     private val table = TableView<Company>()
     private val data = FXCollections.observableArrayList<Company>()
 
@@ -26,7 +28,7 @@ class CompaniesView {
     private fun buildToolbar() {
         val toolbar = HBox(10.0).apply {
             styleClass.add("admin-toolbar")
-            padding = Insets(12.0, 16.0, 12.0, 16.0)
+            padding = Insets(12.0, 20.0, 12.0, 20.0)
             alignment = Pos.CENTER_LEFT
         }
         val title = Label("Компании").apply { font = Font.font(18.0); styleClass.add("page-title") }
@@ -68,8 +70,14 @@ class CompaniesView {
                         private val delBtn = Button("🗑").apply { styleClass.add("action-btn-danger") }
                         private val box = HBox(4.0, editBtn, delBtn)
                         init {
-                            editBtn.setOnAction { showEditDialog(table.items[index]) }
-                            delBtn.setOnAction { confirmDelete(table.items[index]) }
+                            editBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until table.items.size) showEditDialog(table.items[idx])
+                            }
+                            delBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until table.items.size) confirmDelete(table.items[idx])
+                            }
                         }
                         override fun updateItem(item: Void?, empty: Boolean) {
                             super.updateItem(item, empty)
@@ -83,11 +91,18 @@ class CompaniesView {
     }
 
     private fun loadData() {
+        table.placeholder = Label("Загрузка…")
         Thread {
             try {
                 val list = CompanyDAO.findAll()
-                Platform.runLater { data.setAll(list) }
-            } catch (_: Exception) {}
+                Platform.runLater {
+                    data.setAll(list)
+                    table.placeholder = Label("Нет компаний")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to load companies", e)
+                Platform.runLater { table.placeholder = Label("Ошибка загрузки: ${e.message}") }
+            }
         }.start()
     }
 

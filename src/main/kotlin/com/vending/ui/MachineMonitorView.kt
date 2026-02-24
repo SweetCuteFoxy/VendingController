@@ -13,7 +13,6 @@ import javafx.scene.text.Font
 import java.text.DecimalFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 class MachineMonitorView {
     val root: BorderPane = BorderPane()

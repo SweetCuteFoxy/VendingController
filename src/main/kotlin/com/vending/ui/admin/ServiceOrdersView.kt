@@ -359,8 +359,12 @@ class ServiceOrdersView {
             headerText = "Создание заявки"
         }
 
-        val machines = try { VendingMachineDAO.findAll() } catch (_: Exception) { emptyList() }
-        val users = try { UserDAO.findAll() } catch (_: Exception) { emptyList() }
+        val machines = try { VendingMachineDAO.findAll() } catch (e: Exception) {
+            logger.warn("Failed to load machines for dialog", e); emptyList()
+        }
+        val users = try { UserDAO.findAll() } catch (e: Exception) {
+            logger.warn("Failed to load users for dialog", e); emptyList()
+        }
 
         val machineCombo = ComboBox<String>().apply {
             machines.forEach { items.add("${it.id}: ${it.name}") }

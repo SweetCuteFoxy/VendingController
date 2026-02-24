@@ -360,7 +360,7 @@
 }
 
 .tile-description {
-    -fx-text-fill: #636980;
+    -fx-text-fill: #7a8299;
     -fx-font-size: 12px;
 }
 
@@ -372,7 +372,7 @@
 
 .stat-label, .summary-label {
     -fx-font-size: 12px;
-    -fx-text-fill: #7a8299;
+    -fx-text-fill: #9ca3b8;
 }
 
 /* ========== Charts ========== */
@@ -688,20 +688,16 @@
 }
 
 .action-btn-danger {
-    -fx-background-color: #2a1a1e;
+    -fx-background-color: transparent;
     -fx-text-fill: #ef6b6b;
-    -fx-font-size: 13px;
-    -fx-background-radius: 6;
-    -fx-padding: 5 10;
+    -fx-font-size: 14px;
+    -fx-padding: 4 8;
     -fx-cursor: hand;
-    -fx-border-color: #442a2e;
-    -fx-border-radius: 6;
 }
 
 .action-btn-danger:hover {
-    -fx-background-color: #ef6b6b;
-    -fx-text-fill: white;
-    -fx-border-color: #ef6b6b;
+    -fx-background-color: #2a1518;
+    -fx-background-radius: 6;
 }
 
 .action-btn-warn {
@@ -846,9 +842,19 @@
 }
 
 .dialog-pane .button-bar .button:hover {
-    -fx-background-color: #5b8def;
+    -fx-background-color: #363d4e;
+    -fx-text-fill: #eceff5;
+}
+
+.dialog-pane .button-bar .button:default {
+    -fx-background-color: linear-gradient(to right, #4a7de0, #5b8def);
     -fx-text-fill: white;
-    -fx-border-color: #5b8def;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+}
+
+.dialog-pane .button-bar .button:default:hover {
+    -fx-background-color: linear-gradient(to right, #5a8ef0, #6b9dff);
 }
 
 .dialog-pane .label {
@@ -1302,6 +1308,7 @@
 .progress-bar .bar {
     -fx-background-radius: 4;
     -fx-background-color: #5b8def;
+    -fx-background-insets: 0;
 }
 
 /* ========== Separator ========== */
@@ -1365,11 +1372,6 @@
     -fx-padding: 0 10 0 0;
 }
 
-/* ========== GridPane Labels (Forms) ========== */
-.grid-pane .label {
-    -fx-text-fill: #9ca3b8;
-}
-
 /* ========== Status Badges ========== */
 .status-badge {
     -fx-font-size: 11px;
@@ -1429,23 +1431,6 @@
     -fx-background-color: #13161c;
 }
 
-/* ========== Summary Stats Labels ========== */
-.summary-label {
-    -fx-text-fill: #9ca3b8;
-    -fx-font-size: 12px;
-}
-
-.summary-value {
-    -fx-text-fill: #eceff5;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-.page-title {
-    -fx-text-fill: #eceff5;
-    -fx-font-weight: bold;
-}
-
 /* ========== Notification Bell Badge ========== */
 .bell-badge {
     -fx-background-color: #f1416c;
@@ -1461,32 +1446,131 @@
     -fx-translate-y: -4;
 }
 
-/* ========== Progress Bar (Stock Fill) ========== */
-.progress-bar {
-    -fx-background-color: #2a2e38;
-    -fx-background-radius: 4;
-}
-
-.progress-bar .track {
-    -fx-background-color: #2a2e38;
-    -fx-background-radius: 4;
-}
-
-.progress-bar .bar {
-    -fx-background-radius: 4;
-    -fx-background-insets: 0;
-}
-
-/* ========== Action Buttons ========== */
-.action-btn-danger {
-    -fx-background-color: transparent;
-    -fx-text-fill: #ef6b6b;
-    -fx-padding: 4 8;
+/* ========== Combo Box Dark Theme ========== */
+.combo-box {
+    -fx-background-color: #1a1e28;
+    -fx-border-color: #2a2e3a;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
     -fx-cursor: hand;
-    -fx-font-size: 14px;
 }
 
-.action-btn-danger:hover {
-    -fx-background-color: #2a1518;
-    -fx-background-radius: 4;
+.combo-box .list-cell {
+    -fx-text-fill: #c8cdd8;
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow-button .arrow {
+    -fx-background-color: #636980;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #1a1e28;
+    -fx-border-color: #2a2e3a;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: #c8cdd8;
+    -fx-background-color: #1a1e28;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #252a36;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: #253050;
+    -fx-text-fill: #5b8def;
+}
+
+/* ========== Date Picker Dark Theme ========== */
+.date-picker {
+    -fx-background-color: #1a1e28;
+    -fx-border-color: #2a2e3a;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.date-picker .text-field {
+    -fx-background-color: #1a1e28;
+    -fx-text-fill: #c8cdd8;
+    -fx-prompt-text-fill: #4a4e60;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #636980;
+}
+
+.date-picker-popup {
+    -fx-background-color: #1a1e28;
+    -fx-border-color: #2a2e3a;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #151920;
+}
+
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: #eceff5;
+}
+
+.date-picker-popup .day-name-cell {
+    -fx-text-fill: #9ca3b8;
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #c8cdd8;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #252a36;
+}
+
+.date-picker-popup .selected {
+    -fx-background-color: #5b8def;
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .today {
+    -fx-border-color: #5b8def;
+}
+
+/* ========== Text Field in Dialogs ========== */
+.dialog-pane .text-field, .dialog-pane .password-field {
+    -fx-background-color: #0f1218;
+    -fx-text-fill: #e0e4ec;
+    -fx-prompt-text-fill: #4a4e60;
+    -fx-border-color: #2a2e3a;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+}
+
+.dialog-pane .text-field:focused, .dialog-pane .password-field:focused {
+    -fx-border-color: #5b8def;
+    -fx-effect: dropshadow(gaussian, rgba(91,141,239,0.15), 8, 0, 0, 0);
+}
+
+/* ========== Grid Pane Form Labels ========== */
+.grid-pane .label {
+    -fx-text-fill: #b0b5c4;
+    -fx-font-size: 13px;
+}
+
+/* ========== Scroll Pane in Dialogs ========== */
+.dialog-pane .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane .scroll-pane .viewport {
+    -fx-background-color: transparent;
 }

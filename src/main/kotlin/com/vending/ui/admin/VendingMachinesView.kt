@@ -11,7 +11,6 @@ import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.*
-import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.layout.*
 import javafx.scene.text.Font
 import javafx.stage.Stage
@@ -45,7 +44,7 @@ class VendingMachinesView(private val stage: Stage) {
     private fun buildToolbar() {
         val toolbar = HBox(10.0).apply {
             styleClass.add("admin-toolbar")
-            padding = Insets(12.0, 16.0, 12.0, 16.0)
+            padding = Insets(12.0, 20.0, 12.0, 20.0)
             alignment = Pos.CENTER_LEFT
         }
 
@@ -188,16 +187,16 @@ class VendingMachinesView(private val stage: Stage) {
 
                     init {
                         editBtn.setOnAction {
-                            val vm = tableView.items[index]
-                            showEditDialog(vm)
+                            val idx = index
+                            if (idx in 0 until tableView.items.size) showEditDialog(tableView.items[idx])
                         }
                         deleteBtn.setOnAction {
-                            val vm = tableView.items[index]
-                            confirmDelete(vm)
+                            val idx = index
+                            if (idx in 0 until tableView.items.size) confirmDelete(tableView.items[idx])
                         }
                         unbindBtn.setOnAction {
-                            val vm = tableView.items[index]
-                            confirmUnbindModem(vm)
+                            val idx = index
+                            if (idx in 0 until tableView.items.size) confirmUnbindModem(tableView.items[idx])
                         }
                     }
 

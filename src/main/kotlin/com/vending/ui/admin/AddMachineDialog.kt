@@ -12,6 +12,7 @@ import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.stage.Modality
 import javafx.stage.Stage
+import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -20,6 +21,7 @@ class AddMachineDialog(
     private val editMachine: VendingMachine?,
     private val onSaved: () -> Unit
 ) {
+    private val logger = LoggerFactory.getLogger(AddMachineDialog::class.java)
     private val dialog = Dialog<VendingMachine>()
     private val isEdit = editMachine != null
 
@@ -96,7 +98,9 @@ class AddMachineDialog(
         try {
             companies = CompanyDAO.findAll()
             modems = ModemDAO.findAll()
-        } catch (_: Exception) {}
+        } catch (e: Exception) {
+            logger.error("Failed to load reference data for AddMachineDialog", e)
+        }
         companyBox.items = FXCollections.observableArrayList(companies.map { "${it.id}: ${it.name}" })
         val modemItems = mutableListOf("— Нет —")
         modemItems.addAll(modems.map { "${it.id}: ${it.imei}" })
@@ -215,14 +219,18 @@ class AddMachineDialog(
                 if (VendingMachineDAO.serialNumberExists(serialField.text, excludeId)) {
                     errors.add("ТА с таким серийным номером уже существует")
                 }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                logger.warn("Serial number check failed", e)
+            }
         }
         if (inventoryField.text.isNotBlank()) {
             try {
                 if (VendingMachineDAO.inventoryNumberExists(inventoryField.text, excludeId)) {
                     errors.add("ТА с таким инвентарным номером уже существует")
                 }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                logger.warn("Inventory number check failed", e)
+            }
         }
 
         // Date validations

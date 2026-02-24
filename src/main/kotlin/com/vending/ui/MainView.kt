@@ -4,7 +4,6 @@ import com.vending.dao.NotificationDAO
 import com.vending.service.AuthService
 import com.vending.service.NotificationService
 import com.vending.ui.admin.*
-import javafx.animation.TranslateTransition
 import javafx.application.Platform
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -13,7 +12,6 @@ import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
 import javafx.stage.Stage
-import javafx.util.Duration
 import org.slf4j.LoggerFactory
 
 class MainView(private val stage: Stage) {
@@ -277,7 +275,6 @@ class MainView(private val stage: Stage) {
 
     private fun toggleSidebar() {
         isSidebarCollapsed = !isSidebarCollapsed
-        val tt = TranslateTransition(Duration.millis(200.0), sidebarBox)
         if (isSidebarCollapsed) {
             sidebarBox.prefWidth = SIDEBAR_COLLAPSED_WIDTH
             sidebarBox.minWidth = SIDEBAR_COLLAPSED_WIDTH
@@ -358,9 +355,9 @@ class MainView(private val stage: Stage) {
                 if (modemsView == null) modemsView = ModemsView()
                 modemsView!!.root to "Администрирование → Модемы"
             }
-            "admin-extra" -> {
+            "admin-extra", "service-orders" -> {
                 if (serviceOrdersView == null) serviceOrdersView = ServiceOrdersView()
-                serviceOrdersView!!.root to "Администрирование → Дополнительные"
+                serviceOrdersView!!.root to "Администрирование → Сервисные заявки"
             }
             else -> {
                 createPlaceholder("Не найдено", "Страница не найдена") to target
