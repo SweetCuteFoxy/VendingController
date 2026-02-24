@@ -72,33 +72,7 @@ class ServiceOrdersView {
             items.addAll("Все", "Новая", "Назначена", "В работе", "Завершена", "Отменена")
             value = "Все"
             prefWidth = 140.0
-        }
-
-        val filterBtn = Button("Фильтр").apply {
-            styleClass.add("primary-button")
-            setOnAction {
-                Thread {
-                    try {
-                        val all = ServiceDAO.findAllOrders()
-                        val statusCode = when (statusCombo.value) {
-                            "Новая" -> "new"
-                            "Назначена" -> "assigned"
-                            "В работе" -> "in_progress"
-                            "Завершена" -> "completed"
-                            "Отменена" -> "cancelled"
-                            else -> null
-                        }
-                        val filtered = if (statusCode != null) all.filter { it.status == statusCode } else all
-                        Platform.runLater {
-                            ordersData.setAll(filtered)
-                            if (filtered.isEmpty()) ordersTable.placeholder = Label("Нет заявок")
-                        }
-                    } catch (e: Exception) {
-                        logger.error("Failed to filter orders", e)
-                        Platform.runLater { ordersTable.placeholder = Label("Ошибка: ${e.message}") }
-                    }
-                }.start()
-            }
+            valueProperty().addListener { _, _, _ -> filterOrders(this.value) }
         }
 
         val filterBar = HBox(10.0).apply {
@@ -106,7 +80,7 @@ class ServiceOrdersView {
             alignment = Pos.CENTER_LEFT
             children.addAll(
                 Label("Статус:").apply { styleClass.add("filter-group-label") },
-                statusCombo, filterBtn,
+                statusCombo,
                 Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
                 addBtn
             )
@@ -217,21 +191,30 @@ class ServiceOrdersView {
                 setCellValueFactory { SimpleStringProperty(it.value.description ?: "—") }; prefWidth = 180.0
             },
             TableColumn<ServiceOrder, Void>("Действия").apply {
-                prefWidth = 80.0
+                prefWidth = 160.0
                 setCellFactory {
                     object : TableCell<ServiceOrder, Void>() {
                         private val viewBtn = Button("👁").apply { styleClass.add("action-btn") }
+                        private val editBtn = Button("✏").apply { styleClass.add("action-btn") }
+                        private val delBtn = Button("🗑").apply { styleClass.add("action-btn-danger") }
+                        private val box = HBox(4.0, viewBtn, editBtn, delBtn)
                         init {
                             viewBtn.setOnAction {
                                 val idx = index
-                                if (idx >= 0 && idx < ordersTable.items.size) {
-                                    showOrderDetail(ordersTable.items[idx])
-                                }
+                                if (idx in 0 until ordersTable.items.size) showOrderDetail(ordersTable.items[idx])
+                            }
+                            editBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until ordersTable.items.size) showOrderDialog(ordersTable.items[idx])
+                            }
+                            delBtn.setOnAction {
+                                val idx = index
+                                if (idx in 0 until ordersTable.items.size) confirmDeleteOrder(ordersTable.items[idx])
                             }
                         }
                         override fun updateItem(item: Void?, empty: Boolean) {
                             super.updateItem(item, empty)
-                            graphic = if (empty) null else viewBtn
+                            graphic = if (empty) null else box
                         }
                     }
                 }
@@ -354,9 +337,10 @@ class ServiceOrdersView {
     // ================== Dialogs ==================
 
     private fun showOrderDialog(order: ServiceOrder?) {
+        val isEdit = order != null
         val dialog = Dialog<ButtonType>().apply {
-            title = "Новая заявка на обслуживание"
-            headerText = "Создание заявки"
+            title = if (isEdit) "Редактирование заявки" else "Новая заявка на обслуживание"
+            headerText = if (isEdit) "Редактирование «${order!!.orderNumber}»" else "Создание заявки"
         }
 
         val machines = try { VendingMachineDAO.findAll() } catch (e: Exception) {
@@ -368,48 +352,67 @@ class ServiceOrdersView {
 
         val machineCombo = ComboBox<String>().apply {
             machines.forEach { items.add("${it.id}: ${it.name}") }
-            if (items.isNotEmpty()) value = items[0]
+            if (isEdit) {
+                val match = items.find { it.startsWith("${order!!.machineId}:") }
+                if (match != null) value = match else if (items.isNotEmpty()) value = items[0]
+            } else {
+                if (items.isNotEmpty()) value = items[0]
+            }
             prefWidth = 250.0
         }
 
         val typeCombo = ComboBox<String>().apply {
             items.addAll("maintenance", "repair", "emergency", "inspection")
-            value = "maintenance"
+            value = if (isEdit) order!!.type else "maintenance"
+        }
+
+        val statusCombo = ComboBox<String>().apply {
+            items.addAll("new", "assigned", "in_progress", "completed", "cancelled")
+            value = if (isEdit) order!!.status else "new"
         }
 
         val priorityCombo = ComboBox<String>().apply {
             items.addAll("low", "medium", "high", "critical")
-            value = "medium"
+            value = if (isEdit) order!!.priority else "medium"
         }
 
-        val datePicker = DatePicker(LocalDate.now().plusDays(1))
+        val datePicker = DatePicker(if (isEdit) order!!.scheduledDate else LocalDate.now().plusDays(1))
 
         val engineerCombo = ComboBox<String>().apply {
             items.add("— не назначен —")
             users.forEach { items.add("${it.id}: ${it.fullName}") }
-            value = items[0]
+            if (isEdit && order!!.engineerId != null) {
+                val match = items.find { it.startsWith("${order.engineerId}:") }
+                value = match ?: items[0]
+            } else {
+                value = items[0]
+            }
             prefWidth = 250.0
         }
 
         val descField = TextArea().apply {
             promptText = "Описание работ…"
             prefRowCount = 3
+            text = order?.description ?: ""
         }
 
         val orderNumField = TextField().apply {
             promptText = "Номер заявки (напр. SO-001)"
-            text = "SO-${System.currentTimeMillis() % 10000}"
+            text = if (isEdit) order!!.orderNumber else "SO-${System.currentTimeMillis() % 10000}"
+            if (isEdit) isEditable = false
         }
 
         val grid = GridPane().apply {
             hgap = 10.0; vgap = 8.0; padding = Insets(16.0)
-            add(Label("№ заявки *"), 0, 0); add(orderNumField, 1, 0)
-            add(Label("Автомат *"), 0, 1); add(machineCombo, 1, 1)
-            add(Label("Тип"), 0, 2); add(typeCombo, 1, 2)
-            add(Label("Приоритет"), 0, 3); add(priorityCombo, 1, 3)
-            add(Label("Плановая дата"), 0, 4); add(datePicker, 1, 4)
-            add(Label("Инженер"), 0, 5); add(engineerCombo, 1, 5)
-            add(Label("Описание"), 0, 6); add(descField, 1, 6)
+            var r = 0
+            add(Label("№ заявки *"), 0, r); add(orderNumField, 1, r); r++
+            add(Label("Автомат *"), 0, r); add(machineCombo, 1, r); r++
+            add(Label("Тип"), 0, r); add(typeCombo, 1, r); r++
+            if (isEdit) { add(Label("Статус"), 0, r); add(statusCombo, 1, r); r++ }
+            add(Label("Приоритет"), 0, r); add(priorityCombo, 1, r); r++
+            add(Label("Плановая дата"), 0, r); add(datePicker, 1, r); r++
+            add(Label("Инженер"), 0, r); add(engineerCombo, 1, r); r++
+            add(Label("Описание"), 0, r); add(descField, 1, r)
         }
 
         dialog.dialogPane.content = grid
@@ -423,17 +426,45 @@ class ServiceOrdersView {
                         val eId = if (engineerCombo.value.startsWith("—")) null
                         else engineerCombo.value.substringBefore(":").trim().toIntOrNull()
 
-                        ServiceDAO.createOrder(
-                            orderNumber = orderNumField.text.trim(),
-                            machineId = mId,
-                            type = typeCombo.value,
-                            priority = priorityCombo.value,
-                            scheduledDate = datePicker.value,
-                            engineerId = eId,
-                            description = descField.text.trim().ifBlank { null }
-                        )
+                        if (isEdit) {
+                            ServiceDAO.updateOrder(
+                                id = order!!.id,
+                                type = typeCombo.value,
+                                status = statusCombo.value,
+                                priority = priorityCombo.value,
+                                scheduledDate = datePicker.value,
+                                engineerId = eId,
+                                description = descField.text.trim().ifBlank { null }
+                            )
+                        } else {
+                            ServiceDAO.createOrder(
+                                orderNumber = orderNumField.text.trim(),
+                                machineId = mId,
+                                type = typeCombo.value,
+                                priority = priorityCombo.value,
+                                scheduledDate = datePicker.value,
+                                engineerId = eId,
+                                description = descField.text.trim().ifBlank { null }
+                            )
+                        }
                         Platform.runLater { loadOrders() }
                     } catch (e: Exception) {
+                        Platform.runLater { Alert(Alert.AlertType.ERROR, "Ошибка: ${e.message}").showAndWait() }
+                    }
+                }.start()
+            }
+        }
+    }
+
+    private fun confirmDeleteOrder(order: ServiceOrder) {
+        Alert(Alert.AlertType.CONFIRMATION, "Удалить заявку «${order.orderNumber}»?").showAndWait().ifPresent {
+            if (it == ButtonType.OK) {
+                Thread {
+                    try {
+                        ServiceDAO.deleteOrder(order.id)
+                        Platform.runLater { loadOrders() }
+                    } catch (e: Exception) {
+                        logger.error("Failed to delete order", e)
                         Platform.runLater { Alert(Alert.AlertType.ERROR, "Ошибка: ${e.message}").showAndWait() }
                     }
                 }.start()
@@ -515,6 +546,30 @@ class ServiceOrdersView {
             } catch (e: Exception) {
                 logger.error("Failed to load service orders", e)
                 Platform.runLater { ordersTable.placeholder = Label("Ошибка загрузки: ${e.message}") }
+            }
+        }.start()
+    }
+
+    private fun filterOrders(statusDisplay: String) {
+        Thread {
+            try {
+                val all = ServiceDAO.findAllOrders()
+                val statusCode = when (statusDisplay) {
+                    "Новая" -> "new"
+                    "Назначена" -> "assigned"
+                    "В работе" -> "in_progress"
+                    "Завершена" -> "completed"
+                    "Отменена" -> "cancelled"
+                    else -> null
+                }
+                val filtered = if (statusCode != null) all.filter { it.status == statusCode } else all
+                Platform.runLater {
+                    ordersData.setAll(filtered)
+                    if (filtered.isEmpty()) ordersTable.placeholder = Label("Нет заявок по выбранному фильтру")
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to filter orders", e)
+                Platform.runLater { ordersTable.placeholder = Label("Ошибка: ${e.message}") }
             }
         }.start()
     }

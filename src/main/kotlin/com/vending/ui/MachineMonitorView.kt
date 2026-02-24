@@ -88,38 +88,39 @@ class MachineMonitorView {
             children.addAll(addLabel, allAddBtn, lowStockBtn, needServiceBtn)
         }
 
-        val applyBtn = Button("Применить").apply {
-            styleClass.add("primary-button")
-            setOnAction {
-                statusFilter = when (statusToggle.selectedToggle) {
-                    workingBtn -> "working"
-                    brokenBtn -> "broken"
-                    maintBtn -> "maintenance"
-                    else -> null
-                }
-                connectionFilter = when (connToggle.selectedToggle) {
-                    wifiBtn -> "wifi"
-                    gsmBtn -> "gsm"
-                    else -> null
-                }
-                additionalFilter = when (addToggle.selectedToggle) {
-                    lowStockBtn -> "low_stock"
-                    needServiceBtn -> "need_service"
-                    else -> null
-                }
-                applyFilters()
+        // Auto-apply filters on toggle change
+        val autoApply = {
+            statusFilter = when (statusToggle.selectedToggle) {
+                workingBtn -> "working"
+                brokenBtn -> "broken"
+                maintBtn -> "maintenance"
+                else -> null
             }
+            connectionFilter = when (connToggle.selectedToggle) {
+                wifiBtn -> "wifi"
+                gsmBtn -> "gsm"
+                else -> null
+            }
+            additionalFilter = when (addToggle.selectedToggle) {
+                lowStockBtn -> "low_stock"
+                needServiceBtn -> "need_service"
+                else -> null
+            }
+            applyFilters()
         }
+        statusToggle.selectedToggleProperty().addListener { _, _, _ -> autoApply() }
+        connToggle.selectedToggleProperty().addListener { _, _, _ -> autoApply() }
+        addToggle.selectedToggleProperty().addListener { _, _, _ -> autoApply() }
 
         // Row 1: status filters
-        // Row 2: connection + additional + apply button
+        // Row 2: connection + additional
         val filtersRow1 = HBox(12.0).apply {
             alignment = Pos.CENTER_LEFT
             children.add(statusGroup)
         }
         val filtersRow2 = HBox(20.0).apply {
             alignment = Pos.CENTER_LEFT
-            children.addAll(connGroup, addGroup, Region().apply { HBox.setHgrow(this, Priority.ALWAYS) }, applyBtn)
+            children.addAll(connGroup, addGroup)
         }
 
         filterBox.children.addAll(titleRow, filtersRow1, filtersRow2)

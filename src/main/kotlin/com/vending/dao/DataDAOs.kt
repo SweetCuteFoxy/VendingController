@@ -3,6 +3,7 @@ package com.vending.dao
 import com.vending.database.Tables
 import com.vending.model.*
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -179,6 +180,27 @@ object ServiceDAO {
             it[Tables.ServiceOrders.description] = description
             it[Tables.ServiceOrders.createdAt] = LocalDateTime.now()
         } get Tables.ServiceOrders.id
+    }
+
+    fun updateOrder(
+        id: Int, type: String, status: String, priority: String,
+        scheduledDate: LocalDate, engineerId: Int?, description: String?
+    ) = transaction {
+        Tables.ServiceOrders.update({ Tables.ServiceOrders.id eq id }) {
+            it[Tables.ServiceOrders.type] = type
+            it[Tables.ServiceOrders.status] = status
+            it[Tables.ServiceOrders.priority] = priority
+            it[Tables.ServiceOrders.scheduledDate] = scheduledDate
+            it[Tables.ServiceOrders.engineerId] = engineerId
+            it[Tables.ServiceOrders.description] = description
+            if (status == "completed") {
+                it[Tables.ServiceOrders.completedAt] = LocalDateTime.now()
+            }
+        }
+    }
+
+    fun deleteOrder(id: Int) = transaction {
+        Tables.ServiceOrders.deleteWhere { Tables.ServiceOrders.id eq id }
     }
 
     private fun ResultRow.toOrder(): ServiceOrder {

@@ -111,26 +111,26 @@ class ReportsView {
             prefWidth = 140.0
         }
 
-        val filterBtn = Button("Применить").apply {
-            styleClass.add("primary-button")
-            setOnAction {
-                val query = searchField.text.trim().lowercase()
-                val method = when (methodCombo.value) {
-                    "Наличные" -> "cash"
-                    "Карта" -> "card"
-                    else -> null
-                }
-                val filtered = allSales.filter { sale ->
-                    val matchQuery = query.isEmpty() ||
-                            sale.machineName.lowercase().contains(query) ||
-                            sale.productName.lowercase().contains(query)
-                    val matchMethod = method == null || sale.paymentMethod == method
-                    matchQuery && matchMethod
-                }
-                salesData.setAll(filtered)
-                updateSalesSummary(filtered)
+        val applySalesFilter = {
+            val query = searchField.text.trim().lowercase()
+            val method = when (methodCombo.value) {
+                "Наличные" -> "cash"
+                "Карта" -> "card"
+                else -> null
             }
+            val filtered = allSales.filter { sale ->
+                val matchQuery = query.isEmpty() ||
+                        sale.machineName.lowercase().contains(query) ||
+                        sale.productName.lowercase().contains(query)
+                val matchMethod = method == null || sale.paymentMethod == method
+                matchQuery && matchMethod
+            }
+            salesData.setAll(filtered)
+            updateSalesSummary(filtered)
         }
+
+        searchField.textProperty().addListener { _, _, _ -> applySalesFilter() }
+        methodCombo.valueProperty().addListener { _, _, _ -> applySalesFilter() }
 
         val exportBtn = Button("📥 CSV").apply {
             styleClass.add("primary-button")
@@ -142,7 +142,7 @@ class ReportsView {
             alignment = Pos.CENTER_LEFT
             children.addAll(
                 Label("Фильтр:").apply { styleClass.add("filter-group-label") },
-                searchField, methodCombo, filterBtn,
+                searchField, methodCombo,
                 Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
                 exportBtn
             )
@@ -228,12 +228,8 @@ class ReportsView {
             prefWidth = 140.0
         }
 
-        val filterBtn = Button("Применить").apply {
-            styleClass.add("primary-button")
-            setOnAction {
-                loadOrders(statusCombo.value, priorityCombo.value)
-            }
-        }
+        statusCombo.valueProperty().addListener { _, _, _ -> loadOrders(statusCombo.value, priorityCombo.value) }
+        priorityCombo.valueProperty().addListener { _, _, _ -> loadOrders(statusCombo.value, priorityCombo.value) }
 
         val filterBar = HBox(10.0).apply {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
@@ -242,8 +238,7 @@ class ReportsView {
                 Label("Статус:").apply { styleClass.add("filter-group-label") },
                 statusCombo,
                 Label("Приоритет:").apply { styleClass.add("filter-group-label") },
-                priorityCombo,
-                filterBtn
+                priorityCombo
             )
         }
 
