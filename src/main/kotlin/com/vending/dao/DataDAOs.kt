@@ -103,6 +103,18 @@ object SaleDAO {
         Tables.Sales.selectAll().orderBy(Tables.Sales.saleTime, SortOrder.DESC).map { it.toSale() }
     }
 
+    fun create(machineId: Int, productId: Int, quantity: Int, unitPrice: BigDecimal, paymentMethod: String): Int = transaction {
+        Tables.Sales.insert {
+            it[Tables.Sales.machineId] = machineId
+            it[Tables.Sales.productId] = productId
+            it[Tables.Sales.quantity] = quantity
+            it[Tables.Sales.unitPrice] = unitPrice
+            it[Tables.Sales.totalAmount] = unitPrice * quantity.toBigDecimal()
+            it[Tables.Sales.paymentMethod] = paymentMethod
+            it[Tables.Sales.saleTime] = LocalDateTime.now()
+        } get Tables.Sales.id
+    }
+
     fun getSalesLast10Days(): List<SalesByDay> = transaction {
         val startDate = LocalDate.now().minusDays(10).atStartOfDay()
         val rows = Tables.Sales.select { Tables.Sales.saleTime greaterEq startDate }

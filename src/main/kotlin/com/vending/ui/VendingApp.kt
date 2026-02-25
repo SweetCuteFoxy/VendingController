@@ -6,6 +6,9 @@ import com.vending.service.NotificationService
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.image.Image
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyCodeCombination
+import javafx.scene.input.KeyCombination
 import javafx.stage.Stage
 import org.slf4j.LoggerFactory
 
@@ -56,6 +59,15 @@ class VendingApp : Application() {
         val mainView = MainView(primaryStage)
         val scene = Scene(mainView.root, 1280.0, 800.0)
         scene.stylesheets.add(javaClass.getResource("/style.css")?.toExternalForm() ?: "")
+        ThemeManager.register(scene)
+
+        // Theme toggle: Ctrl+Shift+T
+        val themeHotkey = KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN)
+        scene.accelerators[themeHotkey] = Runnable { ThemeManager.toggle() }
+
+        // Dev panel: Ctrl+Shift+D
+        scene.accelerators[DevPanel.HOTKEY] = Runnable { mainView.toggleDevPanel() }
+
         primaryStage.scene = scene
         primaryStage.isMaximized = true
     }

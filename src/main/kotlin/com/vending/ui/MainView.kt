@@ -40,6 +40,10 @@ class MainView(private val stage: Stage) {
     private val adminSubMenu = VBox(2.0)
     private var adminExpanded = false
 
+    // Dev panel
+    private val devPanel = DevPanel()
+    private var rootStack: StackPane? = null
+
     init {
         root.styleClass.add("main-root")
         buildSidebar()
@@ -224,7 +228,34 @@ class MainView(private val stage: Stage) {
             VBox.setVgrow(this, Priority.ALWAYS)
         }
 
-        sidebarBox.children.addAll(brand, userCard, sep, scrollPane)
+        // Theme toggle at bottom of sidebar
+        val themeIcon = Label("☀")
+        val themeText = Label("Светлая тема")
+        themeText.styleClass.add("sidebar-menu-text")
+        val themeBtn = Button().apply {
+            styleClass.add("sidebar-menu-button")
+            maxWidth = Double.MAX_VALUE
+            alignment = Pos.CENTER_LEFT
+            graphic = HBox(10.0).apply {
+                alignment = Pos.CENTER_LEFT
+                children.addAll(
+                    themeIcon.apply { minWidth = 20.0 },
+                    themeText
+                )
+            }
+            setOnAction { ThemeManager.toggle() }
+        }
+        ThemeManager.lightThemeProperty.addListener { _, _, isLight ->
+            themeIcon.text = if (isLight) "🌙" else "☀"
+            themeText.text = if (isLight) "Тёмная тема" else "Светлая тема"
+        }
+
+        val bottomBox = VBox().apply {
+            padding = Insets(8.0)
+            children.addAll(Separator(), themeBtn)
+        }
+
+        sidebarBox.children.addAll(brand, userCard, sep, scrollPane, bottomBox)
         root.left = sidebarBox
     }
 
@@ -314,11 +345,12 @@ class MainView(private val stage: Stage) {
         StackPane.setAlignment(toastBox, Pos.TOP_RIGHT)
         NotificationService.setToastContainer(toastBox)
 
-        // Overlay
-        val overlay = StackPane(contentArea, toastBox).apply {
+        // Wrap everything in a StackPane for overlays (toast + dev panel)
+        val stack = StackPane(contentArea, toastBox).apply {
             StackPane.setAlignment(toastBox, Pos.TOP_RIGHT)
         }
-        root.center = overlay
+        rootStack = stack
+        root.center = stack
     }
 
     private fun navigateTo(target: String) {
@@ -399,5 +431,11 @@ class MainView(private val stage: Stage) {
             }
         }
         dialog.showAndWait()
+    }
+
+    /** Переключение панели разработчика (вызывается из VendingApp по Ctrl+Shift+D) */
+    fun toggleDevPanel() {
+        val stack = rootStack ?: return
+        devPanel.toggle(stack)
     }
 }
