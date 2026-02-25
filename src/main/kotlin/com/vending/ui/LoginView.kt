@@ -5,7 +5,6 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
-import javafx.scene.text.Font
 
 class LoginView(private val onSuccess: () -> Unit) {
 
@@ -24,7 +23,7 @@ class LoginView(private val onSuccess: () -> Unit) {
         }
 
         // Logo/Title
-        val logoLabel = Label("🏭").apply { font = Font.font(56.0) }
+        val logoLabel = VendingIcon.create(56.0)
         val titleLabel = Label("Vending Controller").apply {
             styleClass.add("login-title")
         }

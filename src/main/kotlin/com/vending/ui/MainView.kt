@@ -152,7 +152,7 @@ class MainView(private val stage: Stage) {
             padding = Insets(20.0, 16.0, 20.0, 16.0)
             alignment = Pos.CENTER_LEFT
             children.addAll(
-                Label("🏭").apply { font = Font.font(24.0) },
+                VendingIcon.create(24.0),
                 Label("VendControl").apply { styleClass.add("sidebar-brand-text") }
             )
         }
