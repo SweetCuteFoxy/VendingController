@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчёт — Архитектура и работа приложения | VendingController</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #181c24;
+            --surface2: #1e2230;
+            --border: #2a2f3c;
+            --text: #c8cdd8;
+            --text-muted: #7a8299;
+            --accent: #5b8def;
+            --accent-light: #7fb3ff;
+            --green: #50cd89;
+            --red: #ef6b6b;
+            --orange: #f0b75a;
+            --purple: #8b5cf6;
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .header {
+            background: linear-gradient(135deg, #141824, #1a2240);
+            border-bottom: 1px solid var(--border);
+            padding: 48px 0 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 32px;
+            color: #eceff5;
+            margin-bottom: 8px;
+        }
+        .header .subtitle {
+            color: var(--accent);
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .header .badge {
+            display: inline-block;
+            background: rgba(91,141,239,0.15);
+            color: var(--accent);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 12px;
+            border: 1px solid rgba(91,141,239,0.25);
+        }
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px;
+        }
+        .toc h3 {
+            font-size: 14px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .toc ol { padding-left: 20px; }
+        .toc li { margin: 6px 0; }
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc a:hover { color: var(--accent); }
+        .section { margin-bottom: 48px; }
+        .section h2 {
+            font-size: 22px;
+            color: #eceff5;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+        .section h3 {
+            font-size: 17px;
+            color: var(--accent-light);
+            margin: 24px 0 10px;
+        }
+        .section h4 {
+            font-size: 14px;
+            color: #eceff5;
+            margin: 16px 0 6px;
+        }
+        .section p, .section li {
+            font-size: 14px;
+            color: var(--text);
+        }
+        .section ul, .section ol {
+            padding-left: 24px;
+            margin: 8px 0 16px;
+        }
+        .section li { margin: 4px 0; }
+        pre {
+            background: #0a0d14;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #c8cdd8;
+            margin: 12px 0 20px;
+        }
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+        }
+        .inline-code {
+            background: rgba(91,141,239,0.12);
+            color: var(--accent-light);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px;
+            font-size: 13px;
+        }
+        thead th {
+            background: var(--surface2);
+            color: var(--accent);
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+        tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tbody tr:hover { background: rgba(91,141,239,0.05); }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #eceff5;
+            margin-bottom: 8px;
+        }
+        .diagram {
+            background: #0a0d14;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin: 16px 0 24px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 2px 2px;
+        }
+        .tag-blue { background: rgba(91,141,239,0.15); color: var(--accent); border: 1px solid rgba(91,141,239,0.25); }
+        .tag-green { background: rgba(80,205,137,0.15); color: var(--green); border: 1px solid rgba(80,205,137,0.25); }
+        .tag-orange { background: rgba(240,183,90,0.15); color: var(--orange); border: 1px solid rgba(240,183,90,0.25); }
+        .tag-purple { background: rgba(139,92,246,0.15); color: var(--purple); border: 1px solid rgba(139,92,246,0.25); }
+        .tag-red { background: rgba(239,107,107,0.15); color: var(--red); border: 1px solid rgba(239,107,107,0.25); }
+        .footer {
+            text-align: center;
+            padding: 32px 0;
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .highlight { color: var(--accent); font-weight: 600; }
+        .note {
+            background: rgba(91,141,239,0.08);
+            border-left: 3px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        .warning {
+            background: rgba(240,183,90,0.08);
+            border-left: 3px solid var(--orange);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        .success {
+            background: rgba(80,205,137,0.08);
+            border-left: 3px solid var(--green);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 12px 0;
+        }
+        @media (max-width: 700px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+        .screenshot-placeholder {
+            background: var(--surface2);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin: 12px 0;
+        }
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin: 12px 0;
+        }
+        .flow-number {
+            min-width: 32px;
+            height: 32px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .flow-content {
+            flex: 1;
+        }
+        .flow-content strong {
+            color: #eceff5;
+        }
+        .shortcut-kbd {
+            display: inline-block;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent-light);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================== HEADER ============================== -->
+<div class="header">
+    <h1>🏗️ Архитектура и работа приложения</h1>
+    <div class="subtitle">VendingController — Модуль франчайзера (Desktop)</div>
+    <div class="badge">27 Kotlin-файлов • 13 таблиц БД • 10 экранов UI • ~8500 строк кода</div>
+</div>
+
+<!-- ============================== CONTENT ============================== -->
+<div class="container">
+
+    <!-- TOC -->
+    <div class="toc">
+        <h3>Содержание</h3>
+        <ol>
+            <li><a href="#s1">Общая архитектура</a></li>
+            <li><a href="#s2">Структура проекта (файловая)</a></li>
+            <li><a href="#s3">Жизненный цикл приложения</a></li>
+            <li><a href="#s4">Слой модели данных (model)</a></li>
+            <li><a href="#s5">Слой доступа к данным (DAO)</a></li>
+            <li><a href="#s6">Сервисный слой (service)</a></li>
+            <li><a href="#s7">UI-слой: экраны приложения</a></li>
+            <li><a href="#s8">Навигация и боковое меню</a></li>
+            <li><a href="#s9">Дашборд (главная страница)</a></li>
+            <li><a href="#s10">Монитор торговых автоматов</a></li>
+            <li><a href="#s11">Администрирование (CRUD-панель)</a></li>
+            <li><a href="#s12">Система push-уведомлений</a></li>
+            <li><a href="#s13">Темизация (тёмная/светлая тема)</a></li>
+            <li><a href="#s14">Dev-панель (отладочная)</a></li>
+            <li><a href="#s15">Горячие клавиши</a></li>
+            <li><a href="#s16">Импорт/экспорт данных</a></li>
+        </ol>
+    </div>
+
+    <!-- ===== 1. Архитектура ===== -->
+    <div class="section" id="s1">
+        <h2>1. Общая архитектура</h2>
+        <p>Приложение построено по <span class="highlight">многослойной архитектуре</span> с чётким разделением ответственности:</p>
+
+        <div class="diagram">
+┌──────────────────────────────────────────────────────────────┐
+│                      PRESENTATION LAYER                       │
+│  ┌──────────┐ ┌───────────┐ ┌──────────┐ ┌───────────────┐  │
+│  │LoginView │ │ MainView  │ │Dashboard │ │ Admin Views   │  │
+│  │          │ │(Navigation)│ │  View    │ │(CRUD tables)  │  │
+│  └──────────┘ └───────────┘ └──────────┘ └───────────────┘  │
+│  ┌───────────┐ ┌──────────┐ ┌──────────┐ ┌───────────────┐  │
+│  │ Monitor   │ │ Reports  │ │ Inventory│ │ThemeManager   │  │
+│  │   View    │ │   View   │ │  View    │ │ DevPanel      │  │
+│  └───────────┘ └──────────┘ └──────────┘ └───────────────┘  │
+├──────────────────────────────────────────────────────────────┤
+│                       SERVICE LAYER                           │
+│  ┌──────────────────┐  ┌─────────────────────────────────┐   │
+│  │   AuthService    │  │     NotificationService         │   │
+│  │ (JWT + BCrypt)   │  │ (push: critical/warning/info)   │   │
+│  └──────────────────┘  └─────────────────────────────────┘   │
+├──────────────────────────────────────────────────────────────┤
+│                        DAO LAYER                              │
+│  ┌─────────┐ ┌──────────────┐ ┌───────────┐ ┌───────────┐   │
+│  │UserDAO  │ │VendingMachine│ │ProductDAO │ │ SaleDAO   │   │
+│  │         │ │    DAO       │ │           │ │           │   │
+│  └─────────┘ └──────────────┘ └───────────┘ └───────────┘   │
+│  ┌──────────┐ ┌─────────┐ ┌──────────────┐ ┌───────────┐   │
+│  │CompanyDAO│ │ModemDAO │ │ServiceOrder  │ │  NewsDAO  │   │
+│  │          │ │         │ │    DAO       │ │           │   │
+│  └──────────┘ └─────────┘ └──────────────┘ └───────────┘   │
+├──────────────────────────────────────────────────────────────┤
+│                     DATABASE LAYER                            │
+│  ┌───────────────────┐  ┌────────────────────────────────┐   │
+│  │  DatabaseConfig   │  │   Tables.kt (Exposed ORM)      │   │
+│  │  (init/connect)   │  │   13 table definitions         │   │
+│  └───────────────────┘  └────────────────────────────────┘   │
+├──────────────────────────────────────────────────────────────┤
+│                     INFRASTRUCTURE                            │
+│  ┌──────────────────┐  ┌──────────┐  ┌──────────────────┐   │
+│  │ PostgreSQL 17    │  │ Logback  │  │ ExportUtil       │   │
+│  │ (vending_db)     │  │ (logs)   │  │ (CSV/PDF/HTML)   │   │
+│  └──────────────────┘  └──────────┘  └──────────────────┘   │
+└──────────────────────────────────────────────────────────────┘</div>
+    </div>
+
+    <!-- ===== 2. Структура проекта ===== -->
+    <div class="section" id="s2">
+        <h2>2. Структура проекта (файловая)</h2>
+        <pre><code>VendingController/
+├── pom.xml                          # Maven конфигурация и зависимости
+├── mvnw / mvnw.cmd                  # Maven Wrapper (не требует глобальной установки)
+├── docs/
+│   ├── report-connection.html       # Отчёт: подключение к БД и библиотеки
+│   └── report-architecture.html     # Отчёт: архитектура приложения (этот файл)
+├── logs/
+│   └── vending-controller.log       # Лог-файлы (ротация по дням, 14 дней)
+└── src/main/
+    ├── kotlin/com/vending/
+    │   ├── Main.kt                  # Точка входа: Application.launch()
+    │   ├── database/
+    │   │   ├── DatabaseConfig.kt    # Подключение к PostgreSQL
+    │   │   └── Tables.kt           # ORM-описание 13 таблиц (Exposed)
+    │   ├── model/
+    │   │   └── Models.kt           # Data-классы + JavaFX Properties
+    │   ├── dao/
+    │   │   ├── UserDAO.kt          # CRUD + аутентификация пользователей
+    │   │   ├── VendingMachineDAO.kt # CRUD + статистика для дашборда
+    │   │   ├── ProductDAO.kt       # CRUD товаров + связь с автоматами
+    │   │   └── DataDAOs.kt         # Sale, Company, Modem, ServiceOrder,
+    │   │                            # ServiceHistory, Notification, News DAOs
+    │   ├── service/
+    │   │   ├── AuthService.kt      # JWT-аутентификация + BCrypt + сессия
+    │   │   └── NotificationService.kt # Push-уведомления + симуляция
+    │   ├── util/
+    │   │   ├── ExportUtil.kt       # Экспорт CSV / PDF / HTML
+    │   │   └── HashGen.kt          # Утилита генерации BCrypt-хешей
+    │   └── ui/
+    │       ├── VendingApp.kt       # JavaFX Application (точка запуска)
+    │       ├── LoginView.kt        # Экран авторизации
+    │       ├── MainView.kt         # Главный layout: sidebar + content
+    │       ├── DashboardView.kt    # Дашборд: графики, статистика, новости
+    │       ├── MachineMonitorView.kt # Монитор ТА: таблица + фильтры
+    │       ├── ReportsView.kt      # Детальные отчёты (продажи, обслуживание, финансы)
+    │       ├── InventoryView.kt    # Учёт ТМЦ (заглушка: сервер недоступен)
+    │       ├── ThemeManager.kt     # Переключатель тёмной/светлой темы
+    │       ├── DevPanel.kt         # Отладочная панель (Ctrl+Shift+D)
+    │       └── admin/
+    │           ├── VendingMachinesView.kt  # CRUD: торговые автоматы
+    │           ├── CompaniesView.kt        # CRUD: компании
+    │           ├── UsersView.kt            # CRUD: пользователи
+    │           ├── ModemsView.kt           # CRUD: модемы
+    │           ├── ServiceOrdersView.kt    # CRUD: заявки на обслуживание
+    │           └── AddMachineDialog.kt     # Диалог добавления ТА
+    └── resources/
+        ├── database.properties     # Параметры подключения к БД
+        ├── style.css               # Стили: тёмная тема + светлая тема (~2200 строк)
+        └── logback.xml             # Конфигурация логирования</code></pre>
+    </div>
+
+    <!-- ===== 3. Жизненный цикл ===== -->
+    <div class="section" id="s3">
+        <h2>3. Жизненный цикл приложения</h2>
+        <p>Последовательность действий от запуска до работы:</p>
+
+        <div class="flow-step">
+            <div class="flow-number">1</div>
+            <div class="flow-content">
+                <strong>Main.kt → Application.launch()</strong><br>
+                Точка входа JVM. Вызывает JavaFX-рантайм, который создаёт экземпляр <span class="inline-code">VendingApp</span>.
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-number">2</div>
+            <div class="flow-content">
+                <strong>VendingApp.start(stage)</strong><br>
+                Инициализирует <span class="inline-code">primaryStage</span> (1280×800, min 1024×700). Вызывает <span class="inline-code">DatabaseConfig.init()</span> для подключения к PostgreSQL.
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-number">3</div>
+            <div class="flow-content">
+                <strong>DatabaseConfig.init()</strong><br>
+                Загружает <span class="inline-code">database.properties</span>, вызывает <span class="inline-code">Database.connect()</span> (Exposed ORM). Устанавливает JDBC-соединение с PostgreSQL через драйвер <span class="inline-code">org.postgresql:42.7.1</span>.
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-number">4</div>
+            <div class="flow-content">
+                <strong>showLogin() → LoginView</strong><br>
+                Отображает экран авторизации. Подключает CSS-стили (<span class="inline-code">style.css</span>). Пользователь вводит email и пароль.
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-number">5</div>
+            <div class="flow-content">
+                <strong>AuthService.login(email, password)</strong><br>
+                <span class="inline-code">UserDAO.authenticate()</span> ищет пользователя в БД, BCrypt проверяет пароль. При успехе — генерируется JWT-токен (HMAC256, 8 часов), сохраняется в <span class="inline-code">SessionInfo</span>.
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-number">6</div>
+            <div class="flow-content">
+                <strong>onLoginSuccess() → showMain()</strong><br>
+                Создаёт <span class="inline-code">MainView</span>, регистрирует <span class="inline-code">ThemeManager</span>, горячие клавиши (Ctrl+Shift+T — тема, Ctrl+Shift+D — Dev-панель). Запускает <span class="inline-code">NotificationService.startSimulation()</span> для эмуляции push-уведомлений.
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-number">7</div>
+            <div class="flow-content">
+                <strong>MainView → DashboardView (главная)</strong><br>
+                Первая страница — дашборд с графиками, подключёнными к реальным данным БД. Пользователь навигирует по боковому меню.
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 4. Модель данных ===== -->
+    <div class="section" id="s4">
+        <h2>4. Слой модели данных (model)</h2>
+        <p>Все модели определены в <span class="inline-code">model/Models.kt</span> (223 строки). Используются <span class="inline-code">data class</span> для иммутабельных данных и JavaFX <span class="inline-code">Property</span> для реактивного UI.</p>
+
+        <table>
+            <thead>
+                <tr><th>Класс</th><th>Ключевые поля</th><th>Назначение</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><span class="inline-code">User</span></td><td>id, email, fullName, passwordHash, roleId, companyId</td><td>Пользователь системы</td></tr>
+                <tr><td><span class="inline-code">Role</span></td><td>id, code, name</td><td>Роль (admin, franchisor, engineer, ...)</td></tr>
+                <tr><td><span class="inline-code">Company</span></td><td>id, name, address, contactPhone, email</td><td>Компания-франчайзи</td></tr>
+                <tr><td><span class="inline-code">Modem</span></td><td>id, imei, phoneNumber, status</td><td>Модем для связи с ТА</td></tr>
+                <tr><td><span class="inline-code">VendingMachine</span></td><td>id, name, model, status, companyId, totalRevenue, 25+ полей</td><td>Торговый автомат</td></tr>
+                <tr><td><span class="inline-code">Product</span></td><td>id, name, price, category, barcode</td><td>Товар</td></tr>
+                <tr><td><span class="inline-code">Sale</span></td><td>id, machineId, productId, quantity, totalAmount, saleTime</td><td>Запись о продаже</td></tr>
+                <tr><td><span class="inline-code">ServiceOrder</span></td><td>id, orderNumber, machineId, type, status, priority, scheduledDate</td><td>Заявка на обслуживание</td></tr>
+                <tr><td><span class="inline-code">Notification</span></td><td>id, type, title, message, isRead</td><td>Push-уведомление</td></tr>
+                <tr><td><span class="inline-code">SessionInfo</span></td><td>currentUser, token, role</td><td>Данные текущей сессии</td></tr>
+                <tr><td><span class="inline-code">DashboardStats</span></td><td>totalMachines, working, broken, maintenance, totalRevenue</td><td>Агрегированная статистика</td></tr>
+                <tr><td><span class="inline-code">DailySales</span></td><td>date, count, amount</td><td>Продажи за день (для графика)</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Вычисляемые свойства</h3>
+        <p>Модели содержат вычисляемые поля для удобного отображения:</p>
+        <pre><code>data class VendingMachine(...) {
+    val statusDisplay: String get() = when(status) {
+        "working"     -> "Работает"
+        "broken"      -> "Не работает"
+        "maintenance" -> "На обслуживании"
+        else          -> status
+    }
+    val typeDisplay: String get() = when(type) {
+        "cash" -> "Наличные"
+        "card" -> "Карта"
+        "both" -> "Наличные + Карта"
+        else   -> type
+    }
+}</code></pre>
+    </div>
+
+    <!-- ===== 5. DAO Layer ===== -->
+    <div class="section" id="s5">
+        <h2>5. Слой доступа к данным (DAO)</h2>
+        <p>DAO-слой реализован через Kotlin <span class="inline-code">object</span>-синглтоны. Все методы оборачиваются в <span class="inline-code">transaction { }</span> блоки ORM Exposed.</p>
+
+        <h3>5.1. VendingMachineDAO (ключевой DAO)</h3>
+        <p>Содержит самую сложную логику — агрегация для дашборда, фильтрация для монитора:</p>
+        <pre><code>object VendingMachineDAO {
+    // Полный список с resolved-именами (company, modem, inspector)
+    fun getAll(): List&lt;VendingMachine&gt;
+
+    // Агрегированная статистика для дашборда:
+    // totalMachines, working, broken, maintenance, totalRevenue, totalCash
+    fun getDashboardStats(): DashboardStats
+
+    // CRUD
+    fun create(machine: VendingMachine): Int
+    fun update(machine: VendingMachine)
+    fun delete(id: Int)
+
+    // Смена статуса
+    fun updateStatus(id: Int, status: String)
+}</code></pre>
+
+        <h3>5.2. UserDAO.authenticate()</h3>
+        <pre><code>fun authenticate(email: String, password: String): User? {
+    return transaction {
+        val row = Users.select { Users.email eq email }.singleOrNull() ?: return@transaction null
+        val hash = row[Users.passwordHash]
+        if (BCrypt.checkpw(password, hash)) mapToUser(row) else null
+    }
+}</code></pre>
+
+        <div class="note">
+            <strong>Паттерн:</strong> Каждый DAO самостоятельно «резолвит» связанные сущности. Например, <span class="inline-code">VendingMachineDAO.getAll()</span> дополнительно загружает <span class="inline-code">companyName</span>, <span class="inline-code">modemImei</span> и <span class="inline-code">inspectorName</span> для каждого автомата.
+        </div>
+    </div>
+
+    <!-- ===== 6. Service Layer ===== -->
+    <div class="section" id="s6">
+        <h2>6. Сервисный слой (service)</h2>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">🔐 AuthService</div>
+                <ul>
+                    <li><span class="inline-code">login(email, password)</span> — авторизация через BCrypt + JWT</li>
+                    <li><span class="inline-code">logout()</span> — очистка сессии</li>
+                    <li><span class="inline-code">generateToken(user)</span> — JWT, HMAC256, 8ч</li>
+                    <li><span class="inline-code">validateToken(token)</span> — верификация JWT</li>
+                    <li><span class="inline-code">getUserShortName()</span> — «Иванов И.И.»</li>
+                    <li>Хранит <span class="inline-code">SessionInfo</span>: currentUser, token, role</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">🔔 NotificationService</div>
+                <ul>
+                    <li><span class="inline-code">pushCritical/Warning/Info()</span> — создание уведомления</li>
+                    <li>Сохранение в БД через <span class="inline-code">NotificationDAO</span></li>
+                    <li>Toast-отображение с приоритетами</li>
+                    <li>Таймауты: critical=10с, warning=7с, info=5с</li>
+                    <li>Кнопка закрытия «✕» на каждом тосте</li>
+                    <li><span class="inline-code">startSimulation()</span> — эмуляция событий от ТА</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 7. UI-слой ===== -->
+    <div class="section" id="s7">
+        <h2>7. UI-слой: экраны приложения</h2>
+        <p>Все экраны строятся <span class="highlight">программно на Kotlin</span> (без FXML). Каждый View — класс с полем <span class="inline-code">root: Node</span>, которое вставляется в <span class="inline-code">contentArea</span> при навигации.</p>
+
+        <table>
+            <thead>
+                <tr><th>Экран</th><th>Файл</th><th>Строк</th><th>Описание</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="tag tag-blue">Авторизация</span></td>
+                    <td>LoginView.kt</td>
+                    <td>~120</td>
+                    <td>Email + пароль, карточка с логотипом, анимация ошибки</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-blue">Главный layout</span></td>
+                    <td>MainView.kt</td>
+                    <td>~442</td>
+                    <td>BorderPane: sidebar (left) + top-bar (top) + contentArea (center) + notifications (overlay)</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-green">Дашборд</span></td>
+                    <td>DashboardView.kt</td>
+                    <td>~358</td>
+                    <td>5 блоков: эффективность, состояние, сводка, динамика продаж, новости</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-green">Монитор ТА</span></td>
+                    <td>MachineMonitorView.kt</td>
+                    <td>~400</td>
+                    <td>Таблица всех ТА + фильтры (статус, тип подключения) + сводка</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-green">Отчёты</span></td>
+                    <td>ReportsView.kt</td>
+                    <td>~450</td>
+                    <td>3 вкладки: продажи, обслуживание, финансы. Таблицы + сводные показатели</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-orange">Учёт ТМЦ</span></td>
+                    <td>InventoryView.kt</td>
+                    <td>~96</td>
+                    <td>Заглушка: «Сервер учёта ТМЦ недоступен» + кнопка «Проверить подключение»</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-purple">Торг. автоматы</span></td>
+                    <td>admin/VendingMachinesView.kt</td>
+                    <td>~400</td>
+                    <td>CRUD-таблица + плитки, фильтр, пагинация, экспорт CSV/PDF/HTML</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-purple">Компании</span></td>
+                    <td>admin/CompaniesView.kt</td>
+                    <td>~180</td>
+                    <td>CRUD-таблица компаний</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-purple">Пользователи</span></td>
+                    <td>admin/UsersView.kt</td>
+                    <td>~220</td>
+                    <td>CRUD-таблица, создание с хешированием пароля</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-purple">Модемы</span></td>
+                    <td>admin/ModemsView.kt</td>
+                    <td>~170</td>
+                    <td>CRUD-таблица модемов</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-purple">Заявки</span></td>
+                    <td>admin/ServiceOrdersView.kt</td>
+                    <td>~380</td>
+                    <td>CRUD + фильтры по статусу/приоритету, история обслуживания</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== 8. Навигация ===== -->
+    <div class="section" id="s8">
+        <h2>8. Навигация и боковое меню</h2>
+        <p><span class="inline-code">MainView</span> построен на <span class="inline-code">BorderPane</span>:</p>
+
+        <div class="diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                         TOP BAR                              │
+│  [≡ Toggle] Главная / Дашборд          🔔(3) 👤 Иванов И.  │
+├──────────┬──────────────────────────────────────────────────┤
+│ SIDEBAR  │                                                   │
+│ (260px)  │              CONTENT AREA                         │
+│          │                                                   │
+│ 🏭 Brand │     ┌──────────────────────────────────┐         │
+│ 👤 User  │     │   DashboardView / MonitorView    │         │
+│ ──────── │     │   / ReportsView / AdminViews     │         │
+│ ▸ Главная│     │                                  │         │
+│ ▸ Монитор│     │   (динамическая замена           │         │
+│ ▸ Отчёты │     │    при навигации)                │         │
+│ ▸ Учёт   │     │                                  │         │
+│ ▾ Админ  │     └──────────────────────────────────┘         │
+│   ├ ТА   │                                                   │
+│   ├ Комп.│  ┌──────────────────────────────────────────┐    │
+│   ├ Юзеры│  │ NOTIFICATION OVERLAY (toast stack, top-R) │    │
+│   ├ Модем│  └──────────────────────────────────────────┘    │
+│   └ Заяв.│                                                   │
+│ ──────── │                                                   │
+│ ☀ Тема   │                                                   │
+└──────────┴──────────────────────────────────────────────────┘</div>
+
+        <h3>Механика навигации</h3>
+        <ol>
+            <li>Каждый пункт меню — <span class="inline-code">Button</span> с CSS-классом <span class="inline-code">.sidebar-menu-button</span></li>
+            <li>При клике вызывается <span class="inline-code">navigateTo(viewName)</span></li>
+            <li>Создаётся экземпляр View (lazy), его <span class="inline-code">root</span> вставляется в <span class="inline-code">contentArea</span></li>
+            <li>Активная кнопка получает CSS-класс <span class="inline-code">.active</span></li>
+            <li>Breadcrumb обновляется (например, «Администрирование / Торговые автоматы»)</li>
+        </ol>
+
+        <h3>Сворачивание сайдбара</h3>
+        <p>Кнопка «≡» переключает <span class="inline-code">isSidebarCollapsed</span>: ширина анимируется с 260px до 60px, текст меню скрывается, остаются только иконки.</p>
+    </div>
+
+    <!-- ===== 9. Дашборд ===== -->
+    <div class="section" id="s9">
+        <h2>9. Дашборд (главная страница)</h2>
+        <p>Построен в <span class="inline-code">DashboardView.kt</span> (~358 строк). Все данные подтягиваются из реальной БД.</p>
+
+        <h3>5 информационных блоков</h3>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">📊 Эффективность сети</div>
+                <p>Процент работающих автоматов. Данные: <span class="inline-code">VendingMachineDAO.getDashboardStats()</span> → <span class="inline-code">working / totalMachines × 100</span>.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">🍩 Состояние сети</div>
+                <p>PieChart (круговая диаграмма): «Работает» (зелёный), «Не работает» (красный), «На обслуживании» (жёлтый). Данные: <span class="inline-code">DashboardStats</span>.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">📋 Сводка</div>
+                <p>Карточки: общий доход, наличные в автоматах, количество ТА. Данные: <span class="inline-code">DashboardStats.totalRevenue</span>, <span class="inline-code">totalCash</span>.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">📈 Динамика продаж (10 дней)</div>
+                <p>LineChart с двумя сериями: количество продаж и сумма. Фильтрация по типу. Данные: <span class="inline-code">SaleDAO.getSalesLast10Days()</span>.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📰 Новости</div>
+            <p>Блок новостей франчайзера. Данные: <span class="inline-code">NewsDAO.getAll()</span>. Отображается в прокручиваемом списке с датами.</p>
+        </div>
+
+        <div class="success">
+            <strong>Все графики подключены к реальным данным БД</strong> — данные тянутся из таблиц <span class="inline-code">vending_machines</span>, <span class="inline-code">sales</span>, <span class="inline-code">news</span> через DAO-слой. Тестовая база содержит 150 продаж, 25 автоматов — графики отображают реальную информацию.
+        </div>
+    </div>
+
+    <!-- ===== 10. Монитор ТА ===== -->
+    <div class="section" id="s10">
+        <h2>10. Монитор торговых автоматов</h2>
+        <p><span class="inline-code">MachineMonitorView.kt</span> (~400 строк) — детальный мониторинг всех ТА в сети.</p>
+
+        <h3>Фильтры</h3>
+        <ul>
+            <li><span class="tag tag-green">Общее состояние</span> — Работает / Не работает / На обслуживании (цветные кнопки-тогглы)</li>
+            <li><span class="tag tag-blue">Тип подключения</span> — Наличные / Карта / Оба</li>
+            <li>Кнопка <strong>«Применить»</strong> — фильтры применяются по нажатию</li>
+            <li>Кнопка <strong>«Сбросить»</strong> — возврат к полному списку</li>
+        </ul>
+
+        <h3>Таблица</h3>
+        <p>Колонки: №, ТП (тип подключения), Связь (модем), Местоположение, Денежные средства, Статус, Действия.</p>
+
+        <h3>Сводная панель (итого)</h3>
+        <p>В нижней части отображается: «Итого автоматов: N» + «Денег в автоматах: ₽ X.XX» — пересчитывается с учётом фильтров.</p>
+    </div>
+
+    <!-- ===== 11. Администрирование ===== -->
+    <div class="section" id="s11">
+        <h2>11. Администрирование (CRUD-панель)</h2>
+        <p>Подменю «Администрирование» содержит 5 разделов:</p>
+
+        <h3>11.1. Торговые автоматы (VendingMachinesView)</h3>
+        <ul>
+            <li><strong>Два режима</strong>: Таблица (по умолчанию) и Плитки</li>
+            <li><strong>Фильтр</strong> по названию автомата (текстовое поле)</li>
+            <li><strong>Пагинация</strong> с выбором количества строк (10/25/50/100)</li>
+            <li><strong>Экспорт</strong>: CSV (UTF-8+BOM), PDF (iTextPDF, A4 landscape), HTML</li>
+            <li><strong>CRUD</strong>: Добавление (AddMachineDialog), Редактирование, Удаление (с подтверждением)</li>
+            <li><strong>Отвязка модема</strong>: эмуляция с подтверждением, modemId → null</li>
+            <li>Подсветка нечётных строк таблицы</li>
+        </ul>
+
+        <h3>11.2. Компании / Пользователи / Модемы</h3>
+        <p>Стандартные CRUD-таблицы с аналогичной механикой (добавление через диалог, редактирование inline, удаление с подтверждением).</p>
+
+        <h3>11.3. Заявки на обслуживание (ServiceOrdersView)</h3>
+        <ul>
+            <li>Два Tab-а: «Заявки» (текущие) и «История обслуживания» (архив)</li>
+            <li>Фильтры по статусу (Новая/В работе/Закрыта/Отменена) и приоритету (Низкий/Средний/Высокий/Авария)</li>
+            <li>Автоматическое применение фильтров при изменении</li>
+            <li>Создание заявки: номер, тип обслуживания, приоритет, инженер, дата</li>
+        </ul>
+    </div>
+
+    <!-- ===== 12. Уведомления ===== -->
+    <div class="section" id="s12">
+        <h2>12. Система push-уведомлений</h2>
+
+        <table>
+            <thead>
+                <tr><th>Тип</th><th>Цвет</th><th>Иконка</th><th>Длительность</th><th>Пример</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="tag tag-red">critical</span></td>
+                    <td>#dc3545 (красный)</td>
+                    <td>❌</td>
+                    <td>10 секунд</td>
+                    <td>«Ошибка: Нет сдачи в ТА-007»</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-orange">warning</span></td>
+                    <td>#fd7e14 (оранжевый)</td>
+                    <td>⚠️</td>
+                    <td>7 секунд</td>
+                    <td>«Внимание: Низкий запас товара A1»</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-green">info</span></td>
+                    <td>#198754 (зелёный)</td>
+                    <td>ℹ️</td>
+                    <td>5 секунд</td>
+                    <td>«Успешно: Товар выдан»</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Архитектура</h3>
+        <ol>
+            <li><span class="inline-code">NotificationService.push*()</span> создаёт объект <span class="inline-code">Notification</span></li>
+            <li>Уведомление сохраняется в БД через <span class="inline-code">NotificationDAO.create()</span></li>
+            <li>Добавляется в очередь <span class="inline-code">ConcurrentLinkedQueue</span></li>
+            <li><span class="inline-code">processQueue()</span> через <span class="inline-code">Platform.runLater</span> отображает toast</li>
+            <li>Toast — VBox со стилизованным фоном, кнопкой «✕», auto-fade по таймеру</li>
+            <li>Приоритет: critical &gt; warning &gt; info</li>
+        </ol>
+
+        <h3>Индикатор в top-bar</h3>
+        <p>Иконка колокольчика 🔔 с красным бейджем, показывающим количество непрочитанных уведомлений (<span class="inline-code">NotificationDAO.getUnreadCount()</span>).</p>
+    </div>
+
+    <!-- ===== 13. Темизация ===== -->
+    <div class="section" id="s13">
+        <h2>13. Темизация (тёмная/светлая тема)</h2>
+
+        <h3>Механизм</h3>
+        <ol>
+            <li><span class="inline-code">ThemeManager.kt</span> — синглтон (<span class="inline-code">object</span>)</li>
+            <li>Хранит <span class="inline-code">lightThemeProperty: SimpleBooleanProperty</span></li>
+            <li>При <span class="inline-code">toggle()</span> переключает флаг</li>
+            <li>Все зарегистрированные Scene получают/теряют CSS-класс <span class="inline-code">&quot;light-theme&quot;</span> на корневом элементе</li>
+            <li>CSS-файл содержит ~600 строк <span class="inline-code">.light-theme</span> переопределений</li>
+        </ol>
+
+        <pre><code>// ThemeManager.kt (упрощённо)
+object ThemeManager {
+    val lightThemeProperty = SimpleBooleanProperty(false)
+
+    fun toggle() {
+        lightThemeProperty.value = !lightThemeProperty.value
+        scenes.forEach { scene ->
+            if (lightThemeProperty.value)
+                scene.root.styleClass.add("light-theme")
+            else
+                scene.root.styleClass.remove("light-theme")
+        }
+    }
+}</code></pre>
+
+        <h3>CSS-стратегия</h3>
+        <p>Базовый CSS — тёмная тема. Светлая тема — каскадные переопределения через <span class="inline-code">.light-theme</span> селекторы:</p>
+        <pre><code>/* Тёмная (по умолчанию) */
+.sidebar { -fx-background-color: #0e1118; }
+
+/* Светлая (override) */
+.light-theme .sidebar { -fx-background-color: #ffffff; }</code></pre>
+
+        <h3>Точки переключения</h3>
+        <ul>
+            <li><strong>Кнопка в сайдбаре</strong>: «☀ Светлая тема» / «🌙 Тёмная тема» — динамически обновляет иконку и текст</li>
+            <li><strong>Горячая клавиша</strong>: <span class="shortcut-kbd">Ctrl+Shift+T</span></li>
+            <li><strong>Dev-панель</strong>: чекбокс внутри панели разработчика</li>
+        </ul>
+    </div>
+
+    <!-- ===== 14. Dev-панель ===== -->
+    <div class="section" id="s14">
+        <h2>14. Dev-панель (отладочная)</h2>
+        <p>Секретная панель для быстрой отладки данных — активируется по <span class="shortcut-kbd">Ctrl+Shift+D</span>.</p>
+
+        <h3>Функции панели</h3>
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">💰 Быстрая продажа</div>
+                <p>Поля: ID автомата, ID товара, количество, цена, способ оплаты. Создаёт запись в <span class="inline-code">Sales</span> через <span class="inline-code">SaleDAO.create()</span>.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">🔧 Смена статуса ТА</div>
+                <p>Поле ID автомата + выпадающий список статусов. Обновляет через <span class="inline-code">VendingMachineDAO.updateStatus()</span>.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">🎨 Переключатель темы</div>
+                <p>Чекбокс «Светлая тема» — дублирует функционал кнопки в сайдбаре.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">⌨️ Справка по горячим клавишам</div>
+                <p>Отображает все доступные комбинации клавиш.</p>
+            </div>
+        </div>
+
+        <h3>Реализация</h3>
+        <ul>
+            <li>Overlay: полупрозрачный фон (<span class="inline-code">.dev-overlay</span>) + панель справа (<span class="inline-code">.dev-panel</span>)</li>
+            <li>Появление: <span class="inline-code">FadeTransition</span> (300мс)</li>
+            <li>Закрытие: кнопка «✕» или повторное нажатие <span class="shortcut-kbd">Ctrl+Shift+D</span></li>
+            <li>Статус-сообщения: зелёный текст при успехе операции</li>
+        </ul>
+    </div>
+
+    <!-- ===== 15. Горячие клавиши ===== -->
+    <div class="section" id="s15">
+        <h2>15. Горячие клавиши</h2>
+
+        <table>
+            <thead>
+                <tr><th>Комбинация</th><th>Действие</th><th>Место регистрации</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="shortcut-kbd">Ctrl+Shift+T</span></td>
+                    <td>Переключение тёмной / светлой темы</td>
+                    <td>VendingApp.showMain() — Scene.accelerators</td>
+                </tr>
+                <tr>
+                    <td><span class="shortcut-kbd">Ctrl+Shift+D</span></td>
+                    <td>Открыть / закрыть Dev-панель</td>
+                    <td>VendingApp.showMain() — Scene.accelerators</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <pre><code>// VendingApp.kt — регистрация горячих клавиш
+val themeHotkey = KeyCodeCombination(KeyCode.T, CONTROL_DOWN, SHIFT_DOWN)
+scene.accelerators[themeHotkey] = Runnable { ThemeManager.toggle() }
+
+scene.accelerators[DevPanel.HOTKEY] = Runnable { mainView.toggleDevPanel() }</code></pre>
+    </div>
+
+    <!-- ===== 16. Экспорт ===== -->
+    <div class="section" id="s16">
+        <h2>16. Импорт/экспорт данных</h2>
+
+        <h3>Импорт данных (БД)</h3>
+        <p>Скрипт <span class="inline-code">DB/import_data.sql</span> загружает тестовые данные из CSV-файлов директории <span class="inline-code">DB/data/</span>:</p>
+        <table>
+            <thead>
+                <tr><th>Файл</th><th>Таблица</th><th>Записей</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>roles.csv</td><td>roles</td><td>5</td></tr>
+                <tr><td>companies.csv</td><td>companies</td><td>12</td></tr>
+                <tr><td>users.csv</td><td>users</td><td>20</td></tr>
+                <tr><td>modems.csv</td><td>modems</td><td>30</td></tr>
+                <tr><td>vending_machines.csv</td><td>vending_machines</td><td>25</td></tr>
+                <tr><td>products.csv</td><td>products</td><td>25</td></tr>
+                <tr><td>machine_products.csv</td><td>machine_products</td><td>60</td></tr>
+                <tr><td>sales.csv</td><td>sales</td><td>150</td></tr>
+                <tr><td>service_orders.csv</td><td>service_orders</td><td>40</td></tr>
+                <tr><td>service_history.csv</td><td>service_history</td><td>50</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Экспорт из приложения</h3>
+        <p>Утилита <span class="inline-code">ExportUtil.kt</span> поддерживает экспорт таблицы торговых автоматов:</p>
+        <ul>
+            <li><strong>CSV</strong>: UTF-8 с BOM, разделитель «;», через <span class="inline-code">FileChooser</span></li>
+            <li><strong>PDF</strong>: iTextPDF, шрифт Arial (кириллица), 7 колонок, A4 landscape</li>
+            <li><strong>HTML</strong>: стилизованная HTML-страница с таблицей</li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- ============================== FOOTER ============================== -->
+<div class="footer">
+    VendingController v1.0-SNAPSHOT &bull; Kotlin 2.1.0 &bull; JavaFX 21.0.2 &bull; PostgreSQL 17 &bull; Axiom JDK 21 &bull; 2026<br>
+    <a href="report-connection.html" style="color: #5b8def; text-decoration: none;">📡 Отчёт: Подключение к БД</a> &bull;
+    <a href="report-architecture.html" style="color: #5b8def; text-decoration: none;">🏗️ Отчёт: Архитектура (этот файл)</a>
+</div>
+
+</body>
+</html>
