@@ -185,9 +185,8 @@ span.code {
 <p class="no-indent"><a href="#s11">11. Администрирование (CRUD-панель)</a></p>
 <p class="no-indent"><a href="#s12">12. Система push-уведомлений</a></p>
 <p class="no-indent"><a href="#s13">13. Темизация (тёмная / светлая тема)</a></p>
-<p class="no-indent"><a href="#s14">14. Dev-панель (отладочная)</a></p>
-<p class="no-indent"><a href="#s15">15. Горячие клавиши</a></p>
-<p class="no-indent"><a href="#s16">16. Импорт / экспорт данных</a></p>
+<p class="no-indent"><a href="#s14">14. Горячие клавиши</a></p>
+<p class="no-indent"><a href="#s15">15. Импорт / экспорт данных</a></p>
 
 
 <!-- ===== 1. Архитектура ===== -->
@@ -205,7 +204,7 @@ span.code {
 │                      PRESENTATION LAYER                       │
 │  LoginView, MainView, DashboardView, MachineMonitorView,     │
 │  ReportsView, InventoryView, Admin Views (CRUD),             │
-│  ThemeManager, DevPanel                                       │
+│  ThemeManager                                                 │
 ├──────────────────────────────────────────────────────────────┤
 │                       SERVICE LAYER                           │
 │  AuthService (JWT + BCrypt)  │  NotificationService (push)    │
@@ -263,7 +262,6 @@ span.code {
     │       ├── ReportsView.kt      # Отчёты (продажи, обслуживание, финансы)
     │       ├── InventoryView.kt    # Учёт ТМЦ (заглушка)
     │       ├── ThemeManager.kt     # Переключатель тем
-    │       ├── DevPanel.kt         # Отладочная панель (Ctrl+Shift+D)
     │       └── admin/
     │           ├── VendingMachinesView.kt  # CRUD: торговые автоматы
     │           ├── CompaniesView.kt        # CRUD: компании
@@ -289,7 +287,7 @@ span.code {
     <li><b>DatabaseConfig.init()</b> — загружает <span class="code">database.properties</span>, вызывает <span class="code">Database.connect()</span> (Exposed ORM). Устанавливает JDBC-соединение через драйвер <span class="code">org.postgresql:42.7.1</span>.</li>
     <li><b>showLogin()  LoginView</b> — отображает экран авторизации. Подключает CSS-стили (<span class="code">style.css</span>). Пользователь вводит email и пароль.</li>
     <li><b>AuthService.login(email, password)</b> — <span class="code">UserDAO.authenticate()</span> ищет пользователя в БД, BCrypt проверяет пароль. При успехе генерируется JWT-токен (HMAC256, 8 часов), сохраняется в <span class="code">SessionInfo</span>.</li>
-    <li><b>onLoginSuccess()  showMain()</b> — создаёт <span class="code">MainView</span>, регистрирует <span class="code">ThemeManager</span>, горячие клавиши. Запускает <span class="code">NotificationService.startSimulation()</span>.</li>
+    <li><b>onLoginSuccess()  showMain()</b> — создаёт <span class="code">MainView</span>, регистрирует <span class="code">ThemeManager</span> и горячие клавиши. Запускает <span class="code">NotificationService.startSimulation()</span>.</li>
     <li><b>MainView  DashboardView</b> — первая страница — дашборд с графиками, подключёнными к реальным данным БД.</li>
 </ol>
 
@@ -619,67 +617,35 @@ object ThemeManager {
 
 <ul>
     <li><b>Кнопка в сайдбаре</b>: «Светлая тема» / «Тёмная тема»;</li>
-    <li><b>Горячая клавиша</b>: Ctrl+Shift+T;</li>
-    <li><b>Dev-панель</b>: чекбокс внутри панели разработчика.</li>
+    <li><b>Горячая клавиша</b>: Ctrl+Shift+T.</li>
 </ul>
 
 
-<!-- ===== 14. Dev-панель ===== -->
+<!-- ===== 14. Горячие клавиши ===== -->
 
-<h2 id="s14">14. Dev-панель (отладочная)</h2>
+<h2 id="s14">14. Горячие клавиши</h2>
 
-<p>Секретная панель для быстрой отладки данных. Активируется комбинацией клавиш Ctrl+Shift+D.</p>
-
-<h3>14.1. Функции панели</h3>
-
-<p class="center" style="font-size:12.0pt;"><i>Таблица 5 — Функции Dev-панели</i></p>
-
-<table class="MsoTableGrid">
-    <tr><th>Функция</th><th>Описание</th></tr>
-    <tr><td>Быстрая продажа</td><td>Поля: ID автомата, ID товара, количество, цена, способ оплаты. Создаёт запись через <span class="code">SaleDAO.create()</span>.</td></tr>
-    <tr><td>Смена статуса ТА</td><td>Поле ID автомата + выпадающий список статусов. Обновляет через <span class="code">VendingMachineDAO.updateStatus()</span>.</td></tr>
-    <tr><td>Переключатель темы</td><td>Чекбокс «Светлая тема» — дублирует функционал кнопки в сайдбаре.</td></tr>
-    <tr><td>Справка по клавишам</td><td>Отображает все доступные комбинации горячих клавиш.</td></tr>
-</table>
-
-<h3>14.2. Реализация</h3>
-
-<ul>
-    <li>Overlay: полупрозрачный фон + панель справа;</li>
-    <li>Появление: <span class="code">FadeTransition</span> (300 мс);</li>
-    <li>Закрытие: кнопка закрытия или повторное нажатие Ctrl+Shift+D;</li>
-    <li>Статус-сообщения: зелёный текст при успехе операции.</li>
-</ul>
-
-
-<!-- ===== 15. Горячие клавиши ===== -->
-
-<h2 id="s15">15. Горячие клавиши</h2>
-
-<p class="center" style="font-size:12.0pt;"><i>Таблица 6 — Горячие клавиши</i></p>
+<p class="center" style="font-size:12.0pt;"><i>Таблица 5 — Горячие клавиши</i></p>
 
 <table class="MsoTableGrid">
     <tr><th>Комбинация</th><th>Действие</th><th>Место регистрации</th></tr>
     <tr><td>Ctrl+Shift+T</td><td>Переключение тёмной / светлой темы</td><td>VendingApp.showMain() — Scene.accelerators</td></tr>
-    <tr><td>Ctrl+Shift+D</td><td>Открыть / закрыть Dev-панель</td><td>VendingApp.showMain() — Scene.accelerators</td></tr>
 </table>
 
 <pre>// VendingApp.kt — регистрация горячих клавиш
 val themeHotkey = KeyCodeCombination(KeyCode.T, CONTROL_DOWN, SHIFT_DOWN)
-scene.accelerators[themeHotkey] = Runnable { ThemeManager.toggle() }
-
-scene.accelerators[DevPanel.HOTKEY] = Runnable { mainView.toggleDevPanel() }</pre>
+scene.accelerators[themeHotkey] = Runnable { ThemeManager.toggle() }</pre>
 
 
-<!-- ===== 16. Экспорт ===== -->
+<!-- ===== 15. Экспорт ===== -->
 
-<h2 id="s16">16. Импорт / экспорт данных</h2>
+<h2 id="s15">15. Импорт / экспорт данных</h2>
 
 <h3>16.1. Импорт данных (БД)</h3>
 
 <p>Скрипт <span class="code">DB/import_data.sql</span> загружает тестовые данные из CSV-файлов директории <span class="code">DB/data/</span>:</p>
 
-<p class="center" style="font-size:12.0pt;"><i>Таблица 7 — Импортируемые данные</i></p>
+<p class="center" style="font-size:12.0pt;"><i>Таблица 6 — Импортируемые данные</i></p>
 
 <table class="MsoTableGrid">
     <tr><th>Файл</th><th>Таблица</th><th>Записей</th></tr>
