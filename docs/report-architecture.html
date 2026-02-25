@@ -1,254 +1,206 @@
-<!DOCTYPE html>
-<html lang="ru">
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отчёт — Архитектура и работа приложения | VendingController</title>
-    <style>
-        @page { size: A4; margin: 2cm; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 14pt;
-            line-height: 1.5;
-            color: #000;
-            background: #f0f0f0;
-            padding: 20px;
-        }
-        .page {
-            max-width: 210mm;
-            margin: 0 auto;
-            background: #fff;
-            padding: 2cm;
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-        }
-
-        /* ===== Титульная страница ===== */
-        .title-page {
-            text-align: center;
-            padding: 60px 20px 40px;
-            border-bottom: 2px solid #000;
-            margin-bottom: 30px;
-        }
-        .title-page .org {
-            font-size: 13pt;
-            margin-bottom: 60px;
-            text-transform: uppercase;
-        }
-        .title-page h1 {
-            font-size: 22pt;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .title-page .subtitle {
-            font-size: 16pt;
-            margin-bottom: 8px;
-        }
-        .title-page .info {
-            font-size: 12pt;
-            color: #444;
-            margin-top: 30px;
-        }
-        .title-page .info span {
-            display: inline-block;
-            margin: 0 10px;
-        }
-
-        /* ===== Содержание ===== */
-        .toc {
-            margin-bottom: 30px;
-            page-break-after: always;
-        }
-        .toc h2 {
-            text-align: center;
-            font-size: 16pt;
-            margin-bottom: 16px;
-        }
-        .toc ol {
-            padding-left: 30px;
-            font-size: 14pt;
-        }
-        .toc li { margin: 6px 0; }
-        .toc a { color: #000; text-decoration: none; }
-        .toc a:hover { text-decoration: underline; }
-
-        /* ===== Заголовки ===== */
-        h2 {
-            font-size: 16pt;
-            font-weight: bold;
-            margin-top: 28px;
-            margin-bottom: 12px;
-            page-break-after: avoid;
-        }
-        h3 {
-            font-size: 14pt;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 8px;
-        }
-
-        /* ===== Текст ===== */
-        p {
-            text-align: justify;
-            text-indent: 1.25cm;
-            margin-bottom: 6px;
-        }
-        p.no-indent { text-indent: 0; }
-        ul, ol { margin: 8px 0 12px 1.25cm; }
-        li { margin: 4px 0; }
-
-        /* ===== Таблицы ===== */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 12px 0 16px;
-            font-size: 12pt;
-        }
-        table, th, td { border: 1px solid #000; }
-        th {
-            background: #d9e2f3;
-            font-weight: bold;
-            padding: 6px 8px;
-            text-align: left;
-            font-size: 12pt;
-        }
-        td { padding: 5px 8px; vertical-align: top; }
-
-        /* ===== Код ===== */
-        pre {
-            background: #f5f5f5;
-            border: 1px solid #ccc;
-            padding: 10px 14px;
-            margin: 10px 0 14px;
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 11pt;
-            line-height: 1.4;
-            page-break-inside: avoid;
-        }
-        code {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 11pt;
-        }
-        .inline-code {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12pt;
-            background: #f0f0f0;
-            padding: 1px 4px;
-            border: 1px solid #ddd;
-        }
-
-        /* ===== Примечания ===== */
-        .note {
-            border: 1px solid #4472c4;
-            background: #dae3f3;
-            padding: 8px 12px;
-            margin: 10px 0 14px;
-            font-size: 12pt;
-        }
-        .note strong { color: #2f5496; }
-
-        /* ===== Диаграмма ===== */
-        .diagram {
-            background: #f9f9f9;
-            border: 1px solid #999;
-            padding: 16px;
-            margin: 12px 0 16px;
-            text-align: center;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 10pt;
-            line-height: 1.5;
-            overflow-x: auto;
-            white-space: pre;
-            page-break-inside: avoid;
-        }
-
-        /* ===== Нумерованные шаги ===== */
-        .step-list { counter-reset: steps; list-style: none; padding-left: 0; margin: 8px 0 12px; }
-        .step-list li {
-            counter-increment: steps;
-            margin: 8px 0;
-            padding-left: 2.5em;
-            position: relative;
-        }
-        .step-list li::before {
-            content: counter(steps);
-            position: absolute;
-            left: 0;
-            width: 1.8em;
-            height: 1.8em;
-            background: #d9e2f3;
-            border: 1px solid #4472c4;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 1.8em;
-            font-size: 11pt;
-            font-weight: bold;
-            color: #2f5496;
-        }
-
-        /* ===== Футер ===== */
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 12px;
-            border-top: 1px solid #000;
-            font-size: 11pt;
-            color: #444;
-        }
-        .footer a { color: #2f5496; text-decoration: none; }
-        .footer a:hover { text-decoration: underline; }
-
-        @media print {
-            body { background: #fff; padding: 0; }
-            .page { box-shadow: none; padding: 0; max-width: 100%; }
-        }
-    </style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 15">
+<title>Архитектура и работа приложения</title>
+<!--[if gte mso 9]><xml>
+<o:DocumentProperties>
+<o:Author>VendingController</o:Author>
+<o:LastAuthor>VendingController</o:LastAuthor>
+<o:Created>2026-02-25T00:00:00Z</o:Created>
+</o:DocumentProperties>
+</xml><![endif]-->
+<!--[if gte mso 9]><xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+@page Section1 {
+    size: 595.3pt 841.9pt;
+    margin: 2.0cm 1.5cm 2.0cm 3.0cm;
+    mso-header-margin: 35.4pt;
+    mso-footer-margin: 35.4pt;
+    mso-paper-source: 0;
+}
+div.Section1 { page: Section1; }
+body {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    line-height: 150%;
+    color: black;
+    margin: 0;
+    padding: 0;
+    background: white;
+}
+@media screen {
+    body { background: #e0e0e0; }
+    div.Section1 {
+        max-width: 210mm;
+        margin: 10px auto;
+        background: white;
+        padding: 2cm 1.5cm 2cm 3cm;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+}
+h1 {
+    font-family: 'Times New Roman', serif;
+    font-size: 16.0pt;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0pt;
+    margin-bottom: 12.0pt;
+    line-height: 150%;
+}
+h2 {
+    font-family: 'Times New Roman', serif;
+    font-size: 16.0pt;
+    font-weight: bold;
+    margin-top: 18.0pt;
+    margin-bottom: 6.0pt;
+    line-height: 150%;
+    page-break-after: avoid;
+}
+h3 {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    font-weight: bold;
+    margin-top: 12.0pt;
+    margin-bottom: 6.0pt;
+    line-height: 150%;
+}
+p {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    margin-top: 0;
+    margin-bottom: 6.0pt;
+    text-align: justify;
+    text-indent: 1.25cm;
+    line-height: 150%;
+}
+p.MsoTitle {
+    text-align: center;
+    text-indent: 0;
+    font-size: 16.0pt;
+    font-weight: bold;
+}
+p.center {
+    text-align: center;
+    text-indent: 0;
+}
+p.no-indent {
+    text-indent: 0;
+}
+ul, ol {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    margin-top: 0;
+    margin-bottom: 6.0pt;
+    margin-left: 1.25cm;
+    line-height: 150%;
+}
+li {
+    margin-bottom: 2.0pt;
+}
+table.MsoTableGrid {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: 'Times New Roman', serif;
+    font-size: 12.0pt;
+    margin-top: 6.0pt;
+    margin-bottom: 12.0pt;
+}
+table.MsoTableGrid td, table.MsoTableGrid th {
+    border: 1.0pt solid black;
+    padding: 3.0pt 5.0pt 3.0pt 5.0pt;
+    vertical-align: top;
+}
+table.MsoTableGrid th {
+    font-weight: bold;
+    text-align: center;
+}
+pre {
+    font-family: 'Courier New', monospace;
+    font-size: 10.0pt;
+    line-height: 130%;
+    margin-top: 6.0pt;
+    margin-bottom: 6.0pt;
+    margin-left: 1.25cm;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+span.code {
+    font-family: 'Courier New', monospace;
+    font-size: 12.0pt;
+}
+.page-break {
+    page-break-before: always;
+}
+-->
+</style>
 </head>
-<body>
-<div class="page">
 
-    <!-- ============================== ТИТУЛЬНАЯ СТРАНИЦА ============================== -->
-    <div class="title-page">
-        <div class="org">Проект «VendingController»<br>Модуль управления вендинговой сетью (франчайзер)</div>
-        <h1>АРХИТЕКТУРА И РАБОТА ПРИЛОЖЕНИЯ</h1>
-        <div class="subtitle">Техническая документация</div>
-        <div class="info">
-            <span>27 Kotlin-файлов</span> &bull;
-            <span>13 таблиц БД</span> &bull;
-            <span>10 экранов UI</span>
-        </div>
-        <div class="info" style="margin-top: 10px;">2026 г.</div>
-    </div>
+<body lang="RU">
+<div class="Section1">
 
-    <!-- ============================== СОДЕРЖАНИЕ ============================== -->
-    <div class="toc">
-        <h2>СОДЕРЖАНИЕ</h2>
-        <ol>
-            <li><a href="#s1">Общая архитектура</a></li>
-            <li><a href="#s2">Структура проекта (файловая)</a></li>
-            <li><a href="#s3">Жизненный цикл приложения</a></li>
-            <li><a href="#s4">Слой модели данных (model)</a></li>
-            <li><a href="#s5">Слой доступа к данным (DAO)</a></li>
-            <li><a href="#s6">Сервисный слой (service)</a></li>
-            <li><a href="#s7">UI-слой: экраны приложения</a></li>
-            <li><a href="#s8">Навигация и боковое меню</a></li>
-            <li><a href="#s9">Дашборд (главная страница)</a></li>
-            <li><a href="#s10">Монитор торговых автоматов</a></li>
-            <li><a href="#s11">Администрирование (CRUD-панель)</a></li>
-            <li><a href="#s12">Система push-уведомлений</a></li>
-            <li><a href="#s13">Темизация (тёмная / светлая тема)</a></li>
-            <li><a href="#s14">Dev-панель (отладочная)</a></li>
-            <li><a href="#s15">Горячие клавиши</a></li>
-            <li><a href="#s16">Импорт / экспорт данных</a></li>
-        </ol>
-    </div>
+<p class="center" style="margin-top:120pt;font-size:14.0pt;">ПРОЕКТ «VENDINGCONTROLLER»</p>
+<p class="center" style="font-size:12.0pt;">Модуль управления вендинговой сетью (франчайзер)</p>
 
-    <!-- ===== 1. Архитектура ===== -->
-    <h2 id="s1">1. Общая архитектура</h2>
-    <p>Приложение построено по <b>многослойной архитектуре</b> с чётким разделением ответственности. Каждый слой решает свою задачу и взаимодействует только со смежными слоями:</p>
+<p class="center" style="margin-top:72pt;">&nbsp;</p>
 
-    <div class="diagram">
+<p class="MsoTitle" style="font-size:18.0pt;">АРХИТЕКТУРА И РАБОТА ПРИЛОЖЕНИЯ</p>
+
+<p class="center" style="margin-top:12pt;font-size:14.0pt;">Техническая документация</p>
+
+<p class="center" style="margin-top:120pt;font-size:12.0pt;">
+27 Kotlin-файлов | 13 таблиц БД | 10 экранов UI
+</p>
+
+<p class="center" style="margin-top:48pt;font-size:14.0pt;">2026</p>
+
+
+<!-- ===== СОДЕРЖАНИЕ ===== -->
+
+<p class="page-break">&nbsp;</p>
+
+<h1>СОДЕРЖАНИЕ</h1>
+
+<p class="no-indent"><a href="#s1">1. Общая архитектура</a></p>
+<p class="no-indent"><a href="#s2">2. Структура проекта (файловая)</a></p>
+<p class="no-indent"><a href="#s3">3. Жизненный цикл приложения</a></p>
+<p class="no-indent"><a href="#s4">4. Слой модели данных (model)</a></p>
+<p class="no-indent"><a href="#s5">5. Слой доступа к данным (DAO)</a></p>
+<p class="no-indent"><a href="#s6">6. Сервисный слой (service)</a></p>
+<p class="no-indent"><a href="#s7">7. UI-слой: экраны приложения</a></p>
+<p class="no-indent"><a href="#s8">8. Навигация и боковое меню</a></p>
+<p class="no-indent"><a href="#s9">9. Дашборд (главная страница)</a></p>
+<p class="no-indent"><a href="#s10">10. Монитор торговых автоматов</a></p>
+<p class="no-indent"><a href="#s11">11. Администрирование (CRUD-панель)</a></p>
+<p class="no-indent"><a href="#s12">12. Система push-уведомлений</a></p>
+<p class="no-indent"><a href="#s13">13. Темизация (тёмная / светлая тема)</a></p>
+<p class="no-indent"><a href="#s14">14. Dev-панель (отладочная)</a></p>
+<p class="no-indent"><a href="#s15">15. Горячие клавиши</a></p>
+<p class="no-indent"><a href="#s16">16. Импорт / экспорт данных</a></p>
+
+
+<!-- ===== 1. Архитектура ===== -->
+
+<p class="page-break">&nbsp;</p>
+
+<h2 id="s1">1. Общая архитектура</h2>
+
+<p>Приложение построено по <b>многослойной архитектуре</b> с чётким разделением ответственности. Каждый слой решает свою задачу и взаимодействует только со смежными слоями.</p>
+
+<p class="center" style="font-size:12.0pt;margin-bottom:6pt;"><i>Рисунок 1 — Слои архитектуры приложения</i></p>
+
+<pre style="margin-left:0;text-align:center;">
 ┌──────────────────────────────────────────────────────────────┐
 │                      PRESENTATION LAYER                       │
 │  LoginView, MainView, DashboardView, MachineMonitorView,     │
@@ -268,11 +220,15 @@
 ├──────────────────────────────────────────────────────────────┤
 │                     INFRASTRUCTURE                            │
 │  PostgreSQL 17  │  Logback (logs)  │  ExportUtil (CSV/PDF/HTML)│
-└──────────────────────────────────────────────────────────────┘</div>
+└──────────────────────────────────────────────────────────────┘
+</pre>
 
-    <!-- ===== 2. Структура проекта ===== -->
-    <h2 id="s2">2. Структура проекта (файловая)</h2>
-    <pre><code>VendingController/
+
+<!-- ===== 2. Структура проекта ===== -->
+
+<h2 id="s2">2. Структура проекта (файловая)</h2>
+
+<pre>VendingController/
 ├── pom.xml                          # Maven конфигурация и зависимости
 ├── mvnw / mvnw.cmd                  # Maven Wrapper
 ├── docs/
@@ -318,380 +274,439 @@
     └── resources/
         ├── database.properties     # Параметры подключения к БД
         ├── style.css               # Стили: тёмная + светлая тема (~2200 строк)
-        └── logback.xml             # Конфигурация логирования</code></pre>
+        └── logback.xml             # Конфигурация логирования</pre>
 
-    <!-- ===== 3. Жизненный цикл ===== -->
-    <h2 id="s3">3. Жизненный цикл приложения</h2>
-    <p>Последовательность действий от запуска JVM до рабочего состояния приложения:</p>
 
-    <ol class="step-list">
-        <li><b>Main.kt → Application.launch()</b> — точка входа JVM. Вызывает JavaFX-рантайм, который создаёт экземпляр <span class="inline-code">VendingApp</span>.</li>
-        <li><b>VendingApp.start(stage)</b> — инициализирует <span class="inline-code">primaryStage</span> (1280×800, min 1024×700). Вызывает <span class="inline-code">DatabaseConfig.init()</span> для подключения к PostgreSQL.</li>
-        <li><b>DatabaseConfig.init()</b> — загружает <span class="inline-code">database.properties</span>, вызывает <span class="inline-code">Database.connect()</span> (Exposed ORM). Устанавливает JDBC-соединение через драйвер <span class="inline-code">org.postgresql:42.7.1</span>.</li>
-        <li><b>showLogin() → LoginView</b> — отображает экран авторизации. Подключает CSS-стили (<span class="inline-code">style.css</span>). Пользователь вводит email и пароль.</li>
-        <li><b>AuthService.login(email, password)</b> — <span class="inline-code">UserDAO.authenticate()</span> ищет пользователя в БД, BCrypt проверяет пароль. При успехе генерируется JWT-токен (HMAC256, 8 часов), сохраняется в <span class="inline-code">SessionInfo</span>.</li>
-        <li><b>onLoginSuccess() → showMain()</b> — создаёт <span class="inline-code">MainView</span>, регистрирует <span class="inline-code">ThemeManager</span>, горячие клавиши. Запускает <span class="inline-code">NotificationService.startSimulation()</span>.</li>
-        <li><b>MainView → DashboardView</b> — первая страница — дашборд с графиками, подключёнными к реальным данным БД.</li>
-    </ol>
+<!-- ===== 3. Жизненный цикл ===== -->
 
-    <!-- ===== 4. Модель данных ===== -->
-    <h2 id="s4">4. Слой модели данных (model)</h2>
-    <p>Все модели определены в файле <span class="inline-code">model/Models.kt</span> (223 строки). Используются Kotlin <span class="inline-code">data class</span> для иммутабельных данных.</p>
+<h2 id="s3">3. Жизненный цикл приложения</h2>
 
-    <table>
-        <thead><tr><th>Класс</th><th>Ключевые поля</th><th>Назначение</th></tr></thead>
-        <tbody>
-            <tr><td><span class="inline-code">User</span></td><td>id, email, fullName, passwordHash, roleId, companyId</td><td>Пользователь системы</td></tr>
-            <tr><td><span class="inline-code">Role</span></td><td>id, code, name</td><td>Роль (admin, franchisor, engineer, ...)</td></tr>
-            <tr><td><span class="inline-code">Company</span></td><td>id, name, address, contactPhone, email</td><td>Компания-франчайзи</td></tr>
-            <tr><td><span class="inline-code">Modem</span></td><td>id, imei, phoneNumber, status</td><td>Модем для связи с ТА</td></tr>
-            <tr><td><span class="inline-code">VendingMachine</span></td><td>id, name, model, status, companyId, totalRevenue, 25+ полей</td><td>Торговый автомат</td></tr>
-            <tr><td><span class="inline-code">Product</span></td><td>id, name, price, category, barcode</td><td>Товар</td></tr>
-            <tr><td><span class="inline-code">Sale</span></td><td>id, machineId, productId, quantity, totalAmount, saleTime</td><td>Запись о продаже</td></tr>
-            <tr><td><span class="inline-code">ServiceOrder</span></td><td>id, orderNumber, machineId, type, status, priority</td><td>Заявка на обслуживание</td></tr>
-            <tr><td><span class="inline-code">Notification</span></td><td>id, type, title, message, isRead</td><td>Push-уведомление</td></tr>
-            <tr><td><span class="inline-code">SessionInfo</span></td><td>currentUser, token, role</td><td>Данные текущей сессии</td></tr>
-            <tr><td><span class="inline-code">DashboardStats</span></td><td>totalMachines, working, broken, maintenance, totalRevenue</td><td>Агрегированная статистика</td></tr>
-            <tr><td><span class="inline-code">DailySales</span></td><td>date, count, amount</td><td>Продажи за день (для графика)</td></tr>
-        </tbody>
-    </table>
+<p>Последовательность действий от запуска JVM до рабочего состояния приложения:</p>
 
-    <h3>4.1. Вычисляемые свойства</h3>
-    <p>Модели содержат вычисляемые поля для удобного отображения в интерфейсе:</p>
-    <pre><code>data class VendingMachine(...) {
+<ol>
+    <li><b>Main.kt  Application.launch()</b> — точка входа JVM. Вызывает JavaFX-рантайм, который создаёт экземпляр <span class="code">VendingApp</span>.</li>
+    <li><b>VendingApp.start(stage)</b> — инициализирует <span class="code">primaryStage</span> (1280x800, min 1024x700). Вызывает <span class="code">DatabaseConfig.init()</span> для подключения к PostgreSQL.</li>
+    <li><b>DatabaseConfig.init()</b> — загружает <span class="code">database.properties</span>, вызывает <span class="code">Database.connect()</span> (Exposed ORM). Устанавливает JDBC-соединение через драйвер <span class="code">org.postgresql:42.7.1</span>.</li>
+    <li><b>showLogin()  LoginView</b> — отображает экран авторизации. Подключает CSS-стили (<span class="code">style.css</span>). Пользователь вводит email и пароль.</li>
+    <li><b>AuthService.login(email, password)</b> — <span class="code">UserDAO.authenticate()</span> ищет пользователя в БД, BCrypt проверяет пароль. При успехе генерируется JWT-токен (HMAC256, 8 часов), сохраняется в <span class="code">SessionInfo</span>.</li>
+    <li><b>onLoginSuccess()  showMain()</b> — создаёт <span class="code">MainView</span>, регистрирует <span class="code">ThemeManager</span>, горячие клавиши. Запускает <span class="code">NotificationService.startSimulation()</span>.</li>
+    <li><b>MainView  DashboardView</b> — первая страница — дашборд с графиками, подключёнными к реальным данным БД.</li>
+</ol>
+
+
+<!-- ===== 4. Модель данных ===== -->
+
+<h2 id="s4">4. Слой модели данных (model)</h2>
+
+<p>Все модели определены в файле <span class="code">model/Models.kt</span> (223 строки). Используются Kotlin <span class="code">data class</span> для иммутабельных данных.</p>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 1 — Модели данных приложения</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Класс</th><th>Ключевые поля</th><th>Назначение</th></tr>
+    <tr><td><span class="code">User</span></td><td>id, email, fullName, passwordHash, roleId, companyId</td><td>Пользователь системы</td></tr>
+    <tr><td><span class="code">Role</span></td><td>id, code, name</td><td>Роль (admin, franchisor, engineer и др.)</td></tr>
+    <tr><td><span class="code">Company</span></td><td>id, name, address, contactPhone, email</td><td>Компания-франчайзи</td></tr>
+    <tr><td><span class="code">Modem</span></td><td>id, imei, phoneNumber, status</td><td>Модем для связи с ТА</td></tr>
+    <tr><td><span class="code">VendingMachine</span></td><td>id, name, model, status, companyId, totalRevenue, 25+ полей</td><td>Торговый автомат</td></tr>
+    <tr><td><span class="code">Product</span></td><td>id, name, price, category, barcode</td><td>Товар</td></tr>
+    <tr><td><span class="code">Sale</span></td><td>id, machineId, productId, quantity, totalAmount, saleTime</td><td>Запись о продаже</td></tr>
+    <tr><td><span class="code">ServiceOrder</span></td><td>id, orderNumber, machineId, type, status, priority</td><td>Заявка на обслуживание</td></tr>
+    <tr><td><span class="code">Notification</span></td><td>id, type, title, message, isRead</td><td>Push-уведомление</td></tr>
+    <tr><td><span class="code">SessionInfo</span></td><td>currentUser, token, role</td><td>Данные текущей сессии</td></tr>
+    <tr><td><span class="code">DashboardStats</span></td><td>totalMachines, working, broken, maintenance, totalRevenue</td><td>Агрегированная статистика</td></tr>
+    <tr><td><span class="code">DailySales</span></td><td>date, count, amount</td><td>Продажи за день (для графика)</td></tr>
+</table>
+
+<h3>4.1. Вычисляемые свойства</h3>
+
+<p>Модели содержат вычисляемые поля для удобного отображения в интерфейсе:</p>
+
+<pre>data class VendingMachine(...) {
     val statusDisplay: String get() = when(status) {
-        "working"     -> "Работает"
-        "broken"      -> "Не работает"
-        "maintenance" -> "На обслуживании"
-        else          -> status
+        "working"     -&gt; "Работает"
+        "broken"      -&gt; "Не работает"
+        "maintenance" -&gt; "На обслуживании"
+        else          -&gt; status
     }
     val typeDisplay: String get() = when(type) {
-        "cash" -> "Наличные"
-        "card" -> "Карта"
-        "both" -> "Наличные + Карта"
-        else   -> type
+        "cash" -&gt; "Наличные"
+        "card" -&gt; "Карта"
+        "both" -&gt; "Наличные + Карта"
+        else   -&gt; type
     }
-}</code></pre>
+}</pre>
 
-    <!-- ===== 5. DAO Layer ===== -->
-    <h2 id="s5">5. Слой доступа к данным (DAO)</h2>
-    <p>DAO-слой реализован через Kotlin <span class="inline-code">object</span>-синглтоны. Все методы оборачиваются в блок <span class="inline-code">transaction { }</span> ORM Exposed.</p>
 
-    <h3>5.1. VendingMachineDAO (ключевой DAO)</h3>
-    <p>Содержит самую сложную логику — агрегация для дашборда, фильтрация для монитора:</p>
-    <pre><code>object VendingMachineDAO {
+<!-- ===== 5. DAO Layer ===== -->
+
+<h2 id="s5">5. Слой доступа к данным (DAO)</h2>
+
+<p>DAO-слой реализован через Kotlin <span class="code">object</span>-синглтоны. Все методы оборачиваются в блок <span class="code">transaction { }</span> ORM Exposed.</p>
+
+<h3>5.1. VendingMachineDAO (ключевой DAO)</h3>
+
+<p>Содержит самую сложную логику — агрегация для дашборда, фильтрация для монитора:</p>
+
+<pre>object VendingMachineDAO {
     fun getAll(): List&lt;VendingMachine&gt;           // полный список с resolved-именами
     fun getDashboardStats(): DashboardStats       // агрегированная статистика
     fun create(machine: VendingMachine): Int
     fun update(machine: VendingMachine)
     fun delete(id: Int)
     fun updateStatus(id: Int, status: String)     // смена статуса
-}</code></pre>
+}</pre>
 
-    <h3>5.2. UserDAO.authenticate()</h3>
-    <pre><code>fun authenticate(email: String, password: String): User? {
+<h3>5.2. UserDAO.authenticate()</h3>
+
+<pre>fun authenticate(email: String, password: String): User? {
     return transaction {
         val row = Users.select { Users.email eq email }.singleOrNull()
             ?: return@transaction null
         val hash = row[Users.passwordHash]
         if (BCrypt.checkpw(password, hash)) mapToUser(row) else null
     }
-}</code></pre>
+}</pre>
 
-    <div class="note">
-        <strong>Примечание:</strong> Каждый DAO самостоятельно «резолвит» связанные сущности. Например, <span class="inline-code">VendingMachineDAO.getAll()</span> дополнительно загружает <span class="inline-code">companyName</span>, <span class="inline-code">modemImei</span> и <span class="inline-code">inspectorName</span> для каждого автомата.
-    </div>
+<p><b>Примечание.</b> Каждый DAO самостоятельно «резолвит» связанные сущности. Например, <span class="code">VendingMachineDAO.getAll()</span> дополнительно загружает <span class="code">companyName</span>, <span class="code">modemImei</span> и <span class="code">inspectorName</span> для каждого автомата.</p>
 
-    <!-- ===== 6. Service Layer ===== -->
-    <h2 id="s6">6. Сервисный слой (service)</h2>
 
-    <h3>6.1. AuthService</h3>
-    <ul>
-        <li><span class="inline-code">login(email, password)</span> — авторизация через BCrypt + JWT;</li>
-        <li><span class="inline-code">logout()</span> — очистка сессии;</li>
-        <li><span class="inline-code">generateToken(user)</span> — JWT, HMAC256, срок — 8 часов;</li>
-        <li><span class="inline-code">validateToken(token)</span> — верификация JWT;</li>
-        <li><span class="inline-code">getUserShortName()</span> — возвращает «Иванов И.И.»;</li>
-        <li>Хранит <span class="inline-code">SessionInfo</span>: currentUser, token, role.</li>
-    </ul>
+<!-- ===== 6. Service Layer ===== -->
 
-    <h3>6.2. NotificationService</h3>
-    <ul>
-        <li><span class="inline-code">pushCritical/Warning/Info()</span> — создание уведомления;</li>
-        <li>Сохранение в БД через <span class="inline-code">NotificationDAO</span>;</li>
-        <li>Toast-отображение с приоритетами;</li>
-        <li>Таймауты: critical = 10 сек, warning = 7 сек, info = 5 сек;</li>
-        <li>Кнопка закрытия «✕» на каждом toast;</li>
-        <li><span class="inline-code">startSimulation()</span> — эмуляция событий от торговых автоматов.</li>
-    </ul>
+<h2 id="s6">6. Сервисный слой (service)</h2>
 
-    <!-- ===== 7. UI-слой ===== -->
-    <h2 id="s7">7. UI-слой: экраны приложения</h2>
-    <p>Все экраны строятся <b>программно на Kotlin</b> (без FXML). Каждый View — класс с полем <span class="inline-code">root: Node</span>, которое вставляется в <span class="inline-code">contentArea</span> при навигации.</p>
+<h3>6.1. AuthService</h3>
 
-    <table>
-        <thead><tr><th>Экран</th><th>Файл</th><th>~Строк</th><th>Описание</th></tr></thead>
-        <tbody>
-            <tr><td>Авторизация</td><td>LoginView.kt</td><td>120</td><td>Email + пароль, карточка с логотипом, анимация ошибки</td></tr>
-            <tr><td>Главный layout</td><td>MainView.kt</td><td>442</td><td>BorderPane: sidebar + top-bar + contentArea + notifications</td></tr>
-            <tr><td>Дашборд</td><td>DashboardView.kt</td><td>358</td><td>5 блоков: эффективность, PieChart, сводка, LineChart, новости</td></tr>
-            <tr><td>Монитор ТА</td><td>MachineMonitorView.kt</td><td>400</td><td>Таблица всех ТА + фильтры по статусу и типу</td></tr>
-            <tr><td>Отчёты</td><td>ReportsView.kt</td><td>450</td><td>3 вкладки: продажи, обслуживание, финансы</td></tr>
-            <tr><td>Учёт ТМЦ</td><td>InventoryView.kt</td><td>96</td><td>Заглушка: «Сервер учёта ТМЦ недоступен»</td></tr>
-            <tr><td>Торг. автоматы</td><td>admin/VendingMachinesView.kt</td><td>400</td><td>CRUD-таблица + плитки, фильтр, пагинация, экспорт</td></tr>
-            <tr><td>Компании</td><td>admin/CompaniesView.kt</td><td>180</td><td>CRUD-таблица компаний</td></tr>
-            <tr><td>Пользователи</td><td>admin/UsersView.kt</td><td>220</td><td>CRUD-таблица, создание с хешированием пароля</td></tr>
-            <tr><td>Модемы</td><td>admin/ModemsView.kt</td><td>170</td><td>CRUD-таблица модемов</td></tr>
-            <tr><td>Заявки</td><td>admin/ServiceOrdersView.kt</td><td>380</td><td>CRUD + фильтры по статусу/приоритету, история</td></tr>
-        </tbody>
-    </table>
+<ul>
+    <li><span class="code">login(email, password)</span> — авторизация через BCrypt + JWT;</li>
+    <li><span class="code">logout()</span> — очистка сессии;</li>
+    <li><span class="code">generateToken(user)</span> — JWT, HMAC256, срок — 8 часов;</li>
+    <li><span class="code">validateToken(token)</span> — верификация JWT;</li>
+    <li><span class="code">getUserShortName()</span> — возвращает «Иванов И.И.»;</li>
+    <li>Хранит <span class="code">SessionInfo</span>: currentUser, token, role.</li>
+</ul>
 
-    <!-- ===== 8. Навигация ===== -->
-    <h2 id="s8">8. Навигация и боковое меню</h2>
-    <p>Класс <span class="inline-code">MainView</span> построен на <span class="inline-code">BorderPane</span> — главном контейнере JavaFX:</p>
+<h3>6.2. NotificationService</h3>
 
-    <div class="diagram">
+<ul>
+    <li><span class="code">pushCritical/Warning/Info()</span> — создание уведомления;</li>
+    <li>Сохранение в БД через <span class="code">NotificationDAO</span>;</li>
+    <li>Toast-отображение с приоритетами;</li>
+    <li>Таймауты: critical = 10 сек, warning = 7 сек, info = 5 сек;</li>
+    <li>Кнопка закрытия на каждом toast;</li>
+    <li><span class="code">startSimulation()</span> — эмуляция событий от торговых автоматов.</li>
+</ul>
+
+
+<!-- ===== 7. UI-слой ===== -->
+
+<h2 id="s7">7. UI-слой: экраны приложения</h2>
+
+<p>Все экраны строятся <b>программно на Kotlin</b> (без FXML). Каждый View — класс с полем <span class="code">root: Node</span>, которое вставляется в <span class="code">contentArea</span> при навигации.</p>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 2 — Экраны приложения</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Экран</th><th>Файл</th><th>~Строк</th><th>Описание</th></tr>
+    <tr><td>Авторизация</td><td>LoginView.kt</td><td>120</td><td>Email + пароль, карточка с логотипом, анимация ошибки</td></tr>
+    <tr><td>Главный layout</td><td>MainView.kt</td><td>442</td><td>BorderPane: sidebar + top-bar + contentArea + notifications</td></tr>
+    <tr><td>Дашборд</td><td>DashboardView.kt</td><td>358</td><td>5 блоков: эффективность, PieChart, сводка, LineChart, новости</td></tr>
+    <tr><td>Монитор ТА</td><td>MachineMonitorView.kt</td><td>400</td><td>Таблица всех ТА + фильтры по статусу и типу</td></tr>
+    <tr><td>Отчёты</td><td>ReportsView.kt</td><td>450</td><td>3 вкладки: продажи, обслуживание, финансы</td></tr>
+    <tr><td>Учёт ТМЦ</td><td>InventoryView.kt</td><td>96</td><td>Заглушка: «Сервер учёта ТМЦ недоступен»</td></tr>
+    <tr><td>Торг. автоматы</td><td>admin/VendingMachinesView.kt</td><td>400</td><td>CRUD-таблица + плитки, фильтр, пагинация, экспорт</td></tr>
+    <tr><td>Компании</td><td>admin/CompaniesView.kt</td><td>180</td><td>CRUD-таблица компаний</td></tr>
+    <tr><td>Пользователи</td><td>admin/UsersView.kt</td><td>220</td><td>CRUD-таблица, создание с хешированием пароля</td></tr>
+    <tr><td>Модемы</td><td>admin/ModemsView.kt</td><td>170</td><td>CRUD-таблица модемов</td></tr>
+    <tr><td>Заявки</td><td>admin/ServiceOrdersView.kt</td><td>380</td><td>CRUD + фильтры по статусу/приоритету, история</td></tr>
+</table>
+
+
+<!-- ===== 8. Навигация ===== -->
+
+<h2 id="s8">8. Навигация и боковое меню</h2>
+
+<p>Класс <span class="code">MainView</span> построен на <span class="code">BorderPane</span> — главном контейнере JavaFX.</p>
+
+<p class="center" style="font-size:12.0pt;margin-bottom:6pt;"><i>Рисунок 2 — Схема главного окна</i></p>
+
+<pre style="margin-left:0;text-align:center;">
 ┌─────────────────────────────────────────────────────────────┐
 │                         TOP BAR                              │
-│  [≡ Toggle] Главная / Дашборд          🔔(3) 👤 Иванов И.  │
+│  [Toggle] Главная / Дашборд            (3) Иванов И.        │
 ├──────────┬──────────────────────────────────────────────────┤
 │ SIDEBAR  │                                                   │
 │ (260px)  │              CONTENT AREA                         │
 │          │                                                   │
-│ Логотип  │                                                   │
-│ Юзер     │     ┌──────────────────────────────────┐         │
-│ ──────── │     │   DashboardView / MonitorView    │         │
-│ ▸ Главная│     │   / ReportsView / AdminViews     │         │
-│ ▸ Монитор│     │                                  │         │
-│ ▸ Отчёты │     │   (динамическая замена            │         │
-│ ▸ Учёт   │     │    при навигации)                │         │
-│ ▾ Админ  │     └──────────────────────────────────┘         │
+│ Логотип  │     ┌──────────────────────────────────┐         │
+│ Юзер     │     │   DashboardView / MonitorView    │         │
+│ ──────── │     │   / ReportsView / AdminViews     │         │
+│  Главная │     │                                  │         │
+│  Монитор │     │   (динамическая замена            │         │
+│  Отчёты  │     │    при навигации)                │         │
+│  Учёт    │     └──────────────────────────────────┘         │
+│  Админ   │                                                   │
 │   ├ ТА   │                                                   │
-│   ├ Комп.│                                                   │
-│   ├ Юзеры│  ┌──────────────────────────────────────────┐    │
-│   ├ Модем│  │ NOTIFICATION OVERLAY (toast stack, top-R) │    │
-│   └ Заяв.│  └──────────────────────────────────────────┘    │
+│   ├ Комп.│  ┌──────────────────────────────────────────┐    │
+│   ├ Юзеры│  │ NOTIFICATION OVERLAY (toast stack, top-R) │    │
+│   ├ Модем│  └──────────────────────────────────────────┘    │
+│   └ Заяв.│                                                   │
 │ ──────── │                                                   │
-│ ☀ Тема   │                                                   │
-└──────────┴──────────────────────────────────────────────────┘</div>
+│  Тема    │                                                   │
+└──────────┴──────────────────────────────────────────────────┘
+</pre>
 
-    <h3>8.1. Механика навигации</h3>
-    <ol>
-        <li>Каждый пункт меню — <span class="inline-code">Button</span> с CSS-классом <span class="inline-code">.sidebar-menu-button</span>;</li>
-        <li>При клике вызывается <span class="inline-code">navigateTo(viewName)</span>;</li>
-        <li>Создаётся экземпляр View (lazy), его <span class="inline-code">root</span> вставляется в <span class="inline-code">contentArea</span>;</li>
-        <li>Активная кнопка получает CSS-класс <span class="inline-code">.active</span>;</li>
-        <li>Breadcrumb обновляется (например, «Администрирование / Торговые автоматы»).</li>
-    </ol>
+<h3>8.1. Механика навигации</h3>
 
-    <h3>8.2. Сворачивание сайдбара</h3>
-    <p>Кнопка «≡» переключает <span class="inline-code">isSidebarCollapsed</span>: ширина анимируется с 260px до 60px, текст меню скрывается, остаются только иконки.</p>
+<ol>
+    <li>Каждый пункт меню — <span class="code">Button</span> с CSS-классом <span class="code">.sidebar-menu-button</span>.</li>
+    <li>При клике вызывается <span class="code">navigateTo(viewName)</span>.</li>
+    <li>Создаётся экземпляр View (lazy), его <span class="code">root</span> вставляется в <span class="code">contentArea</span>.</li>
+    <li>Активная кнопка получает CSS-класс <span class="code">.active</span>.</li>
+    <li>Breadcrumb обновляется (например, «Администрирование / Торговые автоматы»).</li>
+</ol>
 
-    <!-- ===== 9. Дашборд ===== -->
-    <h2 id="s9">9. Дашборд (главная страница)</h2>
-    <p>Построен в файле <span class="inline-code">DashboardView.kt</span> (~358 строк). Все данные подтягиваются из реальной базы данных.</p>
+<h3>8.2. Сворачивание сайдбара</h3>
 
-    <h3>9.1. Информационные блоки (5 штук)</h3>
-    <table>
-        <thead><tr><th>Блок</th><th>Содержимое</th><th>Источник данных</th></tr></thead>
-        <tbody>
-            <tr><td>Эффективность сети</td><td>Процент работающих автоматов</td><td><span class="inline-code">DashboardStats.working / totalMachines × 100</span></td></tr>
-            <tr><td>Состояние сети</td><td>PieChart (круговая диаграмма): Работает / Не работает / На обслуживании</td><td><span class="inline-code">VendingMachineDAO.getDashboardStats()</span></td></tr>
-            <tr><td>Сводка</td><td>Общий доход, наличные в автоматах, количество ТА</td><td><span class="inline-code">DashboardStats.totalRevenue, totalCash</span></td></tr>
-            <tr><td>Динамика продаж</td><td>LineChart: количество и сумма продаж за 10 дней</td><td><span class="inline-code">SaleDAO.getSalesLast10Days()</span></td></tr>
-            <tr><td>Новости</td><td>Лента новостей франчайзера</td><td><span class="inline-code">NewsDAO.getAll()</span></td></tr>
-        </tbody>
-    </table>
+<p>Кнопка переключает <span class="code">isSidebarCollapsed</span>: ширина анимируется с 260px до 60px, текст меню скрывается, остаются только иконки.</p>
 
-    <div class="note">
-        <strong>Примечание:</strong> Все графики подключены к реальным данным БД. Тестовая база содержит 150 продаж, 25 автоматов — графики отображают реальную информацию.
-    </div>
 
-    <!-- ===== 10. Монитор ТА ===== -->
-    <h2 id="s10">10. Монитор торговых автоматов</h2>
-    <p>Файл <span class="inline-code">MachineMonitorView.kt</span> (~400 строк) — детальный мониторинг всех торговых автоматов в сети.</p>
+<!-- ===== 9. Дашборд ===== -->
 
-    <h3>10.1. Фильтры</h3>
-    <ul>
-        <li><b>По состоянию</b> — Работает / Не работает / На обслуживании (цветные кнопки-тогглы);</li>
-        <li><b>По типу подключения</b> — Наличные / Карта / Оба;</li>
-        <li>Кнопки «Применить» и «Сбросить».</li>
-    </ul>
+<h2 id="s9">9. Дашборд (главная страница)</h2>
 
-    <h3>10.2. Таблица</h3>
-    <p>Колонки: №, ТП (тип подключения), Связь (модем), Местоположение, Денежные средства, Статус, Действия.</p>
+<p>Построен в файле <span class="code">DashboardView.kt</span> (~358 строк). Все данные подтягиваются из реальной базы данных.</p>
 
-    <h3>10.3. Сводная панель</h3>
-    <p>В нижней части отображается: «Итого автоматов: N» и «Денег в автоматах: ₽ X.XX» — пересчитывается с учётом активных фильтров.</p>
+<h3>9.1. Информационные блоки (5 штук)</h3>
 
-    <!-- ===== 11. Администрирование ===== -->
-    <h2 id="s11">11. Администрирование (CRUD-панель)</h2>
-    <p>Подменю «Администрирование» содержит 5 разделов с единообразной механикой CRUD-операций.</p>
+<p class="center" style="font-size:12.0pt;"><i>Таблица 3 — Блоки дашборда</i></p>
 
-    <h3>11.1. Торговые автоматы (VendingMachinesView)</h3>
-    <ul>
-        <li><b>Два режима отображения</b>: Таблица (по умолчанию) и Плитки;</li>
-        <li><b>Фильтр</b> по названию автомата (текстовое поле);</li>
-        <li><b>Пагинация</b> с выбором количества строк (10 / 25 / 50 / 100);</li>
-        <li><b>Экспорт</b>: CSV (UTF-8 + BOM), PDF (iTextPDF, A4 landscape), HTML;</li>
-        <li><b>CRUD</b>: добавление (AddMachineDialog), редактирование, удаление (с подтверждением);</li>
-        <li><b>Отвязка модема</b>: эмуляция с подтверждением, modemId → null.</li>
-    </ul>
+<table class="MsoTableGrid">
+    <tr><th>Блок</th><th>Содержимое</th><th>Источник данных</th></tr>
+    <tr><td>Эффективность сети</td><td>Процент работающих автоматов</td><td><span class="code">DashboardStats.working / totalMachines * 100</span></td></tr>
+    <tr><td>Состояние сети</td><td>PieChart: Работает / Не работает / На обслуживании</td><td><span class="code">VendingMachineDAO.getDashboardStats()</span></td></tr>
+    <tr><td>Сводка</td><td>Общий доход, наличные в автоматах, количество ТА</td><td><span class="code">DashboardStats.totalRevenue, totalCash</span></td></tr>
+    <tr><td>Динамика продаж</td><td>LineChart: количество и сумма продаж за 10 дней</td><td><span class="code">SaleDAO.getSalesLast10Days()</span></td></tr>
+    <tr><td>Новости</td><td>Лента новостей франчайзера</td><td><span class="code">NewsDAO.getAll()</span></td></tr>
+</table>
 
-    <h3>11.2. Компании / Пользователи / Модемы</h3>
-    <p>Стандартные CRUD-таблицы с аналогичной механикой: добавление через диалог, редактирование inline, удаление с подтверждением.</p>
+<p><b>Примечание.</b> Все графики подключены к реальным данным БД. Тестовая база содержит 150 продаж, 25 автоматов — графики отображают реальную информацию.</p>
 
-    <h3>11.3. Заявки на обслуживание (ServiceOrdersView)</h3>
-    <ul>
-        <li>Два Tab-а: «Заявки» (текущие) и «История обслуживания» (архив);</li>
-        <li>Фильтры по статусу (Новая / В работе / Закрыта / Отменена) и приоритету (Низкий / Средний / Высокий / Авария);</li>
-        <li>Автоматическое применение фильтров при изменении;</li>
-        <li>Создание заявки: номер, тип обслуживания, приоритет, инженер, дата.</li>
-    </ul>
 
-    <!-- ===== 12. Уведомления ===== -->
-    <h2 id="s12">12. Система push-уведомлений</h2>
+<!-- ===== 10. Монитор ТА ===== -->
 
-    <table>
-        <thead><tr><th>Тип</th><th>Цвет</th><th>Длительность</th><th>Пример сообщения</th></tr></thead>
-        <tbody>
-            <tr><td>critical</td><td>Красный (#dc3545)</td><td>10 секунд</td><td>«Ошибка: Нет сдачи в ТА-007»</td></tr>
-            <tr><td>warning</td><td>Оранжевый (#fd7e14)</td><td>7 секунд</td><td>«Внимание: Низкий запас товара A1»</td></tr>
-            <tr><td>info</td><td>Зелёный (#198754)</td><td>5 секунд</td><td>«Успешно: Товар выдан»</td></tr>
-        </tbody>
-    </table>
+<h2 id="s10">10. Монитор торговых автоматов</h2>
 
-    <h3>12.1. Архитектура уведомлений</h3>
-    <ol>
-        <li><span class="inline-code">NotificationService.push*()</span> создаёт объект <span class="inline-code">Notification</span>;</li>
-        <li>Уведомление сохраняется в БД через <span class="inline-code">NotificationDAO.create()</span>;</li>
-        <li>Добавляется в очередь <span class="inline-code">ConcurrentLinkedQueue</span>;</li>
-        <li><span class="inline-code">processQueue()</span> через <span class="inline-code">Platform.runLater</span> отображает toast;</li>
-        <li>Toast — VBox со стилизованным фоном, кнопкой «✕», auto-fade по таймеру;</li>
-        <li>Приоритет отображения: critical &gt; warning &gt; info.</li>
-    </ol>
+<p>Файл <span class="code">MachineMonitorView.kt</span> (~400 строк) — детальный мониторинг всех торговых автоматов в сети.</p>
 
-    <h3>12.2. Индикатор в top-bar</h3>
-    <p>Иконка колокольчика с красным бейджем, показывающим количество непрочитанных уведомлений (данные из <span class="inline-code">NotificationDAO.getUnreadCount()</span>).</p>
+<h3>10.1. Фильтры</h3>
 
-    <!-- ===== 13. Темизация ===== -->
-    <h2 id="s13">13. Темизация (тёмная / светлая тема)</h2>
+<ul>
+    <li><b>По состоянию</b> — Работает / Не работает / На обслуживании (кнопки-тогглы);</li>
+    <li><b>По типу подключения</b> — Наличные / Карта / Оба;</li>
+    <li>Кнопки «Применить» и «Сбросить».</li>
+</ul>
 
-    <h3>13.1. Механизм</h3>
-    <ol>
-        <li><span class="inline-code">ThemeManager.kt</span> — синглтон (Kotlin <span class="inline-code">object</span>);</li>
-        <li>Хранит <span class="inline-code">lightThemeProperty: SimpleBooleanProperty</span>;</li>
-        <li>При вызове <span class="inline-code">toggle()</span> переключает флаг;</li>
-        <li>Все зарегистрированные Scene получают/теряют CSS-класс <span class="inline-code">"light-theme"</span> на корневом элементе;</li>
-        <li>CSS-файл содержит ~600 строк переопределений для класса <span class="inline-code">.light-theme</span>.</li>
-    </ol>
+<h3>10.2. Таблица</h3>
 
-    <pre><code>// ThemeManager.kt (упрощённо)
+<p>Колонки: №, ТП (тип подключения), Связь (модем), Местоположение, Денежные средства, Статус, Действия.</p>
+
+<h3>10.3. Сводная панель</h3>
+
+<p>В нижней части отображается: «Итого автоматов: N» и «Денег в автоматах: X.XX руб.» — пересчитывается с учётом активных фильтров.</p>
+
+
+<!-- ===== 11. Администрирование ===== -->
+
+<h2 id="s11">11. Администрирование (CRUD-панель)</h2>
+
+<p>Подменю «Администрирование» содержит 5 разделов с единообразной механикой CRUD-операций.</p>
+
+<h3>11.1. Торговые автоматы (VendingMachinesView)</h3>
+
+<ul>
+    <li><b>Два режима отображения</b>: Таблица (по умолчанию) и Плитки;</li>
+    <li><b>Фильтр</b> по названию автомата (текстовое поле);</li>
+    <li><b>Пагинация</b> с выбором количества строк (10 / 25 / 50 / 100);</li>
+    <li><b>Экспорт</b>: CSV (UTF-8 + BOM), PDF (iTextPDF, A4 landscape), HTML;</li>
+    <li><b>CRUD</b>: добавление (AddMachineDialog), редактирование, удаление (с подтверждением);</li>
+    <li><b>Отвязка модема</b>: эмуляция с подтверждением, modemId = null.</li>
+</ul>
+
+<h3>11.2. Компании / Пользователи / Модемы</h3>
+
+<p>Стандартные CRUD-таблицы с аналогичной механикой: добавление через диалог, редактирование inline, удаление с подтверждением.</p>
+
+<h3>11.3. Заявки на обслуживание (ServiceOrdersView)</h3>
+
+<ul>
+    <li>Два Tab-а: «Заявки» (текущие) и «История обслуживания» (архив);</li>
+    <li>Фильтры по статусу (Новая / В работе / Закрыта / Отменена) и приоритету (Низкий / Средний / Высокий / Авария);</li>
+    <li>Автоматическое применение фильтров при изменении;</li>
+    <li>Создание заявки: номер, тип обслуживания, приоритет, инженер, дата.</li>
+</ul>
+
+
+<!-- ===== 12. Уведомления ===== -->
+
+<h2 id="s12">12. Система push-уведомлений</h2>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 4 — Типы уведомлений</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Тип</th><th>Цвет</th><th>Длительность</th><th>Пример сообщения</th></tr>
+    <tr><td>critical</td><td>Красный (#dc3545)</td><td>10 секунд</td><td>«Ошибка: Нет сдачи в ТА-007»</td></tr>
+    <tr><td>warning</td><td>Оранжевый (#fd7e14)</td><td>7 секунд</td><td>«Внимание: Низкий запас товара A1»</td></tr>
+    <tr><td>info</td><td>Зелёный (#198754)</td><td>5 секунд</td><td>«Успешно: Товар выдан»</td></tr>
+</table>
+
+<h3>12.1. Архитектура уведомлений</h3>
+
+<ol>
+    <li><span class="code">NotificationService.push*()</span> создаёт объект <span class="code">Notification</span>.</li>
+    <li>Уведомление сохраняется в БД через <span class="code">NotificationDAO.create()</span>.</li>
+    <li>Добавляется в очередь <span class="code">ConcurrentLinkedQueue</span>.</li>
+    <li><span class="code">processQueue()</span> через <span class="code">Platform.runLater</span> отображает toast.</li>
+    <li>Toast — VBox со стилизованным фоном, кнопкой закрытия, auto-fade по таймеру.</li>
+    <li>Приоритет отображения: critical &gt; warning &gt; info.</li>
+</ol>
+
+<h3>12.2. Индикатор в top-bar</h3>
+
+<p>Иконка колокольчика с красным бейджем, показывающим количество непрочитанных уведомлений (данные из <span class="code">NotificationDAO.getUnreadCount()</span>).</p>
+
+
+<!-- ===== 13. Темизация ===== -->
+
+<h2 id="s13">13. Темизация (тёмная / светлая тема)</h2>
+
+<h3>13.1. Механизм</h3>
+
+<ol>
+    <li><span class="code">ThemeManager.kt</span> — синглтон (Kotlin <span class="code">object</span>).</li>
+    <li>Хранит <span class="code">lightThemeProperty: SimpleBooleanProperty</span>.</li>
+    <li>При вызове <span class="code">toggle()</span> переключает флаг.</li>
+    <li>Все зарегистрированные Scene получают/теряют CSS-класс <span class="code">"light-theme"</span> на корневом элементе.</li>
+    <li>CSS-файл содержит ~600 строк переопределений для класса <span class="code">.light-theme</span>.</li>
+</ol>
+
+<pre>// ThemeManager.kt (упрощённо)
 object ThemeManager {
     val lightThemeProperty = SimpleBooleanProperty(false)
 
     fun toggle() {
         lightThemeProperty.value = !lightThemeProperty.value
-        scenes.forEach { scene ->
+        scenes.forEach { scene -&gt;
             if (lightThemeProperty.value)
                 scene.root.styleClass.add("light-theme")
             else
                 scene.root.styleClass.remove("light-theme")
         }
     }
-}</code></pre>
+}</pre>
 
-    <h3>13.2. CSS-стратегия</h3>
-    <p>Базовый CSS — тёмная тема. Светлая тема — каскадные переопределения через селекторы <span class="inline-code">.light-theme</span>:</p>
-    <pre><code>/* Тёмная (по умолчанию) */
+<h3>13.2. CSS-стратегия</h3>
+
+<p>Базовый CSS — тёмная тема. Светлая тема — каскадные переопределения через селекторы <span class="code">.light-theme</span>:</p>
+
+<pre>/* Тёмная (по умолчанию) */
 .sidebar { -fx-background-color: #0e1118; }
 
 /* Светлая (override) */
-.light-theme .sidebar { -fx-background-color: #ffffff; }</code></pre>
+.light-theme .sidebar { -fx-background-color: #ffffff; }</pre>
 
-    <h3>13.3. Точки переключения</h3>
-    <ul>
-        <li><b>Кнопка в сайдбаре</b>: «☀ Светлая тема» / «🌙 Тёмная тема»;</li>
-        <li><b>Горячая клавиша</b>: Ctrl+Shift+T;</li>
-        <li><b>Dev-панель</b>: чекбокс внутри панели разработчика.</li>
-    </ul>
+<h3>13.3. Точки переключения</h3>
 
-    <!-- ===== 14. Dev-панель ===== -->
-    <h2 id="s14">14. Dev-панель (отладочная)</h2>
-    <p>Секретная панель для быстрой отладки данных. Активируется комбинацией клавиш Ctrl+Shift+D.</p>
+<ul>
+    <li><b>Кнопка в сайдбаре</b>: «Светлая тема» / «Тёмная тема»;</li>
+    <li><b>Горячая клавиша</b>: Ctrl+Shift+T;</li>
+    <li><b>Dev-панель</b>: чекбокс внутри панели разработчика.</li>
+</ul>
 
-    <h3>14.1. Функции панели</h3>
-    <table>
-        <thead><tr><th>Функция</th><th>Описание</th></tr></thead>
-        <tbody>
-            <tr><td>Быстрая продажа</td><td>Поля: ID автомата, ID товара, количество, цена, способ оплаты. Создаёт запись через <span class="inline-code">SaleDAO.create()</span>.</td></tr>
-            <tr><td>Смена статуса ТА</td><td>Поле ID автомата + выпадающий список статусов. Обновляет через <span class="inline-code">VendingMachineDAO.updateStatus()</span>.</td></tr>
-            <tr><td>Переключатель темы</td><td>Чекбокс «Светлая тема» — дублирует функционал кнопки в сайдбаре.</td></tr>
-            <tr><td>Справка по клавишам</td><td>Отображает все доступные комбинации горячих клавиш.</td></tr>
-        </tbody>
-    </table>
 
-    <h3>14.2. Реализация</h3>
-    <ul>
-        <li>Overlay: полупрозрачный фон + панель справа;</li>
-        <li>Появление: <span class="inline-code">FadeTransition</span> (300 мс);</li>
-        <li>Закрытие: кнопка «✕» или повторное нажатие Ctrl+Shift+D;</li>
-        <li>Статус-сообщения: зелёный текст при успехе операции.</li>
-    </ul>
+<!-- ===== 14. Dev-панель ===== -->
 
-    <!-- ===== 15. Горячие клавиши ===== -->
-    <h2 id="s15">15. Горячие клавиши</h2>
+<h2 id="s14">14. Dev-панель (отладочная)</h2>
 
-    <table>
-        <thead><tr><th>Комбинация</th><th>Действие</th><th>Место регистрации</th></tr></thead>
-        <tbody>
-            <tr><td>Ctrl+Shift+T</td><td>Переключение тёмной / светлой темы</td><td>VendingApp.showMain() — Scene.accelerators</td></tr>
-            <tr><td>Ctrl+Shift+D</td><td>Открыть / закрыть Dev-панель</td><td>VendingApp.showMain() — Scene.accelerators</td></tr>
-        </tbody>
-    </table>
+<p>Секретная панель для быстрой отладки данных. Активируется комбинацией клавиш Ctrl+Shift+D.</p>
 
-    <pre><code>// VendingApp.kt — регистрация горячих клавиш
+<h3>14.1. Функции панели</h3>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 5 — Функции Dev-панели</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Функция</th><th>Описание</th></tr>
+    <tr><td>Быстрая продажа</td><td>Поля: ID автомата, ID товара, количество, цена, способ оплаты. Создаёт запись через <span class="code">SaleDAO.create()</span>.</td></tr>
+    <tr><td>Смена статуса ТА</td><td>Поле ID автомата + выпадающий список статусов. Обновляет через <span class="code">VendingMachineDAO.updateStatus()</span>.</td></tr>
+    <tr><td>Переключатель темы</td><td>Чекбокс «Светлая тема» — дублирует функционал кнопки в сайдбаре.</td></tr>
+    <tr><td>Справка по клавишам</td><td>Отображает все доступные комбинации горячих клавиш.</td></tr>
+</table>
+
+<h3>14.2. Реализация</h3>
+
+<ul>
+    <li>Overlay: полупрозрачный фон + панель справа;</li>
+    <li>Появление: <span class="code">FadeTransition</span> (300 мс);</li>
+    <li>Закрытие: кнопка закрытия или повторное нажатие Ctrl+Shift+D;</li>
+    <li>Статус-сообщения: зелёный текст при успехе операции.</li>
+</ul>
+
+
+<!-- ===== 15. Горячие клавиши ===== -->
+
+<h2 id="s15">15. Горячие клавиши</h2>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 6 — Горячие клавиши</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Комбинация</th><th>Действие</th><th>Место регистрации</th></tr>
+    <tr><td>Ctrl+Shift+T</td><td>Переключение тёмной / светлой темы</td><td>VendingApp.showMain() — Scene.accelerators</td></tr>
+    <tr><td>Ctrl+Shift+D</td><td>Открыть / закрыть Dev-панель</td><td>VendingApp.showMain() — Scene.accelerators</td></tr>
+</table>
+
+<pre>// VendingApp.kt — регистрация горячих клавиш
 val themeHotkey = KeyCodeCombination(KeyCode.T, CONTROL_DOWN, SHIFT_DOWN)
 scene.accelerators[themeHotkey] = Runnable { ThemeManager.toggle() }
 
-scene.accelerators[DevPanel.HOTKEY] = Runnable { mainView.toggleDevPanel() }</code></pre>
+scene.accelerators[DevPanel.HOTKEY] = Runnable { mainView.toggleDevPanel() }</pre>
 
-    <!-- ===== 16. Экспорт ===== -->
-    <h2 id="s16">16. Импорт / экспорт данных</h2>
 
-    <h3>16.1. Импорт данных (БД)</h3>
-    <p>Скрипт <span class="inline-code">DB/import_data.sql</span> загружает тестовые данные из CSV-файлов директории <span class="inline-code">DB/data/</span>:</p>
+<!-- ===== 16. Экспорт ===== -->
 
-    <table>
-        <thead><tr><th>Файл</th><th>Таблица</th><th>Записей</th></tr></thead>
-        <tbody>
-            <tr><td>roles.csv</td><td>roles</td><td>5</td></tr>
-            <tr><td>companies.csv</td><td>companies</td><td>12</td></tr>
-            <tr><td>users.csv</td><td>users</td><td>20</td></tr>
-            <tr><td>modems.csv</td><td>modems</td><td>30</td></tr>
-            <tr><td>vending_machines.csv</td><td>vending_machines</td><td>25</td></tr>
-            <tr><td>products.csv</td><td>products</td><td>25</td></tr>
-            <tr><td>machine_products.csv</td><td>machine_products</td><td>60</td></tr>
-            <tr><td>sales.csv</td><td>sales</td><td>150</td></tr>
-            <tr><td>service_orders.csv</td><td>service_orders</td><td>40</td></tr>
-            <tr><td>service_history.csv</td><td>service_history</td><td>50</td></tr>
-        </tbody>
-    </table>
+<h2 id="s16">16. Импорт / экспорт данных</h2>
 
-    <h3>16.2. Экспорт из приложения</h3>
-    <p>Утилита <span class="inline-code">ExportUtil.kt</span> поддерживает экспорт таблицы торговых автоматов:</p>
-    <ul>
-        <li><b>CSV</b>: UTF-8 с BOM, разделитель «;», через <span class="inline-code">FileChooser</span>;</li>
-        <li><b>PDF</b>: iTextPDF, шрифт Arial (кириллица), 7 колонок, A4 landscape;</li>
-        <li><b>HTML</b>: стилизованная HTML-страница с таблицей.</li>
-    </ul>
+<h3>16.1. Импорт данных (БД)</h3>
 
-    <!-- ============================== FOOTER ============================== -->
-    <div class="footer">
-        VendingController v1.0-SNAPSHOT &bull; Kotlin 2.1.0 &bull; JavaFX 21.0.2 &bull; PostgreSQL 17 &bull; 2026 г.<br>
-        <a href="report-connection.html">Подключение к БД</a> &bull;
-        <a href="report-architecture.html">Архитектура приложения (этот файл)</a>
-    </div>
+<p>Скрипт <span class="code">DB/import_data.sql</span> загружает тестовые данные из CSV-файлов директории <span class="code">DB/data/</span>:</p>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 7 — Импортируемые данные</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Файл</th><th>Таблица</th><th>Записей</th></tr>
+    <tr><td>roles.csv</td><td>roles</td><td>5</td></tr>
+    <tr><td>companies.csv</td><td>companies</td><td>12</td></tr>
+    <tr><td>users.csv</td><td>users</td><td>20</td></tr>
+    <tr><td>modems.csv</td><td>modems</td><td>30</td></tr>
+    <tr><td>vending_machines.csv</td><td>vending_machines</td><td>25</td></tr>
+    <tr><td>products.csv</td><td>products</td><td>25</td></tr>
+    <tr><td>machine_products.csv</td><td>machine_products</td><td>60</td></tr>
+    <tr><td>sales.csv</td><td>sales</td><td>150</td></tr>
+    <tr><td>service_orders.csv</td><td>service_orders</td><td>40</td></tr>
+    <tr><td>service_history.csv</td><td>service_history</td><td>50</td></tr>
+</table>
+
+<h3>16.2. Экспорт из приложения</h3>
+
+<p>Утилита <span class="code">ExportUtil.kt</span> поддерживает экспорт таблицы торговых автоматов:</p>
+
+<ul>
+    <li><b>CSV</b>: UTF-8 с BOM, разделитель «;», через <span class="code">FileChooser</span>;</li>
+    <li><b>PDF</b>: iTextPDF, шрифт Arial (кириллица), 7 колонок, A4 landscape;</li>
+    <li><b>HTML</b>: стилизованная HTML-страница с таблицей.</li>
+</ul>
+
+
+<p class="center" style="margin-top:36pt;font-size:11pt;color:#666;">— конец документа —</p>
 
 </div>
 </body>

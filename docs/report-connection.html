@@ -1,344 +1,316 @@
-<!DOCTYPE html>
-<html lang="ru">
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отчёт — Подключение к БД и используемые библиотеки | VendingController</title>
-    <style>
-        @page { size: A4; margin: 2cm; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 14pt;
-            line-height: 1.5;
-            color: #000;
-            background: #f0f0f0;
-            padding: 20px;
-        }
-        .page {
-            max-width: 210mm;
-            margin: 0 auto;
-            background: #fff;
-            padding: 2cm;
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-        }
-
-        /* ===== Титульная страница ===== */
-        .title-page {
-            text-align: center;
-            padding: 60px 20px 40px;
-            border-bottom: 2px solid #000;
-            margin-bottom: 30px;
-        }
-        .title-page .org {
-            font-size: 13pt;
-            margin-bottom: 60px;
-            text-transform: uppercase;
-        }
-        .title-page h1 {
-            font-size: 22pt;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .title-page .subtitle {
-            font-size: 16pt;
-            margin-bottom: 8px;
-        }
-        .title-page .info {
-            font-size: 12pt;
-            color: #444;
-            margin-top: 30px;
-        }
-        .title-page .info span {
-            display: inline-block;
-            margin: 0 10px;
-        }
-
-        /* ===== Содержание ===== */
-        .toc {
-            margin-bottom: 30px;
-            page-break-after: always;
-        }
-        .toc h2 {
-            text-align: center;
-            font-size: 16pt;
-            margin-bottom: 16px;
-        }
-        .toc ol {
-            padding-left: 30px;
-            font-size: 14pt;
-        }
-        .toc li {
-            margin: 6px 0;
-        }
-        .toc a {
-            color: #000;
-            text-decoration: none;
-        }
-        .toc a:hover {
-            text-decoration: underline;
-        }
-
-        /* ===== Заголовки ===== */
-        h2 {
-            font-size: 16pt;
-            font-weight: bold;
-            margin-top: 28px;
-            margin-bottom: 12px;
-            page-break-after: avoid;
-        }
-        h3 {
-            font-size: 14pt;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 8px;
-        }
-
-        /* ===== Текст ===== */
-        p {
-            text-align: justify;
-            text-indent: 1.25cm;
-            margin-bottom: 6px;
-        }
-        p.no-indent { text-indent: 0; }
-        ul, ol {
-            margin: 8px 0 12px 1.25cm;
-        }
-        li { margin: 4px 0; }
-
-        /* ===== Таблицы ===== */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 12px 0 16px;
-            font-size: 12pt;
-        }
-        table, th, td { border: 1px solid #000; }
-        th {
-            background: #d9e2f3;
-            font-weight: bold;
-            padding: 6px 8px;
-            text-align: left;
-            font-size: 12pt;
-        }
-        td {
-            padding: 5px 8px;
-            vertical-align: top;
-        }
-
-        /* ===== Код ===== */
-        pre {
-            background: #f5f5f5;
-            border: 1px solid #ccc;
-            padding: 10px 14px;
-            margin: 10px 0 14px;
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 11pt;
-            line-height: 1.4;
-            page-break-inside: avoid;
-        }
-        code {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 11pt;
-        }
-        .inline-code {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12pt;
-            background: #f0f0f0;
-            padding: 1px 4px;
-            border: 1px solid #ddd;
-        }
-
-        /* ===== Примечания ===== */
-        .note {
-            border: 1px solid #4472c4;
-            background: #dae3f3;
-            padding: 8px 12px;
-            margin: 10px 0 14px;
-            font-size: 12pt;
-        }
-        .note strong { color: #2f5496; }
-        .warning {
-            border: 1px solid #bf8f00;
-            background: #fff2cc;
-            padding: 8px 12px;
-            margin: 10px 0 14px;
-            font-size: 12pt;
-        }
-        .warning strong { color: #806000; }
-
-        /* ===== Диаграмма ===== */
-        .diagram {
-            background: #f9f9f9;
-            border: 1px solid #999;
-            padding: 16px;
-            margin: 12px 0 16px;
-            text-align: center;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 10pt;
-            line-height: 1.5;
-            overflow-x: auto;
-            white-space: pre;
-            page-break-inside: avoid;
-        }
-
-        /* ===== Футер ===== */
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 12px;
-            border-top: 1px solid #000;
-            font-size: 11pt;
-            color: #444;
-        }
-        .footer a { color: #2f5496; text-decoration: none; }
-        .footer a:hover { text-decoration: underline; }
-
-        @media print {
-            body { background: #fff; padding: 0; }
-            .page { box-shadow: none; padding: 0; max-width: 100%; }
-        }
-    </style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 15">
+<title>Подключение к БД и используемые библиотеки</title>
+<!--[if gte mso 9]><xml>
+<o:DocumentProperties>
+<o:Author>VendingController</o:Author>
+<o:LastAuthor>VendingController</o:LastAuthor>
+<o:Created>2026-02-25T00:00:00Z</o:Created>
+</o:DocumentProperties>
+</xml><![endif]-->
+<!--[if gte mso 9]><xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+@page Section1 {
+    size: 595.3pt 841.9pt;
+    margin: 2.0cm 1.5cm 2.0cm 3.0cm;
+    mso-header-margin: 35.4pt;
+    mso-footer-margin: 35.4pt;
+    mso-paper-source: 0;
+}
+div.Section1 { page: Section1; }
+body {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    line-height: 150%;
+    color: black;
+    margin: 0;
+    padding: 0;
+    background: white;
+}
+@media screen {
+    body { background: #e0e0e0; }
+    div.Section1 {
+        max-width: 210mm;
+        margin: 10px auto;
+        background: white;
+        padding: 2cm 1.5cm 2cm 3cm;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+}
+h1 {
+    font-family: 'Times New Roman', serif;
+    font-size: 16.0pt;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0pt;
+    margin-bottom: 12.0pt;
+    line-height: 150%;
+}
+h2 {
+    font-family: 'Times New Roman', serif;
+    font-size: 16.0pt;
+    font-weight: bold;
+    margin-top: 18.0pt;
+    margin-bottom: 6.0pt;
+    line-height: 150%;
+    page-break-after: avoid;
+}
+h3 {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    font-weight: bold;
+    margin-top: 12.0pt;
+    margin-bottom: 6.0pt;
+    line-height: 150%;
+}
+p {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    margin-top: 0;
+    margin-bottom: 6.0pt;
+    text-align: justify;
+    text-indent: 1.25cm;
+    line-height: 150%;
+}
+p.MsoTitle {
+    text-align: center;
+    text-indent: 0;
+    font-size: 16.0pt;
+    font-weight: bold;
+}
+p.center {
+    text-align: center;
+    text-indent: 0;
+}
+p.no-indent {
+    text-indent: 0;
+}
+ul, ol {
+    font-family: 'Times New Roman', serif;
+    font-size: 14.0pt;
+    margin-top: 0;
+    margin-bottom: 6.0pt;
+    margin-left: 1.25cm;
+    line-height: 150%;
+}
+li {
+    margin-bottom: 2.0pt;
+}
+table.MsoTableGrid {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: 'Times New Roman', serif;
+    font-size: 12.0pt;
+    margin-top: 6.0pt;
+    margin-bottom: 12.0pt;
+}
+table.MsoTableGrid td, table.MsoTableGrid th {
+    border: 1.0pt solid black;
+    padding: 3.0pt 5.0pt 3.0pt 5.0pt;
+    vertical-align: top;
+}
+table.MsoTableGrid th {
+    font-weight: bold;
+    text-align: center;
+}
+pre {
+    font-family: 'Courier New', monospace;
+    font-size: 10.0pt;
+    line-height: 130%;
+    margin-top: 6.0pt;
+    margin-bottom: 6.0pt;
+    margin-left: 1.25cm;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+span.code {
+    font-family: 'Courier New', monospace;
+    font-size: 12.0pt;
+}
+.page-break {
+    page-break-before: always;
+}
+-->
+</style>
 </head>
-<body>
-<div class="page">
 
-    <!-- ============================== ТИТУЛЬНАЯ СТРАНИЦА ============================== -->
-    <div class="title-page">
-        <div class="org">Проект «VendingController»<br>Модуль управления вендинговой сетью (франчайзер)</div>
-        <h1>ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ<br>И ИСПОЛЬЗУЕМЫЕ БИБЛИОТЕКИ</h1>
-        <div class="subtitle">Техническая документация</div>
-        <div class="info">
-            <span>Kotlin 2.1.0</span> &bull;
-            <span>JavaFX 21.0.2</span> &bull;
-            <span>PostgreSQL 17</span> &bull;
-            <span>Exposed ORM 0.46.0</span>
-        </div>
-        <div class="info" style="margin-top: 10px;">2026 г.</div>
-    </div>
+<body lang="RU">
+<div class="Section1">
 
-    <!-- ============================== СОДЕРЖАНИЕ ============================== -->
-    <div class="toc">
-        <h2>СОДЕРЖАНИЕ</h2>
-        <ol>
-            <li><a href="#s1">Технологический стек</a></li>
-            <li><a href="#s2">Зависимости проекта (pom.xml)</a></li>
-            <li><a href="#s3">Конфигурация подключения к базе данных</a></li>
-            <li><a href="#s4">Инициализация подключения — DatabaseConfig</a></li>
-            <li><a href="#s5">ORM-слой: Exposed — определение таблиц</a></li>
-            <li><a href="#s6">Схема базы данных (SQL)</a></li>
-            <li><a href="#s7">DAO-слой: доступ к данным</a></li>
-            <li><a href="#s8">Система аутентификации (JWT + BCrypt)</a></li>
-            <li><a href="#s9">Логирование (SLF4J + Logback)</a></li>
-            <li><a href="#s10">Экспорт данных (CSV, PDF, HTML)</a></li>
-            <li><a href="#s11">Диаграмма подключения — общая схема</a></li>
-        </ol>
-    </div>
+<p class="center" style="margin-top:120pt;font-size:14.0pt;">ПРОЕКТ «VENDINGCONTROLLER»</p>
+<p class="center" style="font-size:12.0pt;">Модуль управления вендинговой сетью (франчайзер)</p>
 
-    <!-- ===== 1. Технологический стек ===== -->
-    <h2 id="s1">1. Технологический стек</h2>
-    <p>Проект <b>VendingController</b> — нативное настольное приложение для управления сетью вендинговых автоматов. Ниже представлены все ключевые технологии, использованные при разработке:</p>
+<p class="center" style="margin-top:72pt;">&nbsp;</p>
 
-    <table>
-        <thead>
-            <tr><th>Компонент</th><th>Технология</th><th>Версия</th><th>Назначение</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>Язык</td><td>Kotlin</td><td>2.1.0</td><td>Основной язык разработки, JVM target 17</td></tr>
-            <tr><td>JDK</td><td>Axiom JDK</td><td>21.0.9</td><td>Java-рантайм, сертифицированный для РЕД ОС</td></tr>
-            <tr><td>UI-фреймворк</td><td>JavaFX</td><td>21.0.2</td><td>Построение интерфейса (программный подход, без FXML)</td></tr>
-            <tr><td>Сборка</td><td>Maven</td><td>3.x (mvnw)</td><td>Управление зависимостями и сборка проекта</td></tr>
-            <tr><td>СУБД</td><td>PostgreSQL</td><td>17</td><td>Реляционная база данных</td></tr>
-            <tr><td>ORM</td><td>Exposed</td><td>0.46.0</td><td>Kotlin ORM (SQL DSL подход)</td></tr>
-            <tr><td>JDBC-драйвер</td><td>postgresql</td><td>42.7.1</td><td>Драйвер подключения к PostgreSQL</td></tr>
-            <tr><td>Хеширование</td><td>jBCrypt</td><td>0.4</td><td>Хеширование паролей (BCrypt)</td></tr>
-            <tr><td>JWT</td><td>java-jwt (Auth0)</td><td>4.4.0</td><td>Генерация и валидация JWT-токенов</td></tr>
-            <tr><td>PDF</td><td>iTextPDF</td><td>5.5.13.3</td><td>Генерация PDF-отчётов с кириллицей</td></tr>
-            <tr><td>Логирование</td><td>Logback + SLF4J</td><td>1.4.14 / 2.0.9</td><td>Структурированное логирование в консоль и файл</td></tr>
-            <tr><td>Тестирование</td><td>JUnit 5</td><td>5.10.0</td><td>Фреймворк модульного тестирования</td></tr>
-        </tbody>
-    </table>
+<p class="MsoTitle" style="font-size:18.0pt;">ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ<br>И ИСПОЛЬЗУЕМЫЕ БИБЛИОТЕКИ</p>
 
-    <!-- ===== 2. Зависимости ===== -->
-    <h2 id="s2">2. Зависимости проекта (pom.xml)</h2>
-    <p>Все зависимости управляются через Maven. Свойства версий вынесены в блок <span class="inline-code">&lt;properties&gt;</span>:</p>
+<p class="center" style="margin-top:12pt;font-size:14.0pt;">Техническая документация</p>
 
-    <pre><code>&lt;properties&gt;
+<p class="center" style="margin-top:120pt;font-size:12.0pt;">
+Kotlin 2.1.0 | JavaFX 21.0.2 | PostgreSQL 17 | Exposed ORM 0.46.0
+</p>
+
+<p class="center" style="margin-top:48pt;font-size:14.0pt;">2026</p>
+
+
+<!-- ===== СОДЕРЖАНИЕ ===== -->
+
+<p class="page-break">&nbsp;</p>
+
+<h1>СОДЕРЖАНИЕ</h1>
+
+<p class="no-indent"><a href="#s1">1. Технологический стек</a></p>
+<p class="no-indent"><a href="#s2">2. Зависимости проекта (pom.xml)</a></p>
+<p class="no-indent"><a href="#s3">3. Конфигурация подключения к базе данных</a></p>
+<p class="no-indent"><a href="#s4">4. Инициализация подключения — DatabaseConfig</a></p>
+<p class="no-indent"><a href="#s5">5. ORM-слой: Exposed — определение таблиц</a></p>
+<p class="no-indent"><a href="#s6">6. Схема базы данных (SQL)</a></p>
+<p class="no-indent"><a href="#s7">7. DAO-слой: доступ к данным</a></p>
+<p class="no-indent"><a href="#s8">8. Система аутентификации (JWT + BCrypt)</a></p>
+<p class="no-indent"><a href="#s9">9. Логирование (SLF4J + Logback)</a></p>
+<p class="no-indent"><a href="#s10">10. Экспорт данных (CSV, PDF, HTML)</a></p>
+<p class="no-indent"><a href="#s11">11. Диаграмма подключения</a></p>
+
+
+<!-- ===== 1. Технологический стек ===== -->
+
+<p class="page-break">&nbsp;</p>
+
+<h2 id="s1">1. Технологический стек</h2>
+
+<p>Проект <b>VendingController</b> представляет собой нативное настольное приложение для управления сетью вендинговых автоматов. В таблице 1 представлены все ключевые технологии, использованные при разработке.</p>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 1 — Технологический стек проекта</i></p>
+
+<table class="MsoTableGrid">
+    <tr>
+        <th>Компонент</th>
+        <th>Технология</th>
+        <th>Версия</th>
+        <th>Назначение</th>
+    </tr>
+    <tr><td>Язык</td><td>Kotlin</td><td>2.1.0</td><td>Основной язык разработки, JVM target 17</td></tr>
+    <tr><td>JDK</td><td>Axiom JDK</td><td>21.0.9</td><td>Java-рантайм, сертифицированный для РЕД ОС</td></tr>
+    <tr><td>UI-фреймворк</td><td>JavaFX</td><td>21.0.2</td><td>Построение интерфейса (программный подход, без FXML)</td></tr>
+    <tr><td>Сборка</td><td>Maven</td><td>3.x (mvnw)</td><td>Управление зависимостями и сборка проекта</td></tr>
+    <tr><td>СУБД</td><td>PostgreSQL</td><td>17</td><td>Реляционная база данных</td></tr>
+    <tr><td>ORM</td><td>Exposed</td><td>0.46.0</td><td>Kotlin ORM (SQL DSL подход)</td></tr>
+    <tr><td>JDBC-драйвер</td><td>postgresql</td><td>42.7.1</td><td>Драйвер подключения к PostgreSQL</td></tr>
+    <tr><td>Хеширование</td><td>jBCrypt</td><td>0.4</td><td>Хеширование паролей (BCrypt)</td></tr>
+    <tr><td>JWT</td><td>java-jwt (Auth0)</td><td>4.4.0</td><td>Генерация и валидация JWT-токенов</td></tr>
+    <tr><td>PDF</td><td>iTextPDF</td><td>5.5.13.3</td><td>Генерация PDF-отчётов с поддержкой кириллицы</td></tr>
+    <tr><td>Логирование</td><td>Logback + SLF4J</td><td>1.4.14 / 2.0.9</td><td>Структурированное логирование в консоль и файл</td></tr>
+    <tr><td>Тестирование</td><td>JUnit 5</td><td>5.10.0</td><td>Фреймворк модульного тестирования</td></tr>
+</table>
+
+
+<!-- ===== 2. Зависимости ===== -->
+
+<h2 id="s2">2. Зависимости проекта (pom.xml)</h2>
+
+<p>Все зависимости управляются через Maven. Свойства версий вынесены в блок <span class="code">&lt;properties&gt;</span>:</p>
+
+<pre>&lt;properties&gt;
     &lt;kotlin.version&gt;2.1.0&lt;/kotlin.version&gt;
     &lt;javafx.version&gt;21.0.2&lt;/javafx.version&gt;
     &lt;exposed.version&gt;0.46.0&lt;/exposed.version&gt;
-&lt;/properties&gt;</code></pre>
+&lt;/properties&gt;</pre>
 
-    <h3>2.1. Kotlin</h3>
-    <p><span class="inline-code">org.jetbrains.kotlin:kotlin-stdlib:2.1.0</span> — стандартная библиотека Kotlin. Компиляция производится плагином <span class="inline-code">kotlin-maven-plugin</span> с JVM target 17.</p>
+<h3>2.1. Kotlin</h3>
 
-    <h3>2.2. JavaFX (GUI)</h3>
-    <p>Три модуля: <span class="inline-code">javafx-base</span>, <span class="inline-code">javafx-controls</span>, <span class="inline-code">javafx-graphics</span> версии 21.0.2. Обеспечивают полный набор компонентов для построения GUI: таблицы, графики (PieChart, LineChart), элементы форм, анимации.</p>
+<p><span class="code">org.jetbrains.kotlin:kotlin-stdlib:2.1.0</span> — стандартная библиотека Kotlin. Компиляция производится плагином <span class="code">kotlin-maven-plugin</span> с JVM target 17.</p>
 
-    <h3>2.3. Exposed ORM</h3>
-    <p>Три модуля: <span class="inline-code">exposed-core</span>, <span class="inline-code">exposed-jdbc</span>, <span class="inline-code">exposed-java-time</span>. SQL DSL подход — таблицы описываются как Kotlin-объекты, запросы строятся через типобезопасный DSL.</p>
+<h3>2.2. JavaFX (GUI)</h3>
 
-    <h3>2.4. Безопасность</h3>
-    <p><span class="inline-code">org.mindrot:jbcrypt:0.4</span> — хеширование паролей алгоритмом BCrypt (salt factor 10). <span class="inline-code">com.auth0:java-jwt:4.4.0</span> — генерация и валидация JWT-токенов (HMAC256).</p>
+<p>Три модуля: <span class="code">javafx-base</span>, <span class="code">javafx-controls</span>, <span class="code">javafx-graphics</span> версии 21.0.2. Обеспечивают полный набор компонентов для построения графического интерфейса: таблицы, графики (PieChart, LineChart), элементы форм, анимации.</p>
 
-    <h3>2.5. Экспорт</h3>
-    <p><span class="inline-code">com.itextpdf:itextpdf:5.5.13.3</span> — генерация PDF с поддержкой кириллицы (шрифт Arial через BaseFont).</p>
+<h3>2.3. Exposed ORM</h3>
 
-    <h3>2.6. Логирование</h3>
-    <p><span class="inline-code">ch.qos.logback:logback-classic:1.4.14</span> + <span class="inline-code">org.slf4j:slf4j-api:2.0.9</span> — логи пишутся в консоль и файл <span class="inline-code">logs/vending-controller.log</span> с ротацией по дням (14 дней хранения).</p>
+<p>Три модуля: <span class="code">exposed-core</span>, <span class="code">exposed-jdbc</span>, <span class="code">exposed-java-time</span>. SQL DSL подход: таблицы описываются как Kotlin-объекты, запросы строятся через типобезопасный DSL.</p>
 
-    <h3>2.7. Maven-плагины</h3>
-    <table>
-        <thead><tr><th>Плагин</th><th>Назначение</th></tr></thead>
-        <tbody>
-            <tr><td><span class="inline-code">kotlin-maven-plugin</span></td><td>Компиляция Kotlin-кода (JVM target 17)</td></tr>
-            <tr><td><span class="inline-code">maven-compiler-plugin 3.11.0</span></td><td>Компиляция Java-кода (source/target 17)</td></tr>
-            <tr><td><span class="inline-code">javafx-maven-plugin 0.0.8</span></td><td>Запуск JavaFX-приложения через Maven</td></tr>
-            <tr><td><span class="inline-code">exec-maven-plugin 3.1.0</span></td><td>Запуск main-класса <span class="inline-code">com.vending.MainKt</span></td></tr>
-        </tbody>
-    </table>
+<h3>2.4. Безопасность</h3>
 
-    <!-- ===== 3. Конфигурация подключения ===== -->
-    <h2 id="s3">3. Конфигурация подключения к базе данных</h2>
-    <p>Параметры подключения хранятся в файле <span class="inline-code">src/main/resources/database.properties</span>:</p>
+<p><span class="code">org.mindrot:jbcrypt:0.4</span> — хеширование паролей алгоритмом BCrypt (salt factor 10). <span class="code">com.auth0:java-jwt:4.4.0</span> — генерация и валидация JWT-токенов (HMAC256).</p>
 
-    <pre><code># PostgreSQL Database Configuration
+<h3>2.5. Экспорт</h3>
+
+<p><span class="code">com.itextpdf:itextpdf:5.5.13.3</span> — генерация PDF с поддержкой кириллицы (шрифт Arial через BaseFont).</p>
+
+<h3>2.6. Логирование</h3>
+
+<p><span class="code">ch.qos.logback:logback-classic:1.4.14</span> и <span class="code">org.slf4j:slf4j-api:2.0.9</span> — логи пишутся в консоль и в файл <span class="code">logs/vending-controller.log</span> с ротацией по дням (14 дней хранения).</p>
+
+<h3>2.7. Maven-плагины</h3>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 2 — Maven-плагины проекта</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Плагин</th><th>Назначение</th></tr>
+    <tr><td><span class="code">kotlin-maven-plugin</span></td><td>Компиляция Kotlin-кода (JVM target 17)</td></tr>
+    <tr><td><span class="code">maven-compiler-plugin 3.11.0</span></td><td>Компиляция Java-кода (source/target 17)</td></tr>
+    <tr><td><span class="code">javafx-maven-plugin 0.0.8</span></td><td>Запуск JavaFX-приложения через Maven</td></tr>
+    <tr><td><span class="code">exec-maven-plugin 3.1.0</span></td><td>Запуск main-класса <span class="code">com.vending.MainKt</span></td></tr>
+</table>
+
+
+<!-- ===== 3. Конфигурация подключения ===== -->
+
+<h2 id="s3">3. Конфигурация подключения к базе данных</h2>
+
+<p>Параметры подключения хранятся в файле <span class="code">src/main/resources/database.properties</span>:</p>
+
+<pre># PostgreSQL Database Configuration
 db.url=jdbc:postgresql://localhost:5432/vending_db
 db.driver=org.postgresql.Driver
 db.user=postgres
-db.password=1111</code></pre>
+db.password=1111</pre>
 
-    <table>
-        <thead><tr><th>Параметр</th><th>Значение</th><th>Описание</th></tr></thead>
-        <tbody>
-            <tr><td><span class="inline-code">db.url</span></td><td>jdbc:postgresql://localhost:5432/vending_db</td><td>JDBC-строка: хост, порт, имя БД</td></tr>
-            <tr><td><span class="inline-code">db.driver</span></td><td>org.postgresql.Driver</td><td>Класс JDBC-драйвера PostgreSQL</td></tr>
-            <tr><td><span class="inline-code">db.user</span></td><td>postgres</td><td>Имя пользователя БД</td></tr>
-            <tr><td><span class="inline-code">db.password</span></td><td>1111</td><td>Пароль пользователя БД</td></tr>
-        </tbody>
-    </table>
+<p class="center" style="font-size:12.0pt;"><i>Таблица 3 — Параметры подключения</i></p>
 
-    <div class="note">
-        <strong>Примечание:</strong> Файл загружается из classpath через <span class="inline-code">ClassLoader.getResourceAsStream("database.properties")</span>. При отсутствии файла используются значения по умолчанию, жёстко заданные в коде.
-    </div>
+<table class="MsoTableGrid">
+    <tr><th>Параметр</th><th>Значение</th><th>Описание</th></tr>
+    <tr><td><span class="code">db.url</span></td><td>jdbc:postgresql://localhost:5432/vending_db</td><td>JDBC-строка: хост, порт, имя БД</td></tr>
+    <tr><td><span class="code">db.driver</span></td><td>org.postgresql.Driver</td><td>Класс JDBC-драйвера PostgreSQL</td></tr>
+    <tr><td><span class="code">db.user</span></td><td>postgres</td><td>Имя пользователя БД</td></tr>
+    <tr><td><span class="code">db.password</span></td><td>1111</td><td>Пароль пользователя БД</td></tr>
+</table>
 
-    <!-- ===== 4. DatabaseConfig ===== -->
-    <h2 id="s4">4. Инициализация подключения — DatabaseConfig</h2>
-    <p>Класс <span class="inline-code">DatabaseConfig</span> — синглтон (Kotlin <span class="inline-code">object</span>), отвечающий за установление соединения с базой данных и создание таблиц при необходимости.</p>
+<p>Файл загружается из classpath через <span class="code">ClassLoader.getResourceAsStream("database.properties")</span>. При отсутствии файла используются значения по умолчанию, жёстко заданные в коде.</p>
 
-    <h3>4.1. Метод init()</h3>
-    <p>Вызывается однократно при старте приложения в методе <span class="inline-code">VendingApp.start()</span>. Последовательность действий:</p>
-    <ol>
-        <li><b>Загрузка конфигурации</b> из файла <span class="inline-code">database.properties</span>;</li>
-        <li><b>Подключение</b> через <span class="inline-code">Database.connect()</span> из библиотеки Exposed;</li>
-        <li><b>Логирование</b> результата: <span class="inline-code">logger.info("Database connected successfully")</span>;</li>
-        <li>Установка <b>флага</b> <span class="inline-code">isConnected = true</span> для предотвращения повторного подключения.</li>
-    </ol>
 
-    <pre><code>// VendingApp.kt — start()
+<!-- ===== 4. DatabaseConfig ===== -->
+
+<h2 id="s4">4. Инициализация подключения — DatabaseConfig</h2>
+
+<p>Класс <span class="code">DatabaseConfig</span> — синглтон (Kotlin <span class="code">object</span>), отвечающий за установление соединения с базой данных и автоматическое создание таблиц.</p>
+
+<h3>4.1. Метод init()</h3>
+
+<p>Вызывается однократно при старте приложения в методе <span class="code">VendingApp.start()</span>. Последовательность действий:</p>
+
+<ol>
+    <li>Загрузка конфигурации из файла <span class="code">database.properties</span>.</li>
+    <li>Подключение через <span class="code">Database.connect()</span> из библиотеки Exposed.</li>
+    <li>Логирование результата: <span class="code">logger.info("Database connected successfully")</span>.</li>
+    <li>Установка флага <span class="code">isConnected = true</span> для предотвращения повторного подключения.</li>
+</ol>
+
+<pre>// VendingApp.kt — start()
 override fun start(stage: Stage) {
-    DatabaseConfig.init()     // ← подключаемся к БД
+    DatabaseConfig.init()
     showLogin()
     primaryStage.show()
 }
@@ -349,34 +321,34 @@ Database.connect(
     driver   = props.getProperty("db.driver", "org.postgresql.Driver"),
     user     = props.getProperty("db.user"),
     password = props.getProperty("db.password")
-)</code></pre>
+)</pre>
 
-    <h3>4.2. Метод createTablesIfNeeded()</h3>
-    <p>Автоматически создаёт недостающие таблицы и колонки через механизм <span class="inline-code">SchemaUtils.createMissingTablesAndColumns()</span>:</p>
+<h3>4.2. Метод createTablesIfNeeded()</h3>
 
-    <pre><code>fun createTablesIfNeeded() {
+<p>Автоматически создаёт недостающие таблицы и колонки через механизм <span class="code">SchemaUtils.createMissingTablesAndColumns()</span>:</p>
+
+<pre>fun createTablesIfNeeded() {
     transaction {
         SchemaUtils.createMissingTablesAndColumns(
-            Tables.Roles,       Tables.Companies,
-            Tables.Users,       Tables.Modems,
-            Tables.VendingMachines, Tables.Products,
-            Tables.MachineProducts, Tables.Sales,
-            Tables.ServiceOrders,   Tables.ServiceHistory,
-            Tables.StatusHistory,   Tables.Notifications,
-            Tables.News
+            Tables.Roles, Tables.Companies, Tables.Users,
+            Tables.Modems, Tables.VendingMachines, Tables.Products,
+            Tables.MachineProducts, Tables.Sales, Tables.ServiceOrders,
+            Tables.ServiceHistory, Tables.StatusHistory,
+            Tables.Notifications, Tables.News
         )
     }
-}</code></pre>
+}</pre>
 
-    <div class="warning">
-        <strong>Важно:</strong> Основная структура БД создаётся SQL-скриптом <span class="inline-code">SQLCreate.sql</span> с полным набором CHECK-ограничений. Метод <span class="inline-code">createTablesIfNeeded()</span> используется как подстраховка для автоматической миграции.
-    </div>
+<p>Основная структура БД создаётся SQL-скриптом <span class="code">SQLCreate.sql</span> с полным набором CHECK-ограничений. Метод <span class="code">createTablesIfNeeded()</span> используется как подстраховка для автоматической миграции.</p>
 
-    <!-- ===== 5. Exposed — определение таблиц ===== -->
-    <h2 id="s5">5. ORM-слой: Exposed — определение таблиц</h2>
-    <p>Все таблицы определены в файле <span class="inline-code">database/Tables.kt</span> как вложенные <span class="inline-code">object</span>-ы внутри <span class="inline-code">object Tables</span>. Используется DSL-подход библиотеки Exposed:</p>
 
-    <pre><code>object Tables {
+<!-- ===== 5. Exposed — таблицы ===== -->
+
+<h2 id="s5">5. ORM-слой: Exposed — определение таблиц</h2>
+
+<p>Все таблицы определены в файле <span class="code">database/Tables.kt</span> как вложенные <span class="code">object</span>-ы внутри <span class="code">object Tables</span>. Используется DSL-подход библиотеки Exposed:</p>
+
+<pre>object Tables {
     object VendingMachines : Table("vending_machines") {
         val id = integer("id").autoIncrement()
         val name = varchar("name", 255)
@@ -386,39 +358,41 @@ Database.connect(
         // ... 25+ полей
         override val primaryKey = PrimaryKey(id)
     }
-}</code></pre>
+}</pre>
 
-    <h3>5.1. Полный список ORM-таблиц (13 штук)</h3>
-    <table>
-        <thead><tr><th>Exposed Object</th><th>SQL-таблица</th><th>Назначение</th></tr></thead>
-        <tbody>
-            <tr><td><span class="inline-code">Tables.Roles</span></td><td>roles</td><td>Роли пользователей (admin, franchisor, engineer, ...)</td></tr>
-            <tr><td><span class="inline-code">Tables.Companies</span></td><td>companies</td><td>Компании-франчайзи</td></tr>
-            <tr><td><span class="inline-code">Tables.Users</span></td><td>users</td><td>Пользователи системы</td></tr>
-            <tr><td><span class="inline-code">Tables.Modems</span></td><td>modems</td><td>Модемы для связи с ТА</td></tr>
-            <tr><td><span class="inline-code">Tables.VendingMachines</span></td><td>vending_machines</td><td>Торговые автоматы (25+ полей)</td></tr>
-            <tr><td><span class="inline-code">Tables.Products</span></td><td>products</td><td>Каталог товаров</td></tr>
-            <tr><td><span class="inline-code">Tables.MachineProducts</span></td><td>machine_products</td><td>Связь «автомат — товар» (склад)</td></tr>
-            <tr><td><span class="inline-code">Tables.Sales</span></td><td>sales</td><td>Записи о продажах</td></tr>
-            <tr><td><span class="inline-code">Tables.ServiceOrders</span></td><td>service_orders</td><td>Заявки на обслуживание</td></tr>
-            <tr><td><span class="inline-code">Tables.ServiceHistory</span></td><td>service_history</td><td>История обслуживания</td></tr>
-            <tr><td><span class="inline-code">Tables.StatusHistory</span></td><td>status_history</td><td>История изменения статусов</td></tr>
-            <tr><td><span class="inline-code">Tables.Notifications</span></td><td>notifications</td><td>Push-уведомления (critical/warning/info)</td></tr>
-            <tr><td><span class="inline-code">Tables.News</span></td><td>news</td><td>Новостная лента франчайзера</td></tr>
-        </tbody>
-    </table>
+<p class="center" style="font-size:12.0pt;"><i>Таблица 4 — ORM-таблицы проекта (13 шт.)</i></p>
 
-    <h3>5.2. Связи между таблицами</h3>
-    <p>Все внешние ключи определяются методом <span class="inline-code">.references()</span>:</p>
-    <pre><code>val companyId = integer("company_id").references(Companies.id)         // FK → companies
-val modemId = integer("modem_id").references(Modems.id).nullable()     // FK → modems (nullable)
-val lastInspectedBy = integer("last_inspected_by").references(Users.id).nullable()</code></pre>
+<table class="MsoTableGrid">
+    <tr><th>Exposed Object</th><th>SQL-таблица</th><th>Назначение</th></tr>
+    <tr><td><span class="code">Tables.Roles</span></td><td>roles</td><td>Роли пользователей (admin, franchisor, engineer и др.)</td></tr>
+    <tr><td><span class="code">Tables.Companies</span></td><td>companies</td><td>Компании-франчайзи</td></tr>
+    <tr><td><span class="code">Tables.Users</span></td><td>users</td><td>Пользователи системы</td></tr>
+    <tr><td><span class="code">Tables.Modems</span></td><td>modems</td><td>Модемы для связи с торговыми автоматами</td></tr>
+    <tr><td><span class="code">Tables.VendingMachines</span></td><td>vending_machines</td><td>Торговые автоматы (25+ полей)</td></tr>
+    <tr><td><span class="code">Tables.Products</span></td><td>products</td><td>Каталог товаров</td></tr>
+    <tr><td><span class="code">Tables.MachineProducts</span></td><td>machine_products</td><td>Связь «автомат — товар» (склад)</td></tr>
+    <tr><td><span class="code">Tables.Sales</span></td><td>sales</td><td>Записи о продажах</td></tr>
+    <tr><td><span class="code">Tables.ServiceOrders</span></td><td>service_orders</td><td>Заявки на обслуживание</td></tr>
+    <tr><td><span class="code">Tables.ServiceHistory</span></td><td>service_history</td><td>История обслуживания</td></tr>
+    <tr><td><span class="code">Tables.StatusHistory</span></td><td>status_history</td><td>История изменения статусов</td></tr>
+    <tr><td><span class="code">Tables.Notifications</span></td><td>notifications</td><td>Push-уведомления</td></tr>
+    <tr><td><span class="code">Tables.News</span></td><td>news</td><td>Новостная лента франчайзера</td></tr>
+</table>
 
-    <!-- ===== 6. SQL Schema ===== -->
-    <h2 id="s6">6. Схема базы данных (SQL)</h2>
-    <p>SQL-скрипт <span class="inline-code">DB/SQLCreate.sql</span> содержит полное создание схемы с CHECK-ограничениями. Ключевые ограничения для таблицы <span class="inline-code">vending_machines</span>:</p>
+<p>Все внешние ключи определяются методом <span class="code">.references()</span>:</p>
 
-    <pre><code>CONSTRAINT check_vm_type CHECK (type IN ('cash', 'card', 'both')),
+<pre>val companyId = integer("company_id").references(Companies.id)
+val modemId = integer("modem_id").references(Modems.id).nullable()
+val lastInspectedBy = integer("last_inspected_by").references(Users.id).nullable()</pre>
+
+
+<!-- ===== 6. SQL Schema ===== -->
+
+<h2 id="s6">6. Схема базы данных (SQL)</h2>
+
+<p>SQL-скрипт <span class="code">DB/SQLCreate.sql</span> содержит полное создание схемы с CHECK-ограничениями. Ключевые ограничения для таблицы <span class="code">vending_machines</span>:</p>
+
+<pre>CONSTRAINT check_vm_type CHECK (type IN ('cash', 'card', 'both')),
 CONSTRAINT check_vm_commissioning_date CHECK (commissioning_date >= manufacture_date),
 CONSTRAINT check_vm_last_verification_date CHECK (
     last_verification_date IS NULL OR
@@ -432,39 +406,45 @@ CONSTRAINT check_vm_status CHECK (
     status IN ('working', 'broken', 'maintenance', 'offline')
 ),
 CONSTRAINT check_vm_country CHECK (
-    country IS NULL OR country IN ('Россия','Китай','Германия','Япония','США','Италия','Турция','Другая')
-)</code></pre>
+    country IS NULL OR country IN
+    ('Россия','Китай','Германия','Япония','США','Италия','Турция','Другая')
+)</pre>
 
-    <p>Импорт тестовых данных осуществляется скриптом <span class="inline-code">DB/import_data.sql</span>, который загружает:</p>
-    <ul>
-        <li>5 ролей, 12 компаний, 20 пользователей;</li>
-        <li>30 модемов, 25 торговых автоматов, 25 товаров;</li>
-        <li>60 связей «автомат–товар», <b>150 записей о продажах</b>;</li>
-        <li>40 заявок на обслуживание, 50 записей истории обслуживания.</li>
-    </ul>
+<p>Импорт тестовых данных осуществляется скриптом <span class="code">DB/import_data.sql</span>, который загружает:</p>
 
-    <!-- ===== 7. DAO-слой ===== -->
-    <h2 id="s7">7. DAO-слой: доступ к данным</h2>
-    <p>Весь доступ к данным инкапсулирован в DAO-объектах (Data Access Object). Каждый DAO — Kotlin <span class="inline-code">object</span> (синглтон). Все операции оборачиваются в блок <span class="inline-code">transaction { ... }</span>.</p>
+<ul>
+    <li>5 ролей, 12 компаний, 20 пользователей;</li>
+    <li>30 модемов, 25 торговых автоматов, 25 товаров;</li>
+    <li>60 связей «автомат–товар», 150 записей о продажах;</li>
+    <li>40 заявок на обслуживание, 50 записей истории обслуживания.</li>
+</ul>
 
-    <table>
-        <thead><tr><th>DAO</th><th>Файл</th><th>Основные методы</th></tr></thead>
-        <tbody>
-            <tr><td><span class="inline-code">UserDAO</span></td><td>dao/UserDAO.kt</td><td>authenticate(), getById(), getAllUsers(), create(), update(), delete()</td></tr>
-            <tr><td><span class="inline-code">VendingMachineDAO</span></td><td>dao/VendingMachineDAO.kt</td><td>getAll(), getById(), create(), update(), delete(), getDashboardStats(), updateStatus()</td></tr>
-            <tr><td><span class="inline-code">ProductDAO</span></td><td>dao/ProductDAO.kt</td><td>getAll(), getByMachineId(), create(), update(), delete()</td></tr>
-            <tr><td><span class="inline-code">SaleDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), getSalesLast10Days(), create()</td></tr>
-            <tr><td><span class="inline-code">CompanyDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), create(), update(), delete()</td></tr>
-            <tr><td><span class="inline-code">ModemDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), create(), update(), delete()</td></tr>
-            <tr><td><span class="inline-code">ServiceOrderDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), create(), update(), delete()</td></tr>
-            <tr><td><span class="inline-code">ServiceHistoryDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll()</td></tr>
-            <tr><td><span class="inline-code">NotificationDAO</span></td><td>dao/DataDAOs.kt</td><td>getRecent(), getUnreadCount(), create(), markAsRead()</td></tr>
-            <tr><td><span class="inline-code">NewsDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll()</td></tr>
-        </tbody>
-    </table>
 
-    <h3>7.1. Пример DAO-запроса (Exposed DSL)</h3>
-    <pre><code>// SaleDAO — получение продаж за последние 10 дней
+<!-- ===== 7. DAO-слой ===== -->
+
+<h2 id="s7">7. DAO-слой: доступ к данным</h2>
+
+<p>Весь доступ к данным инкапсулирован в DAO-объектах (Data Access Object). Каждый DAO реализован как Kotlin <span class="code">object</span> (синглтон). Все операции оборачиваются в блок <span class="code">transaction { ... }</span> библиотеки Exposed.</p>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 5 — DAO-объекты проекта</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>DAO</th><th>Файл</th><th>Основные методы</th></tr>
+    <tr><td><span class="code">UserDAO</span></td><td>dao/UserDAO.kt</td><td>authenticate(), getById(), getAllUsers(), create(), update(), delete()</td></tr>
+    <tr><td><span class="code">VendingMachineDAO</span></td><td>dao/VendingMachineDAO.kt</td><td>getAll(), getById(), create(), update(), delete(), getDashboardStats(), updateStatus()</td></tr>
+    <tr><td><span class="code">ProductDAO</span></td><td>dao/ProductDAO.kt</td><td>getAll(), getByMachineId(), create(), update(), delete()</td></tr>
+    <tr><td><span class="code">SaleDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), getSalesLast10Days(), create()</td></tr>
+    <tr><td><span class="code">CompanyDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), create(), update(), delete()</td></tr>
+    <tr><td><span class="code">ModemDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), create(), update(), delete()</td></tr>
+    <tr><td><span class="code">ServiceOrderDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll(), create(), update(), delete()</td></tr>
+    <tr><td><span class="code">ServiceHistoryDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll()</td></tr>
+    <tr><td><span class="code">NotificationDAO</span></td><td>dao/DataDAOs.kt</td><td>getRecent(), getUnreadCount(), create(), markAsRead()</td></tr>
+    <tr><td><span class="code">NewsDAO</span></td><td>dao/DataDAOs.kt</td><td>getAll()</td></tr>
+</table>
+
+<h3>7.1. Пример DAO-запроса (Exposed DSL)</h3>
+
+<pre>// SaleDAO — получение продаж за последние 10 дней
 fun getSalesLast10Days(): List&lt;DailySales&gt; {
     return transaction {
         val tenDaysAgo = LocalDateTime.now().minusDays(10)
@@ -479,21 +459,24 @@ fun getSalesLast10Days(): List&lt;DailySales&gt; {
                 )
             }
     }
-}</code></pre>
+}</pre>
 
-    <div class="note">
-        <strong>Примечание:</strong> Exposed автоматически использует подключение, установленное в <span class="inline-code">DatabaseConfig.init()</span>. Повторное указание подключения при каждом вызове <span class="inline-code">transaction</span> не требуется.
-    </div>
+<p>Exposed автоматически использует подключение, установленное в <span class="code">DatabaseConfig.init()</span>. Повторное указание подключения при каждом вызове <span class="code">transaction</span> не требуется.</p>
 
-    <!-- ===== 8. Аутентификация ===== -->
-    <h2 id="s8">8. Система аутентификации (JWT + BCrypt)</h2>
-    <p>Реализована в файле <span class="inline-code">service/AuthService.kt</span> как Kotlin <span class="inline-code">object</span> (синглтон).</p>
 
-    <h3>8.1. Хеширование паролей</h3>
-    <p>При регистрации пароль хешируется через <span class="inline-code">BCrypt.hashpw(password, BCrypt.gensalt(10))</span>. При авторизации — проверяется через <span class="inline-code">BCrypt.checkpw()</span> в методе <span class="inline-code">UserDAO.authenticate()</span>.</p>
+<!-- ===== 8. Аутентификация ===== -->
 
-    <h3>8.2. JWT-токены</h3>
-    <pre><code>private const val SECRET = "VendingControllerJWTSecret2026"
+<h2 id="s8">8. Система аутентификации (JWT + BCrypt)</h2>
+
+<p>Реализована в файле <span class="code">service/AuthService.kt</span> как Kotlin <span class="code">object</span> (синглтон).</p>
+
+<h3>8.1. Хеширование паролей</h3>
+
+<p>При регистрации пароль хешируется через <span class="code">BCrypt.hashpw(password, BCrypt.gensalt(10))</span>. При авторизации проверяется через <span class="code">BCrypt.checkpw()</span> в методе <span class="code">UserDAO.authenticate()</span>.</p>
+
+<h3>8.2. JWT-токены</h3>
+
+<pre>private const val SECRET = "VendingControllerJWTSecret2026"
 private const val ISSUER = "VendingController"
 private const val TOKEN_VALIDITY_MS = 8 * 60 * 60 * 1000L  // 8 часов
 private val algorithm = Algorithm.HMAC256(SECRET)
@@ -507,29 +490,31 @@ fun generateToken(user: User): String {
         .withIssuedAt(Date())
         .withExpiresAt(Date(System.currentTimeMillis() + TOKEN_VALIDITY_MS))
         .sign(algorithm)
-}</code></pre>
+}</pre>
 
-    <h3>8.3. Процесс авторизации</h3>
-    <ol>
-        <li>Пользователь вводит email и пароль на экране <span class="inline-code">LoginView</span>;</li>
-        <li>Вызывается <span class="inline-code">AuthService.login(email, password)</span>, который делегирует проверку <span class="inline-code">UserDAO.authenticate()</span>;</li>
-        <li>BCrypt проверяет пароль: <span class="inline-code">BCrypt.checkpw(password, user.passwordHash)</span>;</li>
-        <li>При успехе генерируется JWT-токен (HMAC256, срок действия — 8 часов);</li>
-        <li>Данные сессии сохраняются в <span class="inline-code">AuthService.session</span>: currentUser, token, role;</li>
-        <li>Приложение переходит на <span class="inline-code">MainView</span>.</li>
-    </ol>
+<h3>8.3. Процесс авторизации</h3>
 
-    <!-- ===== 9. Логирование ===== -->
-    <h2 id="s9">9. Логирование (SLF4J + Logback)</h2>
-    <p>Конфигурация логирования определена в файле <span class="inline-code">src/main/resources/logback.xml</span>:</p>
+<ol>
+    <li>Пользователь вводит email и пароль на экране <span class="code">LoginView</span>.</li>
+    <li>Вызывается <span class="code">AuthService.login(email, password)</span>, который делегирует проверку <span class="code">UserDAO.authenticate()</span>.</li>
+    <li>BCrypt проверяет пароль: <span class="code">BCrypt.checkpw(password, user.passwordHash)</span>.</li>
+    <li>При успехе генерируется JWT-токен (HMAC256, срок действия 8 часов).</li>
+    <li>Данные сессии сохраняются в <span class="code">AuthService.session</span>: currentUser, token, role.</li>
+    <li>Приложение переходит на <span class="code">MainView</span>.</li>
+</ol>
 
-    <pre><code>&lt;configuration&gt;
-    &lt;!-- Консольный вывод --&gt;
+
+<!-- ===== 9. Логирование ===== -->
+
+<h2 id="s9">9. Логирование (SLF4J + Logback)</h2>
+
+<p>Конфигурация логирования определена в файле <span class="code">src/main/resources/logback.xml</span>:</p>
+
+<pre>&lt;configuration&gt;
     &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
         &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
     &lt;/appender&gt;
 
-    &lt;!-- Файловый вывод с ротацией --&gt;
     &lt;appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
         &lt;file&gt;logs/vending-controller.log&lt;/file&gt;
         &lt;rollingPolicy class="TimeBasedRollingPolicy"&gt;
@@ -540,32 +525,41 @@ fun generateToken(user: User): String {
 
     &lt;logger name="com.vending" level="DEBUG"/&gt;
     &lt;logger name="org.jetbrains.exposed" level="INFO"/&gt;
-&lt;/configuration&gt;</code></pre>
+&lt;/configuration&gt;</pre>
 
-    <p>Логгеры используются во всех ключевых классах приложения:</p>
-    <pre><code>private val logger = LoggerFactory.getLogger(VendingApp::class.java)
+<p>Логгеры используются во всех ключевых классах приложения:</p>
+
+<pre>private val logger = LoggerFactory.getLogger(VendingApp::class.java)
 logger.info("Database initialized")
 logger.error("Database initialization failed", e)
-logger.warn("Failed login attempt for $email")</code></pre>
+logger.warn("Failed login attempt for $email")</pre>
 
-    <!-- ===== 10. Экспорт ===== -->
-    <h2 id="s10">10. Экспорт данных (CSV, PDF, HTML)</h2>
-    <p>Утилита экспорта реализована в файле <span class="inline-code">util/ExportUtil.kt</span>. Поддерживаются три формата вывода:</p>
 
-    <table>
-        <thead><tr><th>Формат</th><th>Метод</th><th>Особенности реализации</th></tr></thead>
-        <tbody>
-            <tr><td>CSV</td><td><span class="inline-code">exportToCSV()</span></td><td>UTF-8 с BOM для корректного открытия в Excel, разделитель «;», выбор пути через FileChooser</td></tr>
-            <tr><td>PDF</td><td><span class="inline-code">exportToPDF()</span></td><td>iTextPDF, шрифт Arial (поддержка кириллицы), таблица 7 колонок, A4 landscape</td></tr>
-            <tr><td>HTML</td><td><span class="inline-code">exportToHTML()</span></td><td>Генерация стилизованной HTML-страницы с таблицей данных</td></tr>
-        </tbody>
-    </table>
+<!-- ===== 10. Экспорт ===== -->
 
-    <!-- ===== 11. Диаграмма ===== -->
-    <h2 id="s11">11. Диаграмма подключения — общая схема</h2>
-    <p class="no-indent">Ниже представлена общая схема взаимодействия компонентов при подключении к базе данных:</p>
+<h2 id="s10">10. Экспорт данных (CSV, PDF, HTML)</h2>
 
-    <div class="diagram">
+<p>Утилита экспорта реализована в файле <span class="code">util/ExportUtil.kt</span>. Поддерживаются три формата вывода (таблица 6).</p>
+
+<p class="center" style="font-size:12.0pt;"><i>Таблица 6 — Форматы экспорта</i></p>
+
+<table class="MsoTableGrid">
+    <tr><th>Формат</th><th>Метод</th><th>Особенности</th></tr>
+    <tr><td>CSV</td><td><span class="code">exportToCSV()</span></td><td>UTF-8 с BOM для Excel, разделитель «;», выбор пути через FileChooser</td></tr>
+    <tr><td>PDF</td><td><span class="code">exportToPDF()</span></td><td>iTextPDF, шрифт Arial (кириллица), 7 колонок, A4 landscape</td></tr>
+    <tr><td>HTML</td><td><span class="code">exportToHTML()</span></td><td>Генерация стилизованной HTML-страницы с таблицей данных</td></tr>
+</table>
+
+
+<!-- ===== 11. Диаграмма ===== -->
+
+<h2 id="s11">11. Диаграмма подключения</h2>
+
+<p>На рисунке 1 представлена общая схема взаимодействия компонентов приложения при подключении к базе данных.</p>
+
+<p class="center" style="font-size:12.0pt;margin-bottom:6pt;"><i>Рисунок 1 — Схема подключения к БД</i></p>
+
+<pre style="margin-left:0;text-align:center;">
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        VendingController App                        │
 │                                                                     │
@@ -573,45 +567,34 @@ logger.warn("Failed login attempt for $email")</code></pre>
 │  │ Main.kt  │──▶│ VendingApp   │──▶│ DatabaseConfig.init()      │  │
 │  │ (entry)  │   │ (JavaFX App) │   │                            │  │
 │  └──────────┘   └──────┬───────┘   │ 1. Загрузка properties     │  │
-│                        │           │ 2. Database.connect(url,    │  │
-│                        ▼           │    driver, user, password)  │  │
-│              ┌─────────────────┐   │ 3. isConnected = true      │  │
-│              │   LoginView     │   └────────────┬───────────────┘  │
-│              │ (JWT Auth)      │                │                   │
-│              └────────┬────────┘                ▼                   │
-│                       │              ┌──────────────────┐          │
-│                       ▼              │  Exposed ORM     │          │
-│              ┌─────────────────┐     │  ┌────────────┐  │          │
-│              │    MainView     │     │  │ Tables.kt  │  │          │
-│              │ (Sidebar + Nav) │     │  │ (13 tables)│  │          │
-│              └────────┬────────┘     │  └────────────┘  │          │
-│                       │              │  ┌────────────┐  │          │
-│         ┌─────────────┼──────────┐   │  │ DAO Layer  │  │          │
-│         ▼             ▼          ▼   │  │ (10 DAOs)  │◀─┼── transaction {}
-│   ┌───────────┐ ┌──────────┐ ┌─────┐│  └────────────┘  │          │
-│   │ Dashboard │ │ Monitor  │ │Admin││                    │          │
-│   │ View      │ │ View     │ │Views││                    │          │
-│   │ (Charts)  │ │ (Table)  │ │(CRUD)│                    │          │
-│   └───────────┘ └──────────┘ └─────┘│                    │          │
-│                                      │          ▼                    │
-│              AuthService             │  ┌──────────────────┐        │
-│   ┌──────────────────────────┐       │  │  PostgreSQL 17   │        │
-│   │  BCrypt (password hash)  │       │  │  vending_db      │        │
-│   │  JWT (HMAC256, 8h token) │       │  │  localhost:5432   │        │
-│   └──────────────────────────┘       │  └──────────────────┘        │
-│                                      │          │                    │
-│   ┌──────────────────────────┐       │  ┌──────────────────┐        │
-│   │  Logback + SLF4J         │       │  │ JDBC Driver      │        │
-│   │  → console + file logs   │       │  │ postgresql-42.7.1│        │
-│   └──────────────────────────┘       │  └──────────────────┘        │
-└─────────────────────────────────────────────────────────────────────┘</div>
+│                        │           │ 2. Database.connect()       │  │
+│                        ▼           │ 3. isConnected = true      │  │
+│              ┌─────────────────┐   └────────────┬───────────────┘  │
+│              │   LoginView     │                │                   │
+│              │ (JWT Auth)      │                ▼                   │
+│              └────────┬────────┘     ┌──────────────────┐          │
+│                       │              │  Exposed ORM     │          │
+│                       ▼              │  Tables.kt       │          │
+│              ┌─────────────────┐     │  (13 таблиц)     │          │
+│              │    MainView     │     │                  │          │
+│              │ (Sidebar + Nav) │     │  DAO Layer       │          │
+│              └────────┬────────┘     │  (10 объектов)   │          │
+│                       │              └────────┬─────────┘          │
+│         ┌─────────────┼──────────┐            │                    │
+│         ▼             ▼          ▼            ▼                    │
+│   ┌───────────┐ ┌──────────┐ ┌──────┐ ┌──────────────────┐       │
+│   │ Dashboard │ │ Monitor  │ │ Admin │ │  PostgreSQL 17   │       │
+│   │ (Charts)  │ │ (Table)  │ │(CRUD) │ │  vending_db      │       │
+│   └───────────┘ └──────────┘ └──────┘ │  localhost:5432   │       │
+│                                        └──────────────────┘       │
+│   AuthService: BCrypt + JWT (HMAC256, 8h)                          │
+│   Logback + SLF4J: console + file (14 дней)                       │
+│   JDBC Driver: postgresql-42.7.1                                   │
+└─────────────────────────────────────────────────────────────────────┘
+</pre>
 
-    <!-- ============================== FOOTER ============================== -->
-    <div class="footer">
-        VendingController v1.0-SNAPSHOT &bull; Kotlin 2.1.0 &bull; JavaFX 21.0.2 &bull; PostgreSQL 17 &bull; 2026 г.<br>
-        <a href="report-connection.html">Подключение к БД (этот файл)</a> &bull;
-        <a href="report-architecture.html">Архитектура приложения</a>
-    </div>
+
+<p class="center" style="margin-top:36pt;font-size:11pt;color:#666;">— конец документа —</p>
 
 </div>
 </body>
