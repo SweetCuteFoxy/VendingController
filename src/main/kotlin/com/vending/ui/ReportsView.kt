@@ -10,10 +10,13 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.geometry.Side
+import javafx.scene.chart.*
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
 import javafx.stage.FileChooser
+import javafx.stage.Stage
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.text.DecimalFormat
@@ -42,6 +45,7 @@ class ReportsView {
     // Summary labels
     private val totalSalesLabel = Label("0")
     private val totalRevenueLabel = Label("0 ₽")
+    private lateinit var mainTabPane: TabPane
 
     init {
         root.styleClass.add("admin-view")
@@ -50,14 +54,16 @@ class ReportsView {
     }
 
     private fun buildContent() {
-        val tabPane = TabPane().apply {
+        mainTabPane = TabPane().apply {
             tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
         }
+        val tabPane = mainTabPane
 
         tabPane.tabs.addAll(
             Tab("Продажи", buildSalesTab()),
             Tab("Заявки на ТО", buildOrdersTab()),
-            Tab("История обслуживания", buildHistoryTab())
+            Tab("История обслуживания", buildHistoryTab()),
+            Tab("📊 Аналитика", buildAnalyticsTab())
         )
 
         // Title bar
@@ -231,37 +237,35 @@ class ReportsView {
         statusCombo.valueProperty().addListener { _, _, _ -> loadOrders(statusCombo.value, priorityCombo.value) }
         priorityCombo.valueProperty().addListener { _, _, _ -> loadOrders(statusCombo.value, priorityCombo.value) }
 
-        val exportOrdersBtn = Button("📥 CSV").apply {
-            styleClass.add("export-btn")
-            setOnAction {
-                val items = ordersData.toList()
-                Thread {
-                    com.vending.util.ExportUtil.exportGenericCSV(
-                        items,
-                        listOf("№ заявки", "Автомат", "Тип", "Статус", "Приоритет", "Дата план", "Инженер", "Описание"),
-                        { o -> listOf(
-                            o.orderNumber, o.machineName,
-                            when(o.type){"maintenance"->"Плановое ТО";"repair"->"Ремонт";"emergency"->"Аварийный";else->o.type},
-                            when(o.status){"new"->"Новая";"assigned"->"Назначена";"in_progress"->"В работе";"completed"->"Завершена";"cancelled"->"Отменена";else->o.status},
-                            when(o.priority){"low"->"Низкий";"medium"->"Средний";"high"->"Высокий";"critical"->"Критический";else->o.priority},
-                            o.scheduledDate.format(dFmt), o.engineerName.ifBlank{"-"}, o.description?:"-"
-                        ) },
-                        "service_orders_report.csv"
-                    )
-                }.start()
-            }
-        }
-
         val filterBar = HBox(10.0).apply {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
             alignment = Pos.CENTER_LEFT
+            val exportBtn = Button("📥 CSV").apply {
+                styleClass.add("export-btn")
+                setOnAction {
+                    val stage = ordersTable.scene?.window as? Stage ?: return@setOnAction
+                    val chooser = FileChooser().apply {
+                        title = "Сохранить заявки"
+                        extensionFilters.add(FileChooser.ExtensionFilter("CSV", "*.csv"))
+                        initialFileName = "service_orders.csv"
+                    }
+                    val file = chooser.showSaveDialog(stage) ?: return@setOnAction
+                    try {
+                        file.bufferedWriter(Charsets.UTF_8).use { w ->
+                            w.write("﻿");
+                            w.write("№;Автомат;Тип;Статус;Приоритет;Дата;Инженер\n")
+                            ordersData.forEach { o -> w.write("${o.orderNumber};${o.machineName};${o.type};${o.status};${o.priority};${o.scheduledDate.format(dFmt)};${o.engineerName}\n") }
+                        }
+                    } catch (e: Exception) { logger.error("Orders CSV export failed", e) }
+                }
+            }
             children.addAll(
                 Label("Статус:").apply { styleClass.add("filter-group-label") },
                 statusCombo,
                 Label("Приоритет:").apply { styleClass.add("filter-group-label") },
                 priorityCombo,
                 Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
-                exportOrdersBtn
+                exportBtn
             )
         }
 
@@ -423,39 +427,188 @@ class ReportsView {
             }
         )
 
-        val exportHistoryBtn = Button("📥 CSV").apply {
-            styleClass.add("export-btn")
-            setOnAction {
-                val items = historyData.toList()
-                Thread {
-                    com.vending.util.ExportUtil.exportGenericCSV(
-                        items,
-                        listOf("ID", "Автомат", "Тип", "Дата", "Описание", "Инженер", "Длительность(ч)", "Стоимость"),
-                        { h -> listOf(
-                            h.id.toString(), h.machineName,
-                            when(h.eventType){"maintenance"->"ТО";"repair"->"Ремонт";"inspection"->"Осмотр";"installation"->"Установка";else->h.eventType},
-                            h.eventDate.format(dFmt), h.description, h.engineerName.ifBlank{"-"},
-                            h.duration?.toString()?:"-", h.cost?.toPlainString()?:"-"
-                        ) },
-                        "service_history_report.csv"
-                    )
-                }.start()
-            }
-        }
-
         val infoBar = HBox(10.0).apply {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
             alignment = Pos.CENTER_LEFT
+            val exportHistBtn = Button("📥 CSV").apply {
+                styleClass.add("export-btn")
+                setOnAction {
+                    val stage = historyTable.scene?.window as? Stage ?: return@setOnAction
+                    val chooser = FileChooser().apply {
+                        title = "Сохранить историю"
+                        extensionFilters.add(FileChooser.ExtensionFilter("CSV", "*.csv"))
+                        initialFileName = "service_history.csv"
+                    }
+                    val file = chooser.showSaveDialog(stage) ?: return@setOnAction
+                    try {
+                        file.bufferedWriter(Charsets.UTF_8).use { w ->
+                            w.write("﻿")
+                            w.write("ID;Автомат;Тип;Дата;Описание;Инженер;Длительность ч;Стоимость\n")
+                            historyData.forEach { h -> w.write("${h.id};${h.machineName};${h.eventType};${h.eventDate.format(dFmt)};${h.description};${h.engineerName};${h.duration ?: ""};${h.cost ?: ""}\n") }
+                        }
+                    } catch (e: Exception) { logger.error("History CSV export failed", e) }
+                }
+            }
             children.addAll(
                 Label("Полная история сервисных событий").apply { styleClass.add("filter-group-label") },
                 Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
-                exportHistoryBtn
+                exportHistBtn
             )
         }
 
         pane.top = infoBar
         pane.center = historyTable
         return pane
+    }
+
+    // ================== Analytics Tab ==================
+
+    private fun buildAnalyticsTab(): ScrollPane {
+        val content = VBox(20.0).apply {
+            padding = Insets(20.0)
+            styleClass.add("analytics-content")
+        }
+
+        // Placeholders that get replaced on data load
+        val paymentChart = buildPaymentChart()
+        val topMachinesChart = buildTopMachinesChart()
+        val orderStatusChart = buildOrderStatusChart()
+        val revenueByDayChart = buildRevenueByDayChart()
+
+        val row1 = HBox(20.0).apply {
+            children.addAll(
+                VBox(8.0).apply {
+                    styleClass.add("analytics-card")
+                    padding = Insets(16.0)
+                    children.addAll(Label("Продажи по способу оплаты").apply { styleClass.add("tile-title") }, Separator(), paymentChart)
+                    HBox.setHgrow(this, Priority.ALWAYS)
+                },
+                VBox(8.0).apply {
+                    styleClass.add("analytics-card")
+                    padding = Insets(16.0)
+                    children.addAll(Label("Статусы заявок на ТО").apply { styleClass.add("tile-title") }, Separator(), orderStatusChart)
+                    HBox.setHgrow(this, Priority.ALWAYS)
+                }
+            )
+        }
+
+        val row2 = VBox(8.0).apply {
+            styleClass.add("analytics-card")
+            padding = Insets(16.0)
+            children.addAll(Label("Топ-10 автоматов по выручке").apply { styleClass.add("tile-title") }, Separator(), topMachinesChart)
+        }
+
+        val row3 = VBox(8.0).apply {
+            styleClass.add("analytics-card")
+            padding = Insets(16.0)
+            children.addAll(Label("Выручка по дням (последние 14 дн.)").apply { styleClass.add("tile-title") }, Separator(), revenueByDayChart)
+        }
+
+        content.children.addAll(row1, row2, row3)
+        return ScrollPane(content).apply { isFitToWidth = true }
+    }
+
+    private fun buildPaymentChart(): PieChart {
+        val cash = allSales.count { it.paymentMethod == "cash" }.toDouble()
+        val card = allSales.count { it.paymentMethod == "card" }.toDouble()
+        val total = cash + card
+        val cashLabel = "Наличные (${cash.toInt()})"
+        val cardLabel = "Карта (${card.toInt()})"
+        val chart = PieChart(FXCollections.observableArrayList(
+            PieChart.Data(cashLabel, if (total > 0) cash else 1.0),
+            PieChart.Data(cardLabel, if (total > 0) card else 1.0)
+        )).apply {
+            isLegendVisible = true
+            legendSide = Side.BOTTOM
+            labelsVisible = false
+            prefHeight = 220.0
+            animated = false
+        }
+        Platform.runLater {
+            chart.lookupAll(".chart-pie").forEachIndexed { i, node ->
+                node.style = "-fx-pie-color: ${if (i == 0) "#50cd89" else "#5b8def"};"
+            }
+        }
+        return chart
+    }
+
+    private fun buildTopMachinesChart(): BarChart<String, Number> {
+        val xAxis = CategoryAxis().apply { label = "Автомат" }
+        val yAxis = NumberAxis().apply { label = "Выручка (₽)" }
+        val chart = BarChart<String, Number>(xAxis, yAxis).apply {
+            isLegendVisible = false
+            prefHeight = 220.0
+            animated = false
+        }
+        val series = XYChart.Series<String, Number>()
+        val byMachine = allSales.groupBy { it.machineName }
+            .mapValues { e -> e.value.sumOf { it.totalAmount.toDouble() } }
+            .entries.sortedByDescending { it.value }.take(10)
+        byMachine.forEach { (name, total) ->
+            val shortName = if (name.length > 14) name.take(12) + "…" else name
+            series.data.add(XYChart.Data(shortName, total))
+        }
+        if (series.data.isEmpty()) series.data.add(XYChart.Data("Нет данных", 0.0))
+        chart.data.add(series)
+        Platform.runLater {
+            chart.lookupAll(".bar").forEach { node ->
+                node.style = "-fx-bar-fill: #5b8def;"
+            }
+        }
+        return chart
+    }
+
+    private fun buildOrderStatusChart(): BarChart<String, Number> {
+        val xAxis = CategoryAxis()
+        val yAxis = NumberAxis().apply { label = "Кол-во" }
+        val chart = BarChart<String, Number>(xAxis, yAxis).apply {
+            isLegendVisible = false
+            prefHeight = 220.0
+            animated = false
+        }
+        val counts = mapOf(
+            "Новая" to ordersData.count { it.status == "new" },
+            "Назначена" to ordersData.count { it.status == "assigned" },
+            "В работе" to ordersData.count { it.status == "in_progress" },
+            "Завершена" to ordersData.count { it.status == "completed" },
+            "Отменена" to ordersData.count { it.status == "cancelled" }
+        )
+        val series = XYChart.Series<String, Number>()
+        val colors = listOf("#5b8def", "#ffa726", "#3699ff", "#50cd89", "#ef5350")
+        counts.entries.forEachIndexed { i, (label, cnt) ->
+            series.data.add(XYChart.Data(label, cnt))
+        }
+        if (series.data.isEmpty()) series.data.add(XYChart.Data("Нет данных", 0))
+        chart.data.add(series)
+        Platform.runLater {
+            chart.lookupAll(".bar").forEachIndexed { i, node ->
+                node.style = "-fx-bar-fill: ${colors.getOrElse(i) { "#5b8def" }};"
+            }
+        }
+        return chart
+    }
+
+    private fun buildRevenueByDayChart(): LineChart<String, Number> {
+        val xAxis = CategoryAxis().apply { label = "Дата" }
+        val yAxis = NumberAxis().apply { label = "Выручка (₽)" }
+        val chart = LineChart<String, Number>(xAxis, yAxis).apply {
+            isLegendVisible = false
+            prefHeight = 220.0
+            animated = false
+            createSymbols = false
+        }
+        val fmt = DateTimeFormatter.ofPattern("dd.MM")
+        val byDay = allSales.groupBy { it.saleTime.toLocalDate() }
+            .mapValues { e -> e.value.sumOf { it.totalAmount.toDouble() } }
+            .entries.sortedBy { it.key }.takeLast(14)
+        val series = XYChart.Series<String, Number>()
+        byDay.forEach { (date, total) -> series.data.add(XYChart.Data(date.format(fmt), total)) }
+        if (series.data.isEmpty()) series.data.add(XYChart.Data("Нет данных", 0.0))
+        chart.data.add(series)
+        Platform.runLater {
+            chart.lookup(".chart-series-line")?.style = "-fx-stroke: #5b8def; -fx-stroke-width: 2px;"
+        }
+        return chart
     }
 
     // ================== Data Loading ==================
@@ -471,6 +624,10 @@ class ReportsView {
                     ordersData.setAll(orders)
                     historyData.setAll(history)
                     updateSalesSummary(allSales)
+                    // Refresh analytics tab with real data
+                    if (mainTabPane.tabs.size >= 4) {
+                        mainTabPane.tabs[3].content = buildAnalyticsTab()
+                    }
                 }
             } catch (e: Exception) {
                 Platform.runLater {

@@ -2645,218 +2645,226 @@
 }
 
 /* ============================================================
-   ENHANCED DIALOG STYLING
+   Styled Dialogs & Forms
    ============================================================ */
 
-/* Better sizing and spacing for dialogs */
-.dialog-pane {
-    -fx-min-width: 460px;
+/* Dialog backdrop */
+.styled-dialog {
     -fx-background-color: #1a1e28;
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 40, 0, 0, 12);
     -fx-border-color: #2a2f3c;
+    -fx-border-width: 0;
     -fx-border-radius: 12;
-    -fx-border-width: 1;
+    -fx-background-radius: 12;
     -fx-padding: 0;
 }
 
-.dialog-pane > .content {
-    -fx-padding: 16 24 8 24;
-}
-
-.dialog-pane > .button-bar {
-    -fx-padding: 12 20 20 20;
-    -fx-background-color: #151920;
-    -fx-background-radius: 0 0 12 12;
-    -fx-border-color: #252a36;
+.styled-dialog .button-bar {
+    -fx-background-color: #151820;
+    -fx-padding: 12 20 12 20;
+    -fx-border-color: #2a2f3c transparent transparent transparent;
     -fx-border-width: 1 0 0 0;
 }
 
-/* Form grid inside dialogs */
-.dialog-pane .grid-pane {
-    -fx-hgap: 12;
-    -fx-vgap: 10;
-    -fx-padding: 4 0;
+.styled-dialog .button-bar .container {
+    -fx-background-color: transparent;
 }
 
-.dialog-pane .grid-pane .label {
-    -fx-text-fill: #8890a4;
-    -fx-font-size: 12px;
+.dialog-form-title {
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-pref-width: 120;
-    -fx-alignment: CENTER_RIGHT;
+    -fx-text-fill: #e8ecf1;
+    -fx-padding: 16 24 4 24;
 }
 
-/* TextFields inside dialogs – better dimensions */
-.dialog-pane .text-field,
-.dialog-pane .password-field,
-.dialog-pane .text-area {
-    -fx-pref-width: 260;
-    -fx-min-height: 36;
+.form-grid {
+    -fx-background-color: transparent;
+}
+
+.form-label {
+    -fx-text-fill: #a0a6b8;
+    -fx-font-size: 12.5px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0 0 0;
+}
+
+.edit-field {
     -fx-background-color: #0f1218;
     -fx-text-fill: #e0e4ec;
-    -fx-prompt-text-fill: #4a4e60;
+    -fx-prompt-text-fill: #3a3e50;
     -fx-border-color: #2a2e3a;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
-    -fx-padding: 8 12;
+    -fx-padding: 9 12;
     -fx-font-size: 13px;
+    -fx-pref-height: 38;
 }
 
-.dialog-pane .text-field:focused,
-.dialog-pane .password-field:focused {
+.edit-field:focused {
     -fx-border-color: #5b8def;
     -fx-background-color: #11151e;
     -fx-effect: dropshadow(gaussian, rgba(91,141,239,0.15), 8, 0, 0, 0);
 }
 
-/* ComboBox inside dialogs */
-.dialog-pane .combo-box {
-    -fx-pref-width: 268;
-    -fx-min-height: 36;
+.edit-combo {
     -fx-background-color: #0f1218;
+    -fx-text-fill: #e0e4ec;
     -fx-border-color: #2a2e3a;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
+    -fx-padding: 4 8;
+    -fx-font-size: 13px;
+    -fx-pref-height: 38;
 }
 
-/* Alert dialog improvements */
-.alert .dialog-pane {
-    -fx-min-width: 380px;
+.edit-combo .list-cell {
+    -fx-text-fill: #e0e4ec;
+    -fx-background-color: #0f1218;
 }
 
-.alert.information .dialog-pane .header-panel {
-    -fx-background-color: #1a3a5c;
+.edit-combo .combo-box-popup .list-view {
+    -fx-background-color: #1a1e28;
+    -fx-border-color: #2a2e3a;
 }
 
-.alert.warning .dialog-pane .header-panel {
-    -fx-background-color: #3a2d0a;
+.edit-combo .combo-box-popup .list-cell:filled:hover {
+    -fx-background-color: #252a38;
 }
 
-.alert.error .dialog-pane .header-panel {
-    -fx-background-color: #3a1a1a;
-}
-
-.alert.confirmation .dialog-pane .header-panel {
-    -fx-background-color: #1a2a1a;
-}
-
-/* ============================================================
-   DEV PANEL TABS
-   ============================================================ */
-
-.dev-tab-pane {
-    -fx-tab-min-height: 32px;
-}
-
-.dev-tab-pane .tab-header-area .tab-header-background {
-    -fx-background-color: #151920;
-    -fx-border-color: #252a36;
-    -fx-border-width: 0 0 1 0;
-}
-
-.dev-tab-pane .tab {
-    -fx-background-color: transparent;
-    -fx-padding: 6 10;
-    -fx-font-size: 11px;
-}
-
-.dev-tab-pane .tab .tab-label {
-    -fx-text-fill: #636980;
-}
-
-.dev-tab-pane .tab:selected .tab-label {
-    -fx-text-fill: #5b8def;
+.btn-save {
+    -fx-background-color: #5b8def;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 9 22;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
 }
 
-.dev-tab-pane .tab:selected {
-    -fx-background-color: #1a1e28;
+.btn-save:hover {
+    -fx-background-color: #6b9dff;
+    -fx-effect: dropshadow(gaussian, rgba(91,141,239,0.3), 8, 0, 0, 2);
+}
+
+.btn-cancel {
+    -fx-background-color: #252a38;
+    -fx-text-fill: #a0a6b8;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 9 22;
+    -fx-cursor: hand;
+    -fx-border-color: #2a2f3c;
+    -fx-border-radius: 8;
+}
+
+.btn-cancel:hover {
+    -fx-background-color: #2d3346;
+    -fx-text-fill: #c8cdd8;
+}
+
+/* Export buttons */
+.export-btn {
+    -fx-background-color: #1e2736;
+    -fx-text-fill: #5b8def;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-padding: 7 14;
+    -fx-cursor: hand;
+    -fx-border-color: #2a3a52;
+    -fx-border-radius: 7;
+    -fx-border-width: 1;
+    -fx-pref-height: 34;
+}
+
+.export-btn:hover {
+    -fx-background-color: #253044;
     -fx-border-color: #5b8def;
-    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(91,141,239,0.2), 6, 0, 0, 1);
 }
 
-.dev-tab-pane .tab-content-area {
+/* Analytics cards */
+.analytics-content {
+    -fx-background-color: transparent;
+}
+
+.analytics-card {
     -fx-background-color: #1a1e28;
-}
-
-.dev-scroll {
-    -fx-background: transparent;
-    -fx-background-color: transparent;
-}
-
-.dev-scroll .viewport {
-    -fx-background-color: transparent;
-}
-
-/* Memory progress bar */
-.dev-mem-bar .track {
-    -fx-background-color: #252a36;
-    -fx-background-radius: 4;
-}
-
-.dev-mem-bar .bar {
-    -fx-background-radius: 4;
-}
-
-.dev-log-area {
-    -fx-background-color: #0b0e14;
-    -fx-border-color: #252a36;
+    -fx-background-radius: 12;
+    -fx-border-color: #2a2f3c;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 2);
 }
 
 /* ============================================================
-   LIGHT THEME: DIALOG ENHANCEMENTS
+   Light Theme overrides for dialogs & forms
    ============================================================ */
 
-.light-theme .dialog-pane {
+.light-theme .styled-dialog {
     -fx-background-color: #ffffff;
-    -fx-border-color: #d8dce8;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 30, 0, 0, 8);
-}
-
-.light-theme .dialog-pane > .button-bar {
-    -fx-background-color: #f5f6fa;
     -fx-border-color: #e0e3ec;
 }
 
-.light-theme .dialog-pane .grid-pane .label {
-    -fx-text-fill: #6b7280;
+.light-theme .styled-dialog .button-bar {
+    -fx-background-color: #f4f6f9;
+    -fx-border-color: #e0e3ec transparent transparent transparent;
 }
 
-.light-theme .alert.information .dialog-pane .header-panel {
-    -fx-background-color: #dbeafe;
+.light-theme .dialog-form-title {
+    -fx-text-fill: #1a1e28;
 }
 
-.light-theme .alert.warning .dialog-pane .header-panel {
-    -fx-background-color: #fef3c7;
+.light-theme .form-label {
+    -fx-text-fill: #4a5068;
 }
 
-.light-theme .alert.error .dialog-pane .header-panel {
-    -fx-background-color: #fee2e2;
-}
-
-.light-theme .alert.confirmation .dialog-pane .header-panel {
-    -fx-background-color: #d1fae5;
-}
-
-.light-theme .dev-tab-pane .tab-header-area .tab-header-background {
+.light-theme .edit-field {
     -fx-background-color: #f0f2f7;
-    -fx-border-color: #d8dce8;
+    -fx-text-fill: #2c3040;
+    -fx-prompt-text-fill: #a0a6b8;
+    -fx-border-color: #d0d4e0;
 }
 
-.light-theme .dev-tab-pane .tab:selected {
+.light-theme .edit-field:focused {
     -fx-background-color: #ffffff;
+    -fx-border-color: #5b8def;
 }
 
-.light-theme .dev-tab-pane .tab:selected .tab-label {
+.light-theme .edit-combo {
+    -fx-background-color: #f0f2f7;
+    -fx-text-fill: #2c3040;
+    -fx-border-color: #d0d4e0;
+}
+
+.light-theme .edit-combo .list-cell {
+    -fx-text-fill: #2c3040;
+    -fx-background-color: #f0f2f7;
+}
+
+.light-theme .btn-cancel {
+    -fx-background-color: #e8eaf0;
+    -fx-text-fill: #4a5068;
+    -fx-border-color: #d0d4e0;
+}
+
+.light-theme .btn-cancel:hover {
+    -fx-background-color: #dde0ea;
+    -fx-text-fill: #1a1e28;
+}
+
+.light-theme .export-btn {
+    -fx-background-color: #eef2fc;
     -fx-text-fill: #4a7de0;
+    -fx-border-color: #c0d0f0;
 }
 
-.light-theme .dev-scroll .viewport {
-    -fx-background-color: transparent;
+.light-theme .export-btn:hover {
+    -fx-background-color: #dce8ff;
+    -fx-border-color: #5b8def;
 }
 
-.light-theme .dev-log-area {
-    -fx-background-color: #f8f9ff;
-    -fx-border-color: #d8dce8;
+.light-theme .analytics-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e3ec;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
 }

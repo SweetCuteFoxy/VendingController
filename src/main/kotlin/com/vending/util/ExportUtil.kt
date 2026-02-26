@@ -16,61 +16,38 @@ import java.io.FileWriter
 object ExportUtil {
     private val logger = LoggerFactory.getLogger(ExportUtil::class.java)
 
-    /**
-     * Generic CSV export for any list of data.
-     * @param items      list to export
-     * @param headers    column header names
-     * @param rowMapper  converts each item to a list of cell strings
-     * @param fileName   default file name suggestion
-     * @param title      dialog window title
-     * @param stage      owner stage (can be null)
-     */
+    /** Generic CSV export — works for any data type */
     fun <T> exportGenericCSV(
-        items: List<T>,
+        data: List<T>,
         headers: List<String>,
-        rowMapper: (T) -> List<String>,
+        rowExtractor: (T) -> List<String>,
         fileName: String,
-        title: String = "Сохранить CSV",
-        stage: Stage? = null
+        stage: Stage
     ) {
-        if (items.isEmpty()) {
-            javafx.application.Platform.runLater {
-                javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.INFORMATION, "Нет данных для экспорта"
-                ).showAndWait()
-            }
-            return
-        }
         val chooser = FileChooser().apply {
-            this.title = title
+            title = "Сохранить CSV"
             extensionFilters.add(FileChooser.ExtensionFilter("CSV files", "*.csv"))
             initialFileName = fileName
         }
-        val file: File = (if (stage != null) chooser.showSaveDialog(stage)
-        else chooser.showSaveDialog(null)) ?: return
+        val file = chooser.showSaveDialog(stage) ?: return
         try {
-            FileWriter(file, Charsets.UTF_8).use { w ->
-                w.write("\uFEFF") // BOM for Excel
-                w.write(headers.joinToString(";") + "\n")
-                items.forEach { item ->
-                    val cells = rowMapper(item).map { it.replace(";", ",").replace("\n", " ") }
-                    w.write(cells.joinToString(";") + "\n")
+            java.io.FileWriter(file, Charsets.UTF_8).use { writer ->
+                writer.write("\uFEFF") // BOM for Excel
+                writer.write(headers.joinToString(";") + "\n")
+                data.forEach { item ->
+                    writer.write(rowExtractor(item).joinToString(";") { it.replace(";", ",") } + "\n")
                 }
             }
+            logger.info("Exported ${data.size} rows to $fileName")
             javafx.application.Platform.runLater {
-                javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.INFORMATION,
-                    "Экспортировано ${items.size} записей\n${file.name}"
-                ).showAndWait()
+                javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION).apply {
+                    title = "Экспорт завершён"
+                    headerText = null
+                    contentText = "Файл сохранён: ${file.name} (${data.size} строк)"
+                }.show()
             }
-            logger.info("Generic CSV export: ${items.size} rows → ${file.absolutePath}")
         } catch (e: Exception) {
-            logger.error("Generic CSV export failed", e)
-            javafx.application.Platform.runLater {
-                javafx.scene.control.Alert(
-                    javafx.scene.control.Alert.AlertType.ERROR, "Ошибка экспорта: ${e.message}"
-                ).showAndWait()
-            }
+            logger.error("CSV export failed", e)
         }
     }
 

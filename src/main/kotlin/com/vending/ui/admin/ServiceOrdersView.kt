@@ -4,6 +4,7 @@ import com.vending.dao.*
 import com.vending.model.ServiceOrder
 import com.vending.model.Notification
 import com.vending.util.ExportUtil
+import javafx.stage.Stage
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -76,30 +77,22 @@ class ServiceOrdersView {
             valueProperty().addListener { _, _, _ -> filterOrders(this.value) }
         }
 
-        val exportBtn = Button("📥 CSV").apply {
-            styleClass.add("export-btn")
-            setOnAction {
-                val items = ordersData.toList()
-                Thread {
-                    ExportUtil.exportGenericCSV(
-                        items,
-                        listOf("№ заявки", "Автомат", "Тип", "Статус", "Приоритет", "Дата план", "Инженер", "Описание"),
-                        { o -> listOf(
-                            o.orderNumber, o.machineName,
-                            when(o.type){"maintenance"->"Плановое ТО";"repair"->"Ремонт";"emergency"->"Аварийный";"inventory"->"Осмотр";else->o.type},
-                            when(o.status){"new"->"Новая";"assigned"->"Назначена";"in_progress"->"В работе";"completed"->"Завершена";"cancelled"->"Отменена";else->o.status},
-                            when(o.priority){"low"->"Низкий";"medium"->"Средний";"high"->"Высокий";"critical"->"Критический";else->o.priority},
-                            o.scheduledDate.format(dFmt), o.engineerName.ifBlank{"-"}, o.description?:"-"
-                        ) },
-                        "service_orders.csv"
-                    )
-                }.start()
-            }
-        }
-
         val filterBar = HBox(10.0).apply {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
             alignment = Pos.CENTER_LEFT
+            val exportBtn = Button("📥 CSV").apply {
+                styleClass.add("export-btn")
+                setOnAction {
+                    val stage = ordersTable.scene?.window as? Stage ?: return@setOnAction
+                    ExportUtil.exportGenericCSV(
+                        data = ordersData.toList(),
+                        headers = listOf("№ заявки", "Автомат", "Тип", "Статус", "Приоритет", "Дата", "Инженер"),
+                        rowExtractor = { listOf(it.orderNumber, it.machineName, it.type, it.status, it.priority, it.scheduledDate.toString(), it.engineerName) },
+                        fileName = "service_orders.csv",
+                        stage = stage
+                    )
+                }
+            }
             children.addAll(
                 Label("Статус:").apply { styleClass.add("filter-group-label") },
                 statusCombo,

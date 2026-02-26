@@ -2,6 +2,7 @@ package com.vending.ui
 
 import com.vending.dao.VendingMachineDAO
 import com.vending.model.VendingMachine
+import com.vending.util.ExportUtil
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -10,6 +11,7 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import javafx.stage.Stage
 import java.text.DecimalFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -46,9 +48,24 @@ class MachineMonitorView {
 
         val titleRow = HBox(10.0).apply {
             alignment = Pos.CENTER_LEFT
-            children.add(Label("Монитор торговых автоматов").apply {
-                font = Font.font(18.0); styleClass.add("page-title")
-            })
+            val exportBtn = Button("📥 CSV").apply {
+                styleClass.add("export-btn")
+                setOnAction {
+                    val stage = table.scene?.window as? Stage ?: return@setOnAction
+                    ExportUtil.exportGenericCSV(
+                        data = data.toList(),
+                        headers = listOf("№", "Название", "Статус", "Связь", "Загрузка", "Деньги"),
+                        rowExtractor = { listOf(it.index.toString(), it.name, it.status, it.connection, it.loadInfo, it.money) },
+                        fileName = "monitor_export.csv",
+                        stage = stage
+                    )
+                }
+            }
+            children.addAll(
+                Label("Монитор торговых автоматов").apply { font = Font.font(18.0); styleClass.add("page-title") },
+                Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
+                exportBtn
+            )
         }
 
         // Status filter

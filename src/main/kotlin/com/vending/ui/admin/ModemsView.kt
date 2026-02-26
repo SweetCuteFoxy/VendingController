@@ -3,6 +3,7 @@ package com.vending.ui.admin
 import com.vending.dao.ModemDAO
 import com.vending.model.Modem
 import com.vending.util.ExportUtil
+import javafx.stage.Stage
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -33,38 +34,25 @@ class ModemsView {
             alignment = Pos.CENTER_LEFT
         }
         val title = Label("Модемы").apply { font = Font.font(18.0); styleClass.add("page-title") }
-        val searchField = javafx.scene.control.TextField().apply {
-            promptText = "🔍 IMEI / номер…"
-            styleClass.add("filter-field")
-            prefWidth = 200.0
-            textProperty().addListener { _, _, q ->
-                val lq = q.trim().lowercase()
-                table.items = if (lq.isEmpty()) data
-                else javafx.collections.FXCollections.observableList(data.filter {
-                    it.imei.lowercase().contains(lq) || (it.phoneNumber?.lowercase()?.contains(lq) == true)
-                })
-            }
-        }
         val spacer = Region().apply { HBox.setHgrow(this, Priority.ALWAYS) }
         val exportBtn = Button("📥 CSV").apply {
             styleClass.add("export-btn")
             setOnAction {
-                val items = data.toList()
-                Thread {
-                    ExportUtil.exportGenericCSV(
-                        items,
-                        listOf("ID", "IMEI", "Телефон", "Статус"),
-                        { listOf(it.id.toString(), it.imei, it.phoneNumber ?: "", if (it.status == "active") "Активен" else "Неактивен") },
-                        "modems.csv"
-                    )
-                }.start()
+                val stage = table.scene?.window as? Stage ?: return@setOnAction
+                ExportUtil.exportGenericCSV(
+                    data = data.toList(),
+                    headers = listOf("ID", "IMEI", "Телефон", "Статус"),
+                    rowExtractor = { listOf(it.id.toString(), it.imei, it.phoneNumber ?: "", it.status) },
+                    fileName = "modems.csv",
+                    stage = stage
+                )
             }
         }
         val addBtn = Button("+ Добавить").apply {
             styleClass.add("primary-button")
             setOnAction { showDialog(null) }
         }
-        toolbar.children.addAll(title, searchField, spacer, exportBtn, addBtn)
+        toolbar.children.addAll(title, spacer, exportBtn, addBtn)
         root.top = toolbar
     }
 
@@ -148,21 +136,33 @@ class ModemsView {
     private fun showDialog(m: Modem?) {
         val dialog = Dialog<Modem>().apply {
             title = if (m == null) "Новый модем" else "Редактирование модема"
+            headerText = null
         }
-        val imeiF = TextField(m?.imei ?: "").apply { promptText = "IMEI (15 цифр)" }
-        val phoneF = TextField(m?.phoneNumber ?: "").apply { promptText = "Номер телефона" }
-        val statusBox = ComboBox(FXCollections.observableArrayList("active", "inactive")).apply {
-            value = m?.status ?: "active"
+        val imeiF = TextField(m?.imei ?: "").apply { styleClass.add("edit-field"); promptText = "IMEI (15 цифр)" }
+        val phoneF = TextField(m?.phoneNumber ?: "").apply { styleClass.add("edit-field"); promptText = "+7XXXXXXXXXX" }
+        val statusBox = ComboBox(FXCollections.observableArrayList("Активен", "Неактивен")).apply {
+            styleClass.add("edit-combo"); maxWidth = Double.MAX_VALUE
+            value = if (m?.status == "active") "Активен" else "Неактивен"
         }
-
         val grid = GridPane().apply {
-            hgap = 10.0; vgap = 8.0; padding = Insets(16.0)
-            add(Label("IMEI *"), 0, 0); add(imeiF, 1, 0)
-            add(Label("Телефон"), 0, 1); add(phoneF, 1, 1)
-            add(Label("Статус"), 0, 2); add(statusBox, 1, 2)
+            styleClass.add("form-grid")
+            hgap = 12.0; vgap = 10.0; padding = Insets(20.0, 24.0, 8.0, 24.0)
+            columnConstraints.addAll(ColumnConstraints(100.0), ColumnConstraints(260.0))
+            add(Label("IMEI *").apply { styleClass.add("form-label") }, 0, 0); add(imeiF, 1, 0)
+            add(Label("Телефон").apply { styleClass.add("form-label") }, 0, 1); add(phoneF, 1, 1)
+            add(Label("Статус").apply { styleClass.add("form-label") }, 0, 2); add(statusBox, 1, 2)
         }
-        dialog.dialogPane.content = grid
-        dialog.dialogPane.buttonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
+        dialog.dialogPane.apply {
+            styleClass.add("styled-dialog")
+            content = VBox(8.0).apply {
+                children.addAll(Label(if (m == null) "Новый модем" else "Редактирование: ${m.imei}").apply { styleClass.add("dialog-form-title") }, Separator(), grid)
+                padding = Insets(4.0, 0.0, 0.0, 0.0)
+            }
+            buttonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
+            (lookupButton(ButtonType.OK) as Button).apply { text = if (m == null) "Создать" else "Сохранить"; styleClass.add("btn-save") }
+            (lookupButton(ButtonType.CANCEL) as Button).apply { text = "Отмена"; styleClass.add("btn-cancel") }
+            stylesheets.addAll(table.scene?.stylesheets ?: emptyList<String>())
+        }
 
         dialog.setResultConverter { btn ->
             if (btn == ButtonType.OK) {
@@ -170,7 +170,8 @@ class ModemsView {
                     Alert(Alert.AlertType.WARNING, "IMEI должен содержать 15 цифр").showAndWait()
                     return@setResultConverter null
                 }
-                Modem(m?.id ?: 0, imeiF.text.trim(), phoneF.text.trim().ifBlank { null }, statusBox.value)
+                val statusVal = if (statusBox.value == "Активен") "active" else "inactive"
+                Modem(m?.id ?: 0, imeiF.text.trim(), phoneF.text.trim().ifBlank { null }, statusVal)
             } else null
         }
 

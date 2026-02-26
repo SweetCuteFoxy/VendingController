@@ -11,6 +11,7 @@ import javafx.geometry.Pos
 import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
+import javafx.stage.Stage
 import org.slf4j.LoggerFactory
 
 class CompaniesView {
@@ -33,38 +34,25 @@ class CompaniesView {
             alignment = Pos.CENTER_LEFT
         }
         val title = Label("Компании").apply { font = Font.font(18.0); styleClass.add("page-title") }
-        val searchField = javafx.scene.control.TextField().apply {
-            promptText = "🔍 Поиск…"
-            styleClass.add("filter-field")
-            prefWidth = 200.0
-            textProperty().addListener { _, _, q ->
-                val lq = q.trim().lowercase()
-                table.items = if (lq.isEmpty()) data
-                else javafx.collections.FXCollections.observableList(data.filter {
-                    it.name.lowercase().contains(lq) || (it.address?.lowercase()?.contains(lq) == true) || (it.email?.lowercase()?.contains(lq) == true)
-                })
-            }
-        }
         val spacer = Region().apply { HBox.setHgrow(this, Priority.ALWAYS) }
         val exportBtn = Button("📥 CSV").apply {
             styleClass.add("export-btn")
             setOnAction {
-                val items = data.toList()
-                Thread {
-                    ExportUtil.exportGenericCSV(
-                        items,
-                        listOf("ID", "Название", "Адрес", "Телефон", "Email"),
-                        { listOf(it.id.toString(), it.name, it.address ?: "", it.contactPhone ?: "", it.email ?: "") },
-                        "companies.csv"
-                    )
-                }.start()
+                val stage = table.scene?.window as? Stage ?: return@setOnAction
+                ExportUtil.exportGenericCSV(
+                    data = data.toList(),
+                    headers = listOf("ID", "Название", "Адрес", "Телефон", "Email"),
+                    rowExtractor = { listOf(it.id.toString(), it.name, it.address ?: "", it.contactPhone ?: "", it.email ?: "") },
+                    fileName = "companies.csv",
+                    stage = stage
+                )
             }
         }
         val addBtn = Button("+ Добавить").apply {
             styleClass.add("primary-button")
             setOnAction { showAddDialog() }
         }
-        toolbar.children.addAll(title, searchField, spacer, exportBtn, addBtn)
+        toolbar.children.addAll(title, spacer, exportBtn, addBtn)
         root.top = toolbar
     }
 
@@ -139,22 +127,49 @@ class CompaniesView {
     private fun showDialog(c: Company?) {
         val dialog = Dialog<Company>().apply {
             title = if (c == null) "Новая компания" else "Редактирование"
-            headerText = if (c == null) "Добавление компании" else "Редактирование «${c.name}»"
+            headerText = null
         }
-        val nameF = TextField(c?.name ?: "").apply { promptText = "Название" }
-        val addrF = TextField(c?.address ?: "").apply { promptText = "Адрес" }
-        val phoneF = TextField(c?.contactPhone ?: "").apply { promptText = "Телефон" }
-        val emailF = TextField(c?.email ?: "").apply { promptText = "Email" }
+        val nameF = TextField(c?.name ?: "").apply { styleClass.add("edit-field"); promptText = "Название компании" }
+        val addrF = TextField(c?.address ?: "").apply { styleClass.add("edit-field"); promptText = "Адрес" }
+        val phoneF = TextField(c?.contactPhone ?: "").apply { styleClass.add("edit-field"); promptText = "+7 (XXX) XXX-XX-XX" }
+        val emailF = TextField(c?.email ?: "").apply { styleClass.add("edit-field"); promptText = "company@example.com" }
 
         val grid = GridPane().apply {
-            hgap = 10.0; vgap = 8.0; padding = Insets(16.0)
-            add(Label("Название *"), 0, 0); add(nameF, 1, 0)
-            add(Label("Адрес"), 0, 1); add(addrF, 1, 1)
-            add(Label("Телефон"), 0, 2); add(phoneF, 1, 2)
-            add(Label("Email"), 0, 3); add(emailF, 1, 3)
+            styleClass.add("form-grid")
+            hgap = 12.0; vgap = 10.0; padding = Insets(20.0, 24.0, 8.0, 24.0)
+            columnConstraints.addAll(
+                ColumnConstraints(110.0),
+                ColumnConstraints(280.0)
+            )
+            add(Label("Название *").apply { styleClass.add("form-label") }, 0, 0); add(nameF, 1, 0)
+            add(Label("Адрес").apply { styleClass.add("form-label") }, 0, 1); add(addrF, 1, 1)
+            add(Label("Телефон").apply { styleClass.add("form-label") }, 0, 2); add(phoneF, 1, 2)
+            add(Label("Email").apply { styleClass.add("form-label") }, 0, 3); add(emailF, 1, 3)
         }
-        dialog.dialogPane.content = grid
-        dialog.dialogPane.buttonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
+
+        dialog.dialogPane.apply {
+            styleClass.add("styled-dialog")
+            content = VBox(8.0).apply {
+                children.addAll(
+                    Label(if (c == null) "Новая компания" else "Редактирование «${c.name}»").apply {
+                        styleClass.add("dialog-form-title")
+                    },
+                    Separator(),
+                    grid
+                )
+                padding = Insets(4.0, 0.0, 0.0, 0.0)
+            }
+            buttonTypes.addAll(ButtonType.OK, ButtonType.CANCEL)
+            (lookupButton(ButtonType.OK) as Button).apply {
+                text = if (c == null) "Создать" else "Сохранить"
+                styleClass.add("btn-save")
+            }
+            (lookupButton(ButtonType.CANCEL) as Button).apply {
+                text = "Отмена"
+                styleClass.add("btn-cancel")
+            }
+            stylesheets.addAll(table.scene?.stylesheets ?: emptyList<String>())
+        }
 
         dialog.setResultConverter { btn ->
             if (btn == ButtonType.OK && nameF.text.isNotBlank()) {
