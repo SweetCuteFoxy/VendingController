@@ -16,6 +16,64 @@ import java.io.FileWriter
 object ExportUtil {
     private val logger = LoggerFactory.getLogger(ExportUtil::class.java)
 
+    /**
+     * Generic CSV export for any list of data.
+     * @param items      list to export
+     * @param headers    column header names
+     * @param rowMapper  converts each item to a list of cell strings
+     * @param fileName   default file name suggestion
+     * @param title      dialog window title
+     * @param stage      owner stage (can be null)
+     */
+    fun <T> exportGenericCSV(
+        items: List<T>,
+        headers: List<String>,
+        rowMapper: (T) -> List<String>,
+        fileName: String,
+        title: String = "Сохранить CSV",
+        stage: Stage? = null
+    ) {
+        if (items.isEmpty()) {
+            javafx.application.Platform.runLater {
+                javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.INFORMATION, "Нет данных для экспорта"
+                ).showAndWait()
+            }
+            return
+        }
+        val chooser = FileChooser().apply {
+            this.title = title
+            extensionFilters.add(FileChooser.ExtensionFilter("CSV files", "*.csv"))
+            initialFileName = fileName
+        }
+        val file: File = (if (stage != null) chooser.showSaveDialog(stage)
+        else chooser.showSaveDialog(null)) ?: return
+        try {
+            FileWriter(file, Charsets.UTF_8).use { w ->
+                w.write("\uFEFF") // BOM for Excel
+                w.write(headers.joinToString(";") + "\n")
+                items.forEach { item ->
+                    val cells = rowMapper(item).map { it.replace(";", ",").replace("\n", " ") }
+                    w.write(cells.joinToString(";") + "\n")
+                }
+            }
+            javafx.application.Platform.runLater {
+                javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.INFORMATION,
+                    "Экспортировано ${items.size} записей\n${file.name}"
+                ).showAndWait()
+            }
+            logger.info("Generic CSV export: ${items.size} rows → ${file.absolutePath}")
+        } catch (e: Exception) {
+            logger.error("Generic CSV export failed", e)
+            javafx.application.Platform.runLater {
+                javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.ERROR, "Ошибка экспорта: ${e.message}"
+                ).showAndWait()
+            }
+        }
+    }
+
     fun exportToCSV(machines: List<VendingMachine>, stage: Stage) {
         val chooser = FileChooser().apply {
             title = "Сохранить CSV"

@@ -4,6 +4,7 @@ import com.vending.dao.CompanyDAO
 import com.vending.dao.UserDAO
 import com.vending.model.User
 import com.vending.model.Role
+import com.vending.util.ExportUtil
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -35,12 +36,38 @@ class UsersView {
             alignment = Pos.CENTER_LEFT
         }
         val title = Label("Пользователи").apply { font = Font.font(18.0); styleClass.add("page-title") }
+        val searchField = javafx.scene.control.TextField().apply {
+            promptText = "🔍 ФИО / Email…"
+            styleClass.add("filter-field")
+            prefWidth = 220.0
+            textProperty().addListener { _, _, q ->
+                val lq = q.trim().lowercase()
+                table.items = if (lq.isEmpty()) data
+                else javafx.collections.FXCollections.observableList(data.filter {
+                    it.fullName.lowercase().contains(lq) || it.email.lowercase().contains(lq)
+                })
+            }
+        }
         val spacer = Region().apply { HBox.setHgrow(this, Priority.ALWAYS) }
+        val exportBtn = Button("📥 CSV").apply {
+            styleClass.add("export-btn")
+            setOnAction {
+                val items = data.toList()
+                Thread {
+                    ExportUtil.exportGenericCSV(
+                        items,
+                        listOf("ID", "ФИО", "Email", "Телефон", "Роль", "Компания", "Статус"),
+                        { listOf(it.id.toString(), it.fullName, it.email, it.phone ?: "", it.roleName, it.companyName, if (it.isActive) "Активен" else "Неактивен") },
+                        "users.csv"
+                    )
+                }.start()
+            }
+        }
         val addBtn = Button("+ Добавить").apply {
             styleClass.add("primary-button")
             setOnAction { showDialog(null) }
         }
-        toolbar.children.addAll(title, spacer, addBtn)
+        toolbar.children.addAll(title, searchField, spacer, exportBtn, addBtn)
         root.top = toolbar
     }
 

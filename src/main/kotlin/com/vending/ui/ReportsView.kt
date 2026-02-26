@@ -231,6 +231,27 @@ class ReportsView {
         statusCombo.valueProperty().addListener { _, _, _ -> loadOrders(statusCombo.value, priorityCombo.value) }
         priorityCombo.valueProperty().addListener { _, _, _ -> loadOrders(statusCombo.value, priorityCombo.value) }
 
+        val exportOrdersBtn = Button("📥 CSV").apply {
+            styleClass.add("export-btn")
+            setOnAction {
+                val items = ordersData.toList()
+                Thread {
+                    com.vending.util.ExportUtil.exportGenericCSV(
+                        items,
+                        listOf("№ заявки", "Автомат", "Тип", "Статус", "Приоритет", "Дата план", "Инженер", "Описание"),
+                        { o -> listOf(
+                            o.orderNumber, o.machineName,
+                            when(o.type){"maintenance"->"Плановое ТО";"repair"->"Ремонт";"emergency"->"Аварийный";else->o.type},
+                            when(o.status){"new"->"Новая";"assigned"->"Назначена";"in_progress"->"В работе";"completed"->"Завершена";"cancelled"->"Отменена";else->o.status},
+                            when(o.priority){"low"->"Низкий";"medium"->"Средний";"high"->"Высокий";"critical"->"Критический";else->o.priority},
+                            o.scheduledDate.format(dFmt), o.engineerName.ifBlank{"-"}, o.description?:"-"
+                        ) },
+                        "service_orders_report.csv"
+                    )
+                }.start()
+            }
+        }
+
         val filterBar = HBox(10.0).apply {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
             alignment = Pos.CENTER_LEFT
@@ -238,7 +259,9 @@ class ReportsView {
                 Label("Статус:").apply { styleClass.add("filter-group-label") },
                 statusCombo,
                 Label("Приоритет:").apply { styleClass.add("filter-group-label") },
-                priorityCombo
+                priorityCombo,
+                Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
+                exportOrdersBtn
             )
         }
 
@@ -400,10 +423,34 @@ class ReportsView {
             }
         )
 
+        val exportHistoryBtn = Button("📥 CSV").apply {
+            styleClass.add("export-btn")
+            setOnAction {
+                val items = historyData.toList()
+                Thread {
+                    com.vending.util.ExportUtil.exportGenericCSV(
+                        items,
+                        listOf("ID", "Автомат", "Тип", "Дата", "Описание", "Инженер", "Длительность(ч)", "Стоимость"),
+                        { h -> listOf(
+                            h.id.toString(), h.machineName,
+                            when(h.eventType){"maintenance"->"ТО";"repair"->"Ремонт";"inspection"->"Осмотр";"installation"->"Установка";else->h.eventType},
+                            h.eventDate.format(dFmt), h.description, h.engineerName.ifBlank{"-"},
+                            h.duration?.toString()?:"-", h.cost?.toPlainString()?:"-"
+                        ) },
+                        "service_history_report.csv"
+                    )
+                }.start()
+            }
+        }
+
         val infoBar = HBox(10.0).apply {
             padding = Insets(10.0, 16.0, 10.0, 16.0)
             alignment = Pos.CENTER_LEFT
-            children.add(Label("Полная история сервисных событий").apply { styleClass.add("filter-group-label") })
+            children.addAll(
+                Label("Полная история сервисных событий").apply { styleClass.add("filter-group-label") },
+                Region().apply { HBox.setHgrow(this, Priority.ALWAYS) },
+                exportHistoryBtn
+            )
         }
 
         pane.top = infoBar

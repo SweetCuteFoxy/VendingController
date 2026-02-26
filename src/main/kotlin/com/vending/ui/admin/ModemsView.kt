@@ -2,6 +2,7 @@ package com.vending.ui.admin
 
 import com.vending.dao.ModemDAO
 import com.vending.model.Modem
+import com.vending.util.ExportUtil
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -32,12 +33,38 @@ class ModemsView {
             alignment = Pos.CENTER_LEFT
         }
         val title = Label("Модемы").apply { font = Font.font(18.0); styleClass.add("page-title") }
+        val searchField = javafx.scene.control.TextField().apply {
+            promptText = "🔍 IMEI / номер…"
+            styleClass.add("filter-field")
+            prefWidth = 200.0
+            textProperty().addListener { _, _, q ->
+                val lq = q.trim().lowercase()
+                table.items = if (lq.isEmpty()) data
+                else javafx.collections.FXCollections.observableList(data.filter {
+                    it.imei.lowercase().contains(lq) || (it.phoneNumber?.lowercase()?.contains(lq) == true)
+                })
+            }
+        }
         val spacer = Region().apply { HBox.setHgrow(this, Priority.ALWAYS) }
+        val exportBtn = Button("📥 CSV").apply {
+            styleClass.add("export-btn")
+            setOnAction {
+                val items = data.toList()
+                Thread {
+                    ExportUtil.exportGenericCSV(
+                        items,
+                        listOf("ID", "IMEI", "Телефон", "Статус"),
+                        { listOf(it.id.toString(), it.imei, it.phoneNumber ?: "", if (it.status == "active") "Активен" else "Неактивен") },
+                        "modems.csv"
+                    )
+                }.start()
+            }
+        }
         val addBtn = Button("+ Добавить").apply {
             styleClass.add("primary-button")
             setOnAction { showDialog(null) }
         }
-        toolbar.children.addAll(title, spacer, addBtn)
+        toolbar.children.addAll(title, searchField, spacer, exportBtn, addBtn)
         root.top = toolbar
     }
 
